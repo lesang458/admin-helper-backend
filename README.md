@@ -1,24 +1,24 @@
-# README
+# Admin Helper Backend
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Environment
+- Rails: `>= 6.0.2.2`
+- Database: `PostgreSQL 12`
+- Ruby: `2.5.5`
 
-Things you may want to cover:
+## Development
+### Environment Variables
+- Database
+  - Development:
+    ```
+    database: admin_helper_development
+    username: admin_helper
+    password: 123456
+    ```
+  - Test
+    ```
+    database: admin_helper_test
+    username: admin_helper
+    password: 123456
+    ```
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Deployment
