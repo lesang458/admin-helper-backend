@@ -26,10 +26,14 @@ gem 'bootsnap', '>= 1.4.2', require: false
 # gem 'rack-cors'
 
 group :development, :test do
+  gem 'factory_bot_rails'
+  gem 'ffaker'
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 4.0.0'
   gem 'rubocop'
   gem 'rubocop-performance', require: false
+  gem 'shoulda', '~> 3.5'
+  gem 'shoulda-matchers', '~> 2.0'
 end
 
 group :development do

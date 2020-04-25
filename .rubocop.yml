@@ -33,7 +33,7 @@ Lint/RaiseException:
 Lint/StructNewOverride:
   Enabled: true
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 150
 
 Metrics/BlockLength:
