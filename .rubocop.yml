@@ -15,11 +15,11 @@ AllCops:
     - 'node_modules/**/*'
     - 'tmp/**/*'
 
-Documentation:
-  Enabled: false
-
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
+
+Layout/LineLength:
+  Max: 200
 
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
@@ -33,9 +33,6 @@ Lint/RaiseException:
 Lint/StructNewOverride:
   Enabled: true
 
-Layout/LineLength:
-  Max: 150
-
 Metrics/BlockLength:
   Exclude:
     - 'lib/**/*_job.rb'
@@ -44,12 +41,17 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Enabled: false
 
+Style/BlockComments:
+  Enabled: false
 
 Style/BlockDelimiters:
   Exclude:
     - 'spec/**/*'
 
 Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
   Enabled: false
 
 Style/ExponentialNotation:
