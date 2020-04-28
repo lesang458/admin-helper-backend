@@ -9,6 +9,7 @@ AllCops:
     - 'doc/**/*'
     - 'bin/**/*'
     - 'test/**/*'
+    - 'vendor/bundle/**/*'
     - 'Guardfile'
     - 'Rakefile'
     - 'public/**/*'

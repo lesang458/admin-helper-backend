@@ -1,0 +1,58 @@
+name: Rails CI
+
+on: pull_request
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:12
+        env:
+          POSTGRES_USER: admin_helper_user
+          POSTGRES_PASSWORD: 123
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby 2.6.5
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6.5
+    - name: Install required apt packages and bundler
+      run: |
+        sudo apt-get -y install libpq-dev
+        gem install bundler
+    - name: Cache gems
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-gems
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Bundle install
+      run: |
+        bundle config path vendor/bundle
+        bundle install --jobs 4 --retry 3
+    - name: Run Rubocop
+      run: |
+        bundle exec rubocop -c .rubocop.yml
+    - name: Test with rake
+      env:
+        PGHOST: 127.0.0.1
+        RAILS_ENV: test
+      run: |
+        bundle exec rails db:create
+        bundle exec rails db:migrate
+        bundle exec rails test
