@@ -9,7 +9,7 @@ jobs:
 
     services:
       db:
-        image: postgres:11
+        image: postgres:12
         env:
           POSTGRES_USER: admin_helper_user
           POSTGRES_PASSWORD: 123
