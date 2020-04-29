@@ -7,21 +7,29 @@ RSpec.describe Employee, type: :model do
   it { should allow_value("My String").for(:first_name) }
   it { should allow_value("MyString").for(:last_name) }
   it { should allow_value("My String").for(:last_name) }
+  it { should belong_to(:user).dependent(:destroy) }
   before { @employee = FactoryBot.create :employee }
   subject { @employee }
-  describe " test length of first name and last name in (2..75)" do
-    it { should belong_to(:user).dependent(:destroy) }
-    it {
-      should_not validate_inclusion_of(:first_name).
-                   in_range(2..75)
-      should_not validate_inclusion_of(:last_name).
-                   in_range(2..75)
-    }
-  end
-  describe "test validate attribute should presence " do
-    it do
+  describe "first name" do
+    it "should be greater or equal 2 and less than or equal 20" do
+      should validate_length_of(:first_name).is_at_least(2).is_at_most(20)
+    end
+    it "should presence" do
       should validate_presence_of(:first_name)
+    end
+  end
+
+  describe "last name" do
+    it "should be greater or equal 2 and less than or equal 75" do
+      should validate_length_of(:last_name).is_at_least(2).is_at_most(20)
+    end
+    it "should presence" do
       should validate_presence_of(:last_name)
+    end
+  end
+
+  describe "status" do
+    it "test status should presence" do
       should validate_presence_of(:status)
     end
   end
