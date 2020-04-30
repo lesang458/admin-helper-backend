@@ -20,4 +20,5 @@ RSpec.describe User, type: :model do
   it { should_not allow_value('email@domain.com (Joe Smith)').for(:email) } # Text followed email is not allowed
   it { should_not allow_value('email@domain').for(:email) } # Missing top level domain (.com/.net/.org/etc)
   it { should_not allow_value('email@111.222.333.44444').for(:email) } # Invalid IP format
+  it { should have_one(:employee) }
 end
