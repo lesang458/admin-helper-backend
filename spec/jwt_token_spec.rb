@@ -4,35 +4,33 @@ require 'jwt'
 RSpec.describe JwtToken do
   payload = { 'id' => 1 }
   secret = 'secret_key'
-  $token
   it 'responds with a JWT' do
     token = JwtToken.encode payload, secret
-    $token = token
     expect(token).to be_kind_of(String)
     segments = token.split('.')
     expect(segments.size).to eql(3)
   end
 
   it 'should decode a valid token' do
-    body = JwtToken.decode $token, secret
+    token = JwtToken.encode payload, secret
+    body = JwtToken.decode token, secret
     expect(body).to eq payload
   end
 
-  it 'wrong key should raise ExceptionHandler::DecodeError' do
+  it 'should raise ExceptionHandler::DecodeError with wrong key' do
     wrong_key = 'wrong-secret-key'
     expect do
       JwtToken.decode nil, wrong_key
     end.to raise_error ExceptionHandler::DecodeError
   end
 
-  it 'wrong token should raise ExceptionHandler::DecodeError' do
-    wrong_token = 'wrong-token'
+  it 'should raise ExceptionHandler::DecodeError with invalid token' do
     expect do
-      JwtToken.decode nil, secret
+      JwtToken.decode nil, 'wrong-token'
     end.to raise_error ExceptionHandler::DecodeError
   end
 
-  it 'time out should raise ExceptionHandler::ExpiredSignature' do
+  it 'should raise ExceptionHandler::ExpiredSignature with expired token' do
     time_out_token = JwtToken.encode payload, 24.hours.ago, secret
     expect do
       JwtToken.decode time_out_token, secret
