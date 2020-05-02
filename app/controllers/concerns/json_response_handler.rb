@@ -1,7 +1,7 @@
 module JsonResponseHandler
-  def self.render_unauthorized_error(_error)
+  def self.render_unauthorized_error(error)
     render json: {
-      message: _error.full_message
+      message: error.full_message
     }, status: :unauthorized
   end
 end

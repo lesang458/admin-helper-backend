@@ -4,12 +4,12 @@ module ExceptionHandler
   class DecodeError < StandardError; end
   class ExpiredSignature < StandardError; end
   included do
-    rescue_from ExceptionHandler::DecodeError do |_error|
-      JsonResponseHandler.render_unauthorized_error _error
+    rescue_from ExceptionHandler::DecodeError do |e|
+      JsonResponseHandler.render_unauthorized_error e
     end
 
-    rescue_from ExceptionHandler::ExpiredSignature do |_error|
-      JsonResponseHandler.render_unauthorized_error _error
+    rescue_from ExceptionHandler::ExpiredSignature do |e|
+      JsonResponseHandler.render_unauthorized_error e
     end
   end
 end
