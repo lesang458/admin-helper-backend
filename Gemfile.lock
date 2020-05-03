@@ -86,6 +86,7 @@ GEM
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.4)
     jsonapi-renderer (0.2.2)
+    jwt (2.2.1)
     kaminari (1.2.0)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.0)
@@ -229,7 +230,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.2)
   factory_bot_rails
   ffaker
-  kaminari
+  jwt
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
   pry-byebug
