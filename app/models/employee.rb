@@ -8,4 +8,8 @@ class Employee < ApplicationRecord
   def user_email
     user.email
   end
+
+  def user_id
+    user.id
+  end
 end

@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace :api,default: {format: :json} do
     namespace :v1 do
-      resources :employees
+      get 'employees',to: 'employees#render_collection'
     end
   end
 end

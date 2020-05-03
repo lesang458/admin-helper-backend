@@ -1,3 +1,3 @@
 class ApplicationController < ActionController::API
-  include RenderResources
+  include JsonResponseHandler
 end
