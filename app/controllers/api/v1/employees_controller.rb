@@ -3,6 +3,7 @@ class Api::V1::EmployeesController < ApplicationController
     employees = @page.to_i <= 0 ? Employee.all : Employee.page(@page).per(@per_page)
     render_collection_employees employees
   end
+
   before_action :set_peginate
 
   private

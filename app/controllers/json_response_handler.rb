@@ -1,8 +1,7 @@
 module JsonResponseHandler
-  def render_collection_employees(list_employees, status = 200)
+  def render_collection_employees(list_employees)
     render json: {
       data: list_employees,
-      status: status,
       pagination: {
         current_page: list_employees.current_page,
         page_size: list_employees.size,
