@@ -1,0 +1,22 @@
+name: Deploy
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    env:
+      HEROKU_DEV_API_KEY: ${{ secrets.HEROKU_DEV_API_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby 2.6.5
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6.5
+      - name: Deploy to Heroku
+        run: |
+          gem install dpl
+          dpl --provider=heroku --app=admin-helper-backend --api-key=$HEROKU_DEV_API_KEY
