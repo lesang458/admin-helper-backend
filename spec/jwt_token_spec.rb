@@ -1,6 +1,5 @@
 require 'rails_helper'
 require 'spec_helper'
-require 'jwt'
 RSpec.describe JwtToken do
   payload = { 'id' => 1 }
   secret = 'secret_key'
