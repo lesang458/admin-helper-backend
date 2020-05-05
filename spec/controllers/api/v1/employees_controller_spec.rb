@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::EmployeesController, type: :controller do
   describe 'GET#list employees non params' do
-    let!(:employees) { FactoryBot.create_list(:employee, 50) }
     before { get(:index) }
+    let!(:employees) { FactoryBot.create_list(:employee, 50) }
     it 'should get list of users' do
       expect(response.status).to eq(200)
     end
@@ -17,8 +17,8 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
   end
 
   describe 'GET#list employees non params' do
-    let!(:employees) { FactoryBot.create_list(:employee, 50) }
     before { get :index, params: { per_page: 3, page: 3 } }
+    let!(:employees) { FactoryBot.create_list(:employee, 50) }
     it 'should get list of users' do
       expect(response.status).to eq(200)
     end
