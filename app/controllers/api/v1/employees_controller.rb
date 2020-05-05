@@ -1,15 +1,14 @@
 class Api::V1::EmployeesController < ApplicationController
+  before_action :set_paginate
   def index
     employees = @page.to_i <= 0 ? Employee.all : Employee.page(@page).per(@per_page)
     render_collection employees
   end
 
-  before_action :set_paginate
-
   private
 
   def set_paginate
-    @per_page = params[:per_page].nil? ? 20 : params[:per_page]
-    @page     = params[:page].nil? ? 1 : params[:page]
+    @per_page = params[:per_page] || 20
+    @page     = params[:page] || 1
   end
 end
