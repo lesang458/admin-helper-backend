@@ -22,3 +22,5 @@
     ```
 
 ## Deployment
+## Example
+- secret_key_base:    "93e123489e402b28bf6e9562a008728bb38bf7fdcac096e211b3c6897b29417cc16c41f2bc37261e4e04bc396f3eb096ced14ef7b9f812231492c4f3ae4405e5"
