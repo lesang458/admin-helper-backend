@@ -2,9 +2,17 @@ require 'jwt'
 ALGORITHM = 'HS256'.freeze
 
 module JwtToken
+  def self.render_secret_key_base
+    Rails.application.credentials.secret_key_base
+  end
+
   def self.encode(payload, exp = 24.hours.from_now, secret)
     payload['exp'] = exp.to_i
     JWT.encode(payload, secret, ALGORITHM)
+  end
+
+  def self.render_user_authorized_token(payload, secret)
+    JwtToken.encode payload, secret
   end
 
   def self.decode(token, secret)

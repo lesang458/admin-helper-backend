@@ -5,11 +5,15 @@ class User < ApplicationRecord
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
 
-  def self.encrypted_password(password, password_salt = BCrypt::Engine.generate_salt)
+  def self.generate_encrypted_password(password, password_salt = BCrypt::Engine.generate_salt)
     BCrypt::Engine.hash_secret(password, password_salt)
   end
 
-  def check_valid_password(password, encrypted_password)
-    encrypted_password == User.encrypted_password(password, encrypted_password.first(29))
+  def check_valid_password(password)
+    encrypted_password == User.generate_encrypted_password(password, encrypted_password.first(29))
+  end
+
+  def render_payload
+    { 'user_id' => id }
   end
 end
