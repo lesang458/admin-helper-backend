@@ -1,5 +1,5 @@
 class Employee < ApplicationRecord
-  belongs_to :user, dependent: :destroy
+  belongs_to :user
   validates :first_name, presence: true, length: { in: 2..20 }
   validates :last_name, presence: true, length: { in: 2..20 }
   enum status: { ACTIVE: 'ACTIVE', FORMER: 'FORMER' }
@@ -7,5 +7,9 @@ class Employee < ApplicationRecord
 
   def user_email
     user.email
+  end
+
+  def user_id
+    user.id
   end
 end
