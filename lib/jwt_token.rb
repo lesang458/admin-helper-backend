@@ -6,17 +6,17 @@ module JwtToken
     Rails.application.credentials.secret_key_base
   end
 
-  def self.encode(payload, exp = 24.hours.from_now, secret)
+  def self.encode(payload, exp = 24.hours.from_now)
     payload['exp'] = exp.to_i
-    JWT.encode(payload, secret, ALGORITHM)
+    JWT.encode(payload, JwtToken.render_secret_key_base, ALGORITHM)
   end
 
-  def self.render_user_authorized_token(payload, secret)
-    JwtToken.encode payload, secret
+  def self.render_user_authorized_token(payload)
+    JwtToken.encode payload
   end
 
-  def self.decode(token, secret)
-    body = JWT.decode(token, secret, { algorithm: ALGORITHM })[0]
+  def self.decode(token)
+    body = JWT.decode(token, JwtToken.render_secret_key_base, { algorithm: ALGORITHM })[0]
     HashWithIndifferentAccess.new body
   rescue JWT::ExpiredSignature
     raise ExceptionHandler::ExpiredSignature
