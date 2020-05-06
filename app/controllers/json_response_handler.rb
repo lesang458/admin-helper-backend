@@ -1,7 +1,7 @@
 module JsonResponseHandler
-  def render_collection(list, name_class)
+  def render_collection(list, serializer_class)
     render json: {
-      data: list.map { |serializer| name_class.new(serializer) },
+      data: list.map { |item| serializer_class.new(item) },
       pagination: {
         current_page: list.current_page,
         page_size: list.size,
