@@ -22,9 +22,9 @@ RSpec.describe Api::V1::SessionsController do
       expect(response).to have_http_status(404)
     end
 
-    it 'should response 422' do
+    it 'should response 400' do
       post :create, params: { email: @user.email, password: 'wrong password' }
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(400)
     end
   end
 end

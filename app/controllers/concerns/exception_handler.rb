@@ -6,28 +6,15 @@ module ExceptionHandler
   class WrongPassword < StandardError; end
   included do
     rescue_from ActiveRecord::RecordNotFound do |e|
-      render_error(e, :not_found)
+      render_error(e.full_message, :not_found)
     end
 
     rescue_from ExceptionHandler::DecodeError do |e|
-      render_error(e, :unauthorized)
+      render_error(e.full_message, :unauthorized)
     end
 
     rescue_from ExceptionHandler::ExpiredSignature do |e|
-      render_error(e, :unauthorized)
+      render_error(e.full_message, :unauthorized)
     end
-
-    rescue_from ExceptionHandler::WrongPassword, with: :render_unprocessable_entity_error
-  end
-
-  private
-
-  def render_unprocessable_entity_error
-    render json: {
-      error: {
-        status: '422',
-        masseage: 'wrong password'
-      }
-    }
   end
 end
