@@ -15,7 +15,6 @@ RSpec.describe Api::V1::SessionsController do
   describe 'Failed Sessions' do
     before(:each) do
       @user = FactoryBot.create :user
-      post :create, params: { email: @user.email, password: 'wrong password' }
     end
 
     it 'should response 404' do
@@ -24,7 +23,8 @@ RSpec.describe Api::V1::SessionsController do
     end
 
     it 'should response 422' do
-      expect(response).to have_http_status(422)
+      post :create, params: { email: @user.email, password: 'wrong password' }
+      expect(response).to have_http_status(200)
     end
   end
 end
