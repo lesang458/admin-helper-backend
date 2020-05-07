@@ -1,9 +1,9 @@
 module JsonResponseHandler
-  def render_error(message, symbol)
+  def render_error(message, status_code_symbol)
     render json: {
-      status: Rack::Utils.status_code(symbol),
+      status: Rack::Utils.status_code(status_code_symbol),
       message: message
-    }, status: symbol
+    }, status: status_code_symbol
   end
 
   def render_bad_request_error(message)
