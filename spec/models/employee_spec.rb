@@ -34,6 +34,6 @@ RSpec.describe Employee, type: :model do
   end
 
   describe 'relation between employee and user' do
-    it { should belong_to(:user).dependent(:destroy) }
+    it { should belong_to(:user) }
   end
 end

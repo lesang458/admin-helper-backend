@@ -12,13 +12,13 @@
     ```
     database: admin_helper_development
     username: admin_helper
-    password: 123456
+    password: 123
     ```
   - Test
     ```
     database: admin_helper_test
     username: admin_helper
-    password: 123456
+    password: 123
     ```
 
 ## Deployment
