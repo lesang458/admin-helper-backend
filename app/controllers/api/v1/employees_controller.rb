@@ -1,5 +1,5 @@
 class Api::V1::EmployeesController < ApplicationController
-  before_action :set_paginate
+  before_action :set_paginate, :current_user
   def index
     employees = @page.to_i <= 0 ? Employee.includes(:user).all : Employee.includes(:user).page(@page).per(@per_page)
     render_collection(employees, EmployeeSerializer)
@@ -10,5 +10,9 @@ class Api::V1::EmployeesController < ApplicationController
   def set_paginate
     @per_page = params[:per_page] || 20
     @page     = params[:page] || 1
+  end
+
+  def current_user
+    AuthorizeApiRequest.new(request.headers['Authorization']).current_users
   end
 end
