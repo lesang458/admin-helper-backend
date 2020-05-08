@@ -4,12 +4,16 @@ module ExceptionHandler
   class DecodeError < StandardError; end
   class ExpiredSignature < StandardError; end
   included do
+    rescue_from ActiveRecord::RecordNotFound do |e|
+      render_error(e.full_message, :not_found)
+    end
+
     rescue_from ExceptionHandler::DecodeError do |e|
-      JsonResponseHandler.render_unauthorized_error e
+      render_error(e.full_message, :unauthorized)
     end
 
     rescue_from ExceptionHandler::ExpiredSignature do |e|
-      JsonResponseHandler.render_unauthorized_error e
+      render_error(e.full_message, :unauthorized)
     end
   end
 end

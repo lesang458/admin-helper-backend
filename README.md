@@ -22,3 +22,5 @@
     ```
 
 ## Deployment
+## Example credentials
+- secret_key_base: "my_secret_key"
