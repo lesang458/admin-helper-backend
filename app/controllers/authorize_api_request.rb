@@ -18,6 +18,6 @@ class AuthorizeApiRequest
   end
 
   def decode_auth_token
-    @decode_auth_token = JwtToken.decode(headers, 'ccdane')
+    @decode_auth_token = JwtToken.decode(headers)
   end
 end
