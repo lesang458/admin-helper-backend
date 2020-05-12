@@ -3,10 +3,8 @@ class AuthorizeApiRequest
     @headers = headers
   end
 
-  def current_users
-    {
-      user: user
-    }
+  def current_user
+    user
   end
 
   private
@@ -14,7 +12,7 @@ class AuthorizeApiRequest
   attr_reader :headers
 
   def user
-    User.find(decode_auth_token[:id])
+    User.find(decode_auth_token[:user_id])
   end
 
   def decode_auth_token
