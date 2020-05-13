@@ -13,6 +13,6 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def set_current_user
-    AuthorizeApiRequest.new(request.headers['Authorization']).current_user
+    @current_user = AuthorizeApiRequest.new(request.headers['Authorization']).current_user
   end
 end

@@ -1,21 +1,17 @@
 class AuthorizeApiRequest
-  def initialize(headers)
-    @headers = headers
+  def initialize(token)
+    @token = token
   end
 
   def current_user
-    user
+    User.find(decode_auth_token[:user_id])
   end
 
   private
 
   attr_reader :headers
 
-  def user
-    User.find(decode_auth_token[:user_id])
-  end
-
   def decode_auth_token
-    @decode_auth_token = JwtToken.decode(headers)
+    @decode_auth_token = JwtToken.decode(token)
   end
 end
