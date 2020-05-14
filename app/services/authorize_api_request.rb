@@ -4,7 +4,7 @@ class AuthorizeApiRequest
   end
 
   def current_user
-    user = User.find_by(id: 404)
+    user = User.find_by(id: decode_auth_token[:user_id])
     raise ExceptionHandler::Unauthorized unless user
     user
   end
