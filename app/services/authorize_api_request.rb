@@ -4,14 +4,14 @@ class AuthorizeApiRequest
   end
 
   def current_user
-    User.find(decode_auth_token[:user_id])
+    user = User.find_by(id: 404)
+    raise ExceptionHandler::Unauthorized unless user
+    user
   end
 
   private
 
-  attr_reader :headers
-
   def decode_auth_token
-    @decode_auth_token = JwtToken.decode(token)
+    @decode_auth_token = JwtToken.decode(@token)
   end
 end

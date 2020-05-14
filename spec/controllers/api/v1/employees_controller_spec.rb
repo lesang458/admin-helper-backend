@@ -35,13 +35,13 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     end
   end
 
-  describe 'token flase' do
+  describe 'false token' do
     let!(:invalid_token) { SecureRandom.hex(64) }
     let!(:invalid_headers) { { authorization: invalid_token } }
 
     before(:each) { request.headers.merge! invalid_headers }
 
-    it 'should render ExceptionHandler::DecodeError' do
+    it 'should raise ExceptionHandler::DecodeError' do
       expect do
         JwtToken.decode nil
       end.to raise_error ExceptionHandler::DecodeError
