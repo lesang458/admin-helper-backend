@@ -17,9 +17,9 @@ RSpec.describe Api::V1::SessionsController do
       @user = FactoryBot.create :user
     end
 
-    it 'should response 404' do
+    it 'should response 400' do
       post :create, params: { email: 'unexist@gmail.com', password: '123456' }
-      expect(response).to have_http_status(404)
+      expect(response).to have_http_status(400)
     end
 
     it 'should response 400' do
