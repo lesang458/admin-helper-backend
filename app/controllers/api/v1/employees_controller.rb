@@ -1,5 +1,4 @@
 class Api::V1::EmployeesController < ApplicationController
-  include Authenticatable
   before_action :set_paginate, :set_current_user
   def index
     employees = @page.to_i <= 0 ? Employee.includes(:user).all : Employee.includes(:user).page(@page).per(@per_page)

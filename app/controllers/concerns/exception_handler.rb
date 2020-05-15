@@ -6,7 +6,7 @@ module ExceptionHandler
   class Unauthorized < StandardError; end
   included do
     rescue_from ExceptionHandler::Unauthorized do
-      render_error("Couldn't find user", :unauthorized)
+      render_error('User authentication failed', :unauthorized)
     end
 
     rescue_from ActiveRecord::RecordNotFound do |e|
