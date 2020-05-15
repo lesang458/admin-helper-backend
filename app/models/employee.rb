@@ -12,4 +12,10 @@ class Employee < ApplicationRecord
   def user_id
     user.id
   end
+
+  def self.search(params)
+    employees = Employee.includes(:user).all
+    employees = employees.where("first_name ILIKE :search", search: "%#{params[:search]}%") if params[:search].present?
+    employees
+  end
 end
