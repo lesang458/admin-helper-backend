@@ -5,10 +5,22 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
   before { FactoryBot.create_list(:employee, 50) }
 
   describe 'token' do
-    let!(:valid_token) { JwtToken.encode({ user_id: 3195 }) }
+    let!(:valid_token) { JwtToken.encode({ user_id: User.first.id }) }
     let!(:valid_headers) { { authorization: valid_token } }
 
     before(:each) { request.headers.merge! valid_headers }
+
+    describe 'GET# employee' do
+      it 'should pass with real param id' do
+        get :show, params: { id: Employee.first.id }
+        expect(response.status).to eq(200)
+      end
+
+      it 'return status 404 with fake param id' do
+        get :show, params: { id: 'fake_id' }
+        expect(response.status).to eq(404)
+      end
+    end
 
     describe 'GET#list employees' do
       it 'should pass with token and non params' do

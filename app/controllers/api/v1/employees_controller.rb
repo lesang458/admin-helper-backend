@@ -7,7 +7,11 @@ class Api::V1::EmployeesController < ApplicationController
 
   def show
     employee = Employee.find_by(id: params[:id])
-    render json: { employee: employee } if employee
+    if employee
+      render json: { employee: employee }
+    else
+      render_error("Couldn't find employee", :not_found)
+    end
   end
 
   private
