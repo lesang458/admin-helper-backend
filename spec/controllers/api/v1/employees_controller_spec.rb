@@ -23,9 +23,6 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(404)
       end
 
-      let!(:invalid_token) { SecureRandom.hex(64) }
-      let!(:invalid_headers) { { authorization: invalid_token } }
-
       it 'return status 401 with token false' do
         request.headers.merge! invalid_headers
         get :show, params: { id: Employee.first.id }
