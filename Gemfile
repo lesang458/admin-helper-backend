@@ -15,9 +15,9 @@ gem 'jwt'
 gem 'kaminari-activerecord'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
-# Use Puma as the app server
+# Puma processes requests using a C-optimized Ragel extension  that provides fast, accurate HTTP 1.1 protocol parsing in a portable way. Puma then serves the request using a thread pool
 gem 'puma', '~> 4.1'
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+# Create full-stack web framework
 gem 'rails', '~> 6.0.2', '>= 6.0.2.2'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
