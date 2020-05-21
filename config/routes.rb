@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      get 'employee', to: 'employees#show'
       post  'login', to: 'sessions#create'
-      get 'employees', to: 'employees#index'
+      resources :employees, only: %i[index show]
     end
   end
 end
