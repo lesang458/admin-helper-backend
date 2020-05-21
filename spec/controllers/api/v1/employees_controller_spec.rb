@@ -10,7 +10,30 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
     before(:each) { request.headers.merge! valid_headers }
 
+    describe 'GET# employee' do
+      let!(:invalid_token) { SecureRandom.hex(64) }
+      let!(:invalid_headers) { { authorization: invalid_token } }
+      it 'should pass with real param id' do
+        get :show, params: { id: Employee.first.id }
+        expect(response.status).to eq(200)
+      end
+
+      it 'return status 404 with fake param id' do
+        get :show, params: { id: 'fake_id' }
+        expect(response.status).to eq(404)
+      end
+
+      it 'return status 401 with token false' do
+        request.headers.merge! invalid_headers
+        get :show, params: { id: Employee.first.id }
+        expect(response.status).to eq(401)
+      end
+    end
+
     describe 'GET#list employees' do
+      let!(:invalid_token) { SecureRandom.hex(64) }
+      let!(:invalid_headers) { { authorization: invalid_token } }
+
       it 'should pass with token and non params' do
         get :index
         expect(response.status).to eq(200)
@@ -30,9 +53,6 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(json_response['total_pages']).to eq(17)
         expect(json_response['total_count']).to eq(50)
       end
-
-      let!(:invalid_token) { SecureRandom.hex(64) }
-      let!(:invalid_headers) { { authorization: invalid_token } }
 
       it 'return status 401 with token false' do
         request.headers.merge! invalid_headers

@@ -9,6 +9,8 @@ gem 'active_model_serializers'
 gem 'bcrypt', '~> 3.1.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
+# Create fake data
+gem 'ffaker'
 # Use to create tokens with high security and security, avoiding theft between different systems
 gem 'jwt'
 # Use pagination
@@ -34,8 +36,6 @@ end
 group :development, :test do
   # Create object for Uni-test
   gem 'factory_bot_rails'
-  # Create fake data
-  gem 'ffaker'
   # Adds step-by-step debugging and stack navigation capabilities to pry using byebug.
   gem 'pry-byebug'
   # Brings the RSpec testing framework to Ruby on Rails as a drop-in alternative to its default testing framework

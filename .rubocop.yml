@@ -19,6 +19,9 @@ AllCops:
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
 Layout/LineLength:
   Max: 200
 
@@ -72,3 +75,6 @@ Style/HashTransformValues:
 
 Style/RedundantSelf:
   Enabled: false
+
+Style/SlicingWithRange:
+  Enabled: true
