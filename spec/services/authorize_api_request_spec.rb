@@ -21,13 +21,13 @@ RSpec.describe AuthorizeApiRequest, type: :service do
   end
 
   describe 'user' do
-    let!(:valid_token_flase) { JwtToken.encode({ user_id: 404 }) }
+    let!(:invalid_token) { JwtToken.encode({ user_id: 404 }) }
     it 'should raise ExceptionHandler::Unauthorized if Could not find user' do
       expect do
         AuthorizeApiRequest.new(valid_token_flase).current_user
       end.to raise_error ExceptionHandler::Unauthorized
     end
-    let!(:valid_token_true) { JwtToken.encode({ user_id: User.first.id }) }
+    let!(:valid_token) { JwtToken.encode({ user_id: User.first.id }) }
     it 'should return user if find user' do
       user = AuthorizeApiRequest.new(valid_token_true).current_user
       expect(user.email).to eq User.first.email
