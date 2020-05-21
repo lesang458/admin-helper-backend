@@ -2,6 +2,8 @@ require 'rails_helper'
 require 'jwt_token'
 
 RSpec.describe AuthorizeApiRequest, type: :service do
+  before { FactoryBot.create_list(:employee, 50) }
+
   payload = { 'id' => 404 }
   describe 'decode' do
     it 'should raise ExceptionHandler::DecodeError with token false' do
@@ -19,17 +21,16 @@ RSpec.describe AuthorizeApiRequest, type: :service do
   end
 
   describe 'user' do
-    let!(:valid_token) { JwtToken.encode({ user_id: 404 }) }
-    let!(:user_id) { JwtToken.encode({ user_id: 3195 }) }
+    let!(:invalid_token) { JwtToken.encode({ user_id: 404 }) }
     it 'should raise ExceptionHandler::Unauthorized if Could not find user' do
       expect do
-        AuthorizeApiRequest.new(valid_token).current_user
+        AuthorizeApiRequest.new(invalid_token).current_user
       end.to raise_error ExceptionHandler::Unauthorized
     end
-
+    let!(:valid_token) { JwtToken.encode({ user_id: User.first.id }) }
     it 'should return user if find user' do
-      user = AuthorizeApiRequest.new(user_id).current_user
-      expect(user.email).to eq 'jayna_rath@spencer.com'
+      user = AuthorizeApiRequest.new(valid_token).current_user
+      expect(user.email).to eq User.first.email
     end
   end
 end
