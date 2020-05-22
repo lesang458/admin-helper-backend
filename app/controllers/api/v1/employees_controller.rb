@@ -4,7 +4,7 @@ class Api::V1::EmployeesController < ApplicationController
     employees = Employee.search(params)
     set_paginate
     employees = @page.to_i <= 0 ? employees : employees.page(@page).per(@per_page)
-    render_collection(employees, EmployeeSerializer) unless employees.blank?
+    render_collection(employees, EmployeeSerializer)
   end
 
   def show

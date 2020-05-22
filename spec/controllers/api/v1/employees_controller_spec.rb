@@ -43,12 +43,31 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should pass with token and return 204' do
         get :index, params: { search: '404 Not Found' }
-        expect(response.status).to eq(204)
+        expect(response.status).to eq(200)
+      end
+
+      it 'shoud pass with upper case' do
+        get :index, params: { search: Employee.first.last_name.upcase }
+        expect(response.status).to eq(200)
+        json_response = JSON.parse(response.body)['pagination']
+        expect(json_response['current_page']).to eq(1)
+        expect(json_response['page_size']).to eq(1)
+        expect(json_response['total_pages']).to eq(1)
+        expect(json_response['total_count']).to eq(1)
+      end
+
+      it 'should pass with lower case' do
+        get :index, params: { search: Employee.first.last_name.downcase }
+        json_response = JSON.parse(response.body)['pagination']
+        expect(json_response['current_page']).to eq(1)
+        expect(json_response['page_size']).to eq(1)
+        expect(json_response['total_pages']).to eq(1)
+        expect(json_response['total_count']).to eq(1)
       end
 
       it 'should pass with phone number and return 204' do
         get :index, params: { search: '093527', per_page: 1, page: 3 }
-        expect(response.status).to eq(204)
+        expect(response.status).to eq(200)
       end
 
       it 'should pass with phone number and return 200' do
