@@ -18,7 +18,6 @@ class Employee < ApplicationRecord
   def self.search(params)
     employees = Employee.includes(:user).all
     employees = employees.where('first_name ILIKE :search OR last_name ILIKE :search OR phone_number ILIKE :search', search: "%#{params[:search]}%") if params[:search].present?
-    raise ExceptionHandler::NoContent if employees.blank?
     employees
   end
 end
