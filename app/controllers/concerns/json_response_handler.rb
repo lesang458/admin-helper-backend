@@ -21,4 +21,8 @@ module JsonResponseHandler
       }
     }
   end
+
+  def render_resource(obj)
+    render json: { "#{obj.class.to_s.downcase}": obj }
+  end
 end

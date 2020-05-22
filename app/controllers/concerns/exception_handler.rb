@@ -18,8 +18,8 @@ module ExceptionHandler
       render_error(e.message, :not_found)
     end
 
-    rescue_from ExceptionHandler::DecodeError do |e|
-      render_error(e.message, :unauthorized)
+    rescue_from ExceptionHandler::DecodeError do
+      render_error('User authentication failed', :unauthorized)
     end
 
     rescue_from ExceptionHandler::ExpiredSignature do |_e|

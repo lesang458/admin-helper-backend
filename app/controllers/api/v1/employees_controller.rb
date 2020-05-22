@@ -7,6 +7,11 @@ class Api::V1::EmployeesController < ApplicationController
     render_collection(employees, EmployeeSerializer)
   end
 
+  def show
+    employee = Employee.find(params[:id])
+    render_resource employee
+  end
+
   private
 
   def set_paginate
