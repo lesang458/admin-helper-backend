@@ -5,7 +5,7 @@ class Employee < ApplicationRecord
   enum status: { ACTIVE: 'ACTIVE', FORMER: 'FORMER' }
   validates :status, presence: true, inclusion: { in: %w[ACTIVE FORMER] }
   VALID_PHONE_NUMBER_REGEX = /\d[0-9]\)*\z/.freeze
-  validates :phone_number, presence: true, length: { maximum: 255 },
+  validates :phone_number, presence: true, length: { maximum: 25 },
                            format: { with: VALID_PHONE_NUMBER_REGEX }
   def user_email
     user.email

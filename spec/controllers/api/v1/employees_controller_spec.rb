@@ -7,12 +7,12 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
   describe 'token' do
     let!(:valid_token) { JwtToken.encode({ user_id: User.first.id }) }
     let!(:valid_headers) { { authorization: valid_token } }
+    let!(:invalid_token) { SecureRandom.hex(64) }
+    let!(:invalid_headers) { { authorization: invalid_token } }
 
     before(:each) { request.headers.merge! valid_headers }
 
     describe 'GET# employee' do
-      let!(:invalid_token) { SecureRandom.hex(64) }
-      let!(:invalid_headers) { { authorization: invalid_token } }
       it 'should pass with real param id' do
         get :show, params: { id: Employee.first.id }
         expect(response.status).to eq(200)
@@ -55,8 +55,6 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(json_response['total_pages']).to eq(17)
         expect(json_response['total_count']).to eq(50)
       end
-      let!(:invalid_token) { SecureRandom.hex(64) }
-      let!(:invalid_headers) { { authorization: invalid_token } }
 
       it 'should pass with token and non params' do
         get :index
