@@ -24,8 +24,6 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       it 'should pass with token and return 204' do
         get :index, params: { search: '404 Not Found' }
         expect(response.status).to eq(204)
-        json_response = JSON.parse(response.body)
-        expect(json_response['message']).to eq('No Content')
       end
 
       it 'should pass with token and params search and params pagination' do

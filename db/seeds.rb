@@ -1,7 +1,7 @@
 100.times do |i|
   user = User.create!(
     email: FFaker::Internet.email,
-    encrypted_password: "12345678"
+    encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a"
   )
   user.create_employee(
     first_name: FFaker::Name.first_name,
