@@ -4,12 +4,7 @@ module ExceptionHandler
   class DecodeError < StandardError; end
   class ExpiredSignature < StandardError; end
   class Unauthorized < StandardError; end
-  class NoContent < StandardError; end
   included do
-    rescue_from ExceptionHandler::NoContent do
-      render_error('No Content', :no_content)
-    end
-
     rescue_from ExceptionHandler::Unauthorized do
       render_error('User authentication failed', :unauthorized)
     end

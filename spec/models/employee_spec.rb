@@ -3,6 +3,19 @@ require 'rails_helper'
 RSpec.describe Employee, type: :model do
   before { @employee = FactoryBot.create :employee }
   subject { @employee }
+
+  describe 'phone_number' do
+    it { should respond_to(:phone_number) }
+    it { should allow_value('123456789').for(:phone_number) }
+    it { should_not allow_value('12345678900987654321123456').for(:phone_number) }
+    it 'should lenght less than or equal 25' do
+      should validate_length_of(:phone_number).is_at_most(25)
+    end
+    it 'should presence' do
+      should validate_presence_of(:phone_number)
+    end
+  end
+
   describe 'first name' do
     it { should respond_to(:first_name) }
     it { should allow_value('MyString').for(:first_name) }

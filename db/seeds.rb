@@ -13,11 +13,11 @@
   )
 end
 
-admin = User.create!(
+former_user = User.create!(
   email: "admin@gmail.com",
   encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a"
 )
-admin.create_employee(
+former_user.create_employee(
   first_name: FFaker::Name.first_name,
   last_name: FFaker::Name.last_name,
   birthday: FFaker::IdentificationESCO.expedition_date,
