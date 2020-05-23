@@ -65,7 +65,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(json_response['total_count']).to eq(1)
       end
 
-      it 'should pass with phone number and return 204' do
+      it 'should pass with phone number and return 200' do
         get :index, params: { search: '093527', per_page: 1, page: 3 }
         expect(response.status).to eq(200)
       end
