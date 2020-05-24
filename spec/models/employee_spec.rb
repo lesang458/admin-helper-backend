@@ -1,8 +1,33 @@
 require 'rails_helper'
 
 RSpec.describe Employee, type: :model do
-  before { @employee = FactoryBot.create :employee }
-  subject { @employee }
+  before { FactoryBot.create(:employee, phone_number: '0935270046') }
+  before { @employee = FactoryBot.create(:employee, first_name: 'Tran', last_name: 'Huy', phone_number: '0935270046') }
+  describe 'search' do
+    it 'should return employe in list employees with search first name' do
+      employees = Employee.search({ search: 'tra' })
+      expect(employees.count).to eq(2)
+      expect(employees.ids).to include @employee.id
+    end
+
+    it 'should return employe in list employees with search last name' do
+      employees = Employee.search({ search: 'hu' })
+      expect(employees.count).to eq(2)
+      expect(employees.ids).to include @employee.id
+    end
+
+    it 'should return employe in list employees with search phone number' do
+      employees = Employee.search({ search: '0935' })
+      expect(employees.count).to eq(2)
+      expect(employees.ids).to include @employee.id
+    end
+
+    it 'should return employe not in list employees' do
+      employees = Employee.search({ search: 'false' })
+      expect(employees.count).to eq(0)
+      expect(employees.ids).not_to include @employee.id
+    end
+  end
 
   describe 'phone_number' do
     it { should respond_to(:phone_number) }

@@ -41,6 +41,11 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(json_response['total_count']).to eq(1)
       end
 
+      it 'should return 200' do
+        get :index, params: { search: 'tra' }
+        expect(response.status).to eq(200)
+      end
+
       it 'should pass with token and return 204' do
         get :index, params: { search: '404 Not Found' }
         expect(response.status).to eq(200)
@@ -87,7 +92,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(json_response['current_page']).to eq(3)
         expect(json_response['page_size']).to eq(3)
         expect(json_response['total_pages']).to eq(17)
-        expect(json_response['total_count']).to eq(50)
+        expect(json_response['total_count']).to eq(51)
       end
 
       it 'should pass with token and non params' do
@@ -97,7 +102,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(json_response['current_page']).to eq(1)
         expect(json_response['page_size']).to eq(20)
         expect(json_response['total_pages']).to eq(3)
-        expect(json_response['total_count']).to eq(51)
+        expect(json_response['total_count']).to eq(52)
       end
 
       it 'should pass with token and params' do
@@ -106,8 +111,8 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(3)
         expect(json_response['page_size']).to eq(3)
-        expect(json_response['total_pages']).to eq(17)
-        expect(json_response['total_count']).to eq(51)
+        expect(json_response['total_pages']).to eq(18)
+        expect(json_response['total_count']).to eq(52)
       end
 
       it 'return status 401 with token false' do
