@@ -2,8 +2,11 @@ require 'rails_helper'
 require 'jwt_token'
 
 RSpec.describe Api::V1::EmployeesController, type: :controller do
-  before { FactoryBot.create_list(:employee, 50) }
-  before { FactoryBot.create(:employee, phone_number: '0935270046') }
+  before(:each) do
+    Employee.delete_all
+  end
+  before { FactoryBot.create(:employee, first_name: 'aaabbbccc', last_name: 'gmail.com', phone_number: '0935208940') }
+  before { @employee = FactoryBot.create(:employee, first_name: 'Tran', last_name: 'Huy', phone_number: '0935270046') }
   describe 'token' do
     let!(:valid_token) { JwtToken.encode({ user_id: User.first.id }) }
     let!(:valid_headers) { { authorization: valid_token } }
@@ -42,7 +45,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       end
 
       it 'should return 200' do
-        get :index, params: { search: 'tra' }
+        get :index, params: { search: 'trannnn' }
         expect(response.status).to eq(200)
       end
 
@@ -90,9 +93,9 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(200)
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(3)
-        expect(json_response['page_size']).to eq(3)
-        expect(json_response['total_pages']).to eq(17)
-        expect(json_response['total_count']).to eq(51)
+        expect(json_response['page_size']).to eq(0)
+        expect(json_response['total_pages']).to eq(0)
+        expect(json_response['total_count']).to eq(0)
       end
 
       it 'should pass with token and non params' do
@@ -100,9 +103,9 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(200)
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(1)
-        expect(json_response['page_size']).to eq(20)
-        expect(json_response['total_pages']).to eq(3)
-        expect(json_response['total_count']).to eq(52)
+        expect(json_response['page_size']).to eq(2)
+        expect(json_response['total_pages']).to eq(1)
+        expect(json_response['total_count']).to eq(2)
       end
 
       it 'should pass with token and params' do
@@ -110,9 +113,9 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(200)
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(3)
-        expect(json_response['page_size']).to eq(3)
-        expect(json_response['total_pages']).to eq(18)
-        expect(json_response['total_count']).to eq(52)
+        expect(json_response['page_size']).to eq(0)
+        expect(json_response['total_pages']).to eq(1)
+        expect(json_response['total_count']).to eq(2)
       end
 
       it 'return status 401 with token false' do

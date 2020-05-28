@@ -1,18 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe Employee, type: :model do
-  before { FactoryBot.create(:employee, phone_number: '0935270046') }
+  before(:each) do
+    Employee.delete_all
+  end
+  before { FactoryBot.create(:employee, first_name: 'aaabbbccc', last_name: 'gmail.com', phone_number: '0935208940') }
   before { @employee = FactoryBot.create(:employee, first_name: 'Tran', last_name: 'Huy', phone_number: '0935270046') }
   describe 'search' do
     it 'should return employe in list employees with search first name' do
       employees = Employee.search({ search: 'tra' })
-      expect(employees.count).to eq(2)
+      expect(employees.count).to eq(1)
       expect(employees.ids).to include @employee.id
     end
 
     it 'should return employe in list employees with search last name' do
       employees = Employee.search({ search: 'hu' })
-      expect(employees.count).to eq(2)
+      expect(employees.count).to eq(1)
       expect(employees.ids).to include @employee.id
     end
 
