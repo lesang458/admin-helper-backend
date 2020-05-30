@@ -7,12 +7,11 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
   describe 'token' do
     let!(:valid_token) { JwtToken.encode({ user_id: User.first.id }) }
     let!(:valid_headers) { { authorization: valid_token } }
-
+    let!(:invalid_token) { SecureRandom.hex(64) }
+    let!(:invalid_headers) { { authorization: invalid_token } }
     before(:each) { request.headers.merge! valid_headers }
 
     describe 'GET# employee' do
-      let!(:invalid_token) { SecureRandom.hex(64) }
-      let!(:invalid_headers) { { authorization: invalid_token } }
       it 'should pass with real param id' do
         get :show, params: { id: Employee.first.id }
         expect(response.status).to eq(200)
@@ -31,8 +30,16 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     end
 
     describe 'GET#list employees' do
-      let!(:invalid_token) { SecureRandom.hex(64) }
-      let!(:invalid_headers) { { authorization: invalid_token } }
+      it 'should status 200 with birthday and joned company date' do
+        get :index, params: { birthday_from: '1995-10-30', birthday_to: '1999-10-30', joined_company_date_from: '2015-11-24', joined_company_date_to: '2020-01-24', status: 'ACTIVE' }
+        expect(response.status).to eq(200)
+      end
+
+      it 'should status 401 with token false' do
+        request.headers.merge! invalid_headers
+        get :index, params: { birthday_from: '1995-10-30', birthday_to: '1999-10-30', joined_company_date_from: '2015-11-24', joined_company_date_to: '2020-01-24', status: 'ACTIVE' }
+        expect(response.status).to eq(401)
+      end
 
       it 'should pass with token and non params' do
         get :index
