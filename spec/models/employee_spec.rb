@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Employee, type: :model do
-  before(:each) do
+  before(:all) do
     Employee.delete_all
+    FactoryBot.create(:employee, first_name: 'aaabbbccc', last_name: 'gmail.com', phone_number: '0935208940')
+    @employee = FactoryBot.create(:employee, first_name: 'Tran', last_name: 'Huy', phone_number: '0935270046')
   end
-  before { FactoryBot.create(:employee, first_name: 'aaabbbccc', last_name: 'gmail.com', phone_number: '0935208940') }
-  before { @employee = FactoryBot.create(:employee, first_name: 'Tran', last_name: 'Huy', phone_number: '0935270046') }
   describe 'search' do
     it 'should return employe in list employees with search first name' do
       employees = Employee.search({ search: 'tra' })
