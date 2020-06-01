@@ -2,7 +2,10 @@ require 'rails_helper'
 require 'jwt_token'
 
 RSpec.describe Api::V1::EmployeesController, type: :controller do
-  before { FactoryBot.create_list(:employee, 50) }
+  before(:all) {
+    Employee.delete_all
+    FactoryBot.create_list(:employee, 50)
+  }
 
   describe 'token' do
     let!(:valid_token) { JwtToken.encode({ user_id: User.first.id }) }
@@ -30,7 +33,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     end
 
     describe 'GET#list employees' do
-      it 'should status 200 with birthday and joned company date' do
+      it 'should status 200 with birthday and joined company date' do
         get :index, params: { birthday_from: '1995-10-30', birthday_to: '1999-10-30', joined_company_date_from: '2015-11-24', joined_company_date_to: '2020-01-24', status: 'ACTIVE' }
         expect(response.status).to eq(200)
       end

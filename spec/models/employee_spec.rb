@@ -1,24 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe Employee, type: :model do
-  before(:each) do
+  before(:all) do
     Employee.delete_all
+    FactoryBot.create(:employee, birthday: '1995-10-30', joined_company_date: '2015-11-24')
+    FactoryBot.create(:employee, birthday: '1997-10-30', joined_company_date: '2017-11-24')
+    FactoryBot.create(:employee, birthday: '1999-10-30', joined_company_date: '2019-11-24')
+    @employee = FactoryBot.create(:employee, birthday: '1999-10-04', joined_company_date: '2020-01-24')
+    FactoryBot.create(:employee, birthday: '1998-05-27', joined_company_date: '2019-09-22')
+    FactoryBot.create(:employee, birthday: '1995-12-30', joined_company_date: '2015-12-24', status: 'FORMER')
   end
-  before { FactoryBot.create(:employee, birthday: '1995-10-30', joined_company_date: '2015-11-24') }
-  before { FactoryBot.create(:employee, birthday: '1997-10-30', joined_company_date: '2017-11-24') }
-  before { FactoryBot.create(:employee, birthday: '1999-10-30', joined_company_date: '2019-11-24') }
-  before { @employee = FactoryBot.create(:employee, birthday: '1999-10-04', joined_company_date: '2020-01-24') }
-  before { FactoryBot.create(:employee, birthday: '1998-05-27', joined_company_date: '2019-09-22') }
-  before { FactoryBot.create(:employee, birthday: '1995-12-30', joined_company_date: '2015-12-24', status: 'FORMER') }
 
   describe 'search' do
-    it 'should birthay > 1995-10-30 and birthday < 1999-10-30' do
+    it 'should birthday >= 1995-10-30 and birthday <= 1999-10-30' do
       employees = Employee.search({ birthday_from: '1995-10-30', birthday_to: '1999-10-30' })
       expect(employees.count).to eq(6)
       expect(employees.ids).to include @employee.id
     end
 
-    it 'should joined company date > 2015-11-24 and joined company date < 2020-01-24' do
+    it 'should joined company date >= 2015-11-24 and joined company date <= 2020-01-24' do
       employees = Employee.search({ joined_company_date_from: '2015-11-24', joined_company_date_to: '2020-01-24' })
       expect(employees.count).to eq(6)
       expect(employees.ids).to include @employee.id
