@@ -39,9 +39,7 @@ RSpec.describe Employee, type: :model do
     it 'should lenght less than or equal 25' do
       should validate_length_of(:phone_number).is_at_most(25)
     end
-    it 'should presence' do
-      should validate_presence_of(:phone_number)
-    end
+    it { should allow_value(nil).for(:phone_number) }
   end
 
   describe 'first name' do
