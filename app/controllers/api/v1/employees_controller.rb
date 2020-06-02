@@ -1,8 +1,9 @@
 class Api::V1::EmployeesController < ApplicationController
   before_action :set_current_user
   def index
+    employees = Employee.search(params)
     set_paginate
-    employees = @page.to_i <= 0 ? Employee.includes(:user).all : Employee.includes(:user).page(@page).per(@per_page)
+    employees = @page.to_i <= 0 ? employees : employees.page(@page).per(@per_page)
     render_collection(employees, EmployeeSerializer)
   end
 
