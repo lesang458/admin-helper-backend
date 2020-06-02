@@ -19,6 +19,8 @@ gem 'kaminari-activerecord'
 gem 'pg', '>= 0.18', '< 2.0'
 # Puma processes requests using a C-optimized Ragel extension  that provides fast, accurate HTTP 1.1 protocol parsing in a portable way. Puma then serves the request using a thread pool
 gem 'puma', '~> 4.1'
+# Rack::Cors provides support for Cross-Origin Resource Sharing (CORS) for Rack compatible web applications.
+gem 'rack-cors'
 # Create full-stack web framework
 gem 'rails', '~> 6.0.2', '>= 6.0.2.2'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

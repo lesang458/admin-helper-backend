@@ -40,8 +40,72 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should status 401 with token false' do
         request.headers.merge! invalid_headers
-        get :index, params: { birthday_from: '1995-10-30', birthday_to: '1999-10-30', joined_company_date_from: '2015-11-24', joined_company_date_to: '2020-01-24', status: 'ACTIVE' }
+        get :index
         expect(response.status).to eq(401)
+      end
+
+      it 'should pass with token and params search' do
+        get :index, params: { search: Employee.first.first_name }
+        expect(response.status).to eq(200)
+        json_response = JSON.parse(response.body)['pagination']
+        expect(json_response['current_page']).to eq(1)
+        expect(json_response['page_size']).to eq(20)
+        expect(json_response['total_pages']).to eq(3)
+        expect(json_response['total_count']).to eq(50)
+      end
+
+      it 'should return 200' do
+        get :index, params: { search: 'trannnn' }
+        expect(response.status).to eq(200)
+      end
+
+      it 'should pass with token and return 204' do
+        get :index, params: { search: '404 Not Found' }
+        expect(response.status).to eq(200)
+      end
+
+      it 'shoud pass with upper case' do
+        get :index, params: { search: Employee.first.last_name.upcase }
+        expect(response.status).to eq(200)
+        json_response = JSON.parse(response.body)['pagination']
+        expect(json_response['current_page']).to eq(1)
+        expect(json_response['page_size']).to eq(20)
+        expect(json_response['total_pages']).to eq(3)
+        expect(json_response['total_count']).to eq(50)
+      end
+
+      it 'should pass with lower case' do
+        get :index, params: { search: Employee.first.last_name.downcase }
+        json_response = JSON.parse(response.body)['pagination']
+        expect(json_response['current_page']).to eq(1)
+        expect(json_response['page_size']).to eq(20)
+        expect(json_response['total_pages']).to eq(3)
+        expect(json_response['total_count']).to eq(50)
+      end
+
+      it 'should pass with phone number and return 200' do
+        get :index, params: { search: '093527', per_page: 1, page: 3 }
+        expect(response.status).to eq(200)
+      end
+
+      it 'should pass with phone number and return 200' do
+        get :index, params: { search: '093527', per_page: 1, page: 1 }
+        expect(response.status).to eq(200)
+        json_response = JSON.parse(response.body)['pagination']
+        expect(json_response['current_page']).to eq(1)
+        expect(json_response['page_size']).to eq(1)
+        expect(json_response['total_pages']).to eq(50)
+        expect(json_response['total_count']).to eq(50)
+      end
+
+      it 'should pass with token and params search and params pagination' do
+        get :index, params: { per_page: 3, page: 3, search: '0123456789' }
+        expect(response.status).to eq(200)
+        json_response = JSON.parse(response.body)['pagination']
+        expect(json_response['current_page']).to eq(3)
+        expect(json_response['page_size']).to eq(3)
+        expect(json_response['total_pages']).to eq(17)
+        expect(json_response['total_count']).to eq(50)
       end
 
       it 'should pass with token and non params' do
