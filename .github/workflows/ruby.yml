@@ -48,11 +48,11 @@ jobs:
     - name: Run Rubocop
       run: |
         bundle exec rubocop -c .rubocop.yml
-    - name: Test with rake
+    - name: Test with RSpec
       env:
         PGHOST: 127.0.0.1
         RAILS_ENV: test
       run: |
         bundle exec rails db:create
         bundle exec rails db:migrate
-        bundle exec rails test
+        bundle exec rspec
