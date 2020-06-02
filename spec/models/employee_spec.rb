@@ -68,14 +68,14 @@ RSpec.describe Employee, type: :model do
 
     it 'should return employe in list employees with search phone number' do
       employees = Employee.search({ search: '0935' })
-      expect(employees.count).to eq(6)
-      expect(employees.ids).to include @employee.id
+      expect(employees.count).to eq(0)
+      expect(employees.ids).not_to include @employee.id
     end
 
     it 'should return employe not in list employees' do
       employees = Employee.search({ search: 'false' })
-      expect(employees.count).to eq(6)
-      expect(employees.ids).to include @employee.id
+      expect(employees.count).to eq(0)
+      expect(employees.ids).not_to include @employee.id
     end
   end
 

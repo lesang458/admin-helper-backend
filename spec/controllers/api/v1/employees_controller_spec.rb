@@ -93,9 +93,9 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(200)
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(1)
-        expect(json_response['page_size']).to eq(1)
-        expect(json_response['total_pages']).to eq(50)
-        expect(json_response['total_count']).to eq(50)
+        expect(json_response['page_size']).to eq(0)
+        expect(json_response['total_pages']).to eq(0)
+        expect(json_response['total_count']).to eq(0)
       end
 
       it 'should pass with token and params search and params pagination' do
