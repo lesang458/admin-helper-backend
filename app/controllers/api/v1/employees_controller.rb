@@ -13,7 +13,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def create
-    user = User.create email: params[:email], encrypted_password: User.generate_encrypted_password('123456')
+    user = User.new email: params[:email], encrypted_password: User.generate_encrypted_password('123456')
     employee = Employee.new(employee_params)
     employee.user = user if user.save
     if employee.save
