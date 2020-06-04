@@ -20,4 +20,8 @@ class Employee < ApplicationRecord
     employees = employees.where('first_name ILIKE :search OR last_name ILIKE :search OR phone_number ILIKE :search', search: "%#{params[:search]}%") if params[:search].present?
     employees
   end
+
+  def self.sort_by(query)
+    self.order(query)
+  end
 end
