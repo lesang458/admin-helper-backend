@@ -7,15 +7,9 @@ class Employee < ApplicationRecord
   VALID_PHONE_NUMBER_REGEX = /\d[0-9]\)*\z/.freeze
   validates :phone_number, presence: true, allow_nil: true, length: { maximum: 25 },
                            format: { with: VALID_PHONE_NUMBER_REGEX }
-  validate :birthday_maximum_is_today
-  validate :joined_company_maximum_is_today
-
-  def birthday_maximum_is_today
-    errors.add(:birthday, 'maximum is today') if birthday.present? && birthday > Time.zone.now
-  end
-
-  def joined_company_maximum_is_today
-    errors.add(:joined_company_date, 'maximum is today') if joined_company_date.present? && joined_company_date > Time.zone.now
+  validate :birthday_in_future
+  def birthday_in_future
+    errors.add(:birthday, 'is in future') if birthday.present? && birthday > Time.zone.now
   end
 
   def user_email

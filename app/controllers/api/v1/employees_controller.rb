@@ -1,4 +1,5 @@
 class Api::V1::EmployeesController < ApplicationController
+  DEFAULTPASSWORD = '123456'.freeze
   before_action :set_current_user
   def index
     employees = Employee.search(params)
@@ -13,7 +14,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def create
-    user = User.new email: params[:email], encrypted_password: User.generate_encrypted_password('123456')
+    user = User.new email: params[:email], encrypted_password: User.generate_encrypted_password(DEFAULTPASSWORD)
     employee = Employee.new(employee_params)
     employee.user = user if user.save
     if employee.save
