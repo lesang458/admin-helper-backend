@@ -16,7 +16,7 @@ class Api::V1::EmployeesController < ApplicationController
   def create
     user = User.new email: params[:email], encrypted_password: User.generate_encrypted_password(DEFAULTPASSWORD)
     employee = Employee.new(employee_params)
-    employee.user = user if user.save
+    employee.user = user if user.save!
     if employee.save
       render_resource employee, :created
     else

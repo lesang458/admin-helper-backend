@@ -32,19 +32,19 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(201)
       end
 
-      it 'should return 400 with empty email' do
+      it 'should return 422 with empty email' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
       end
 
-      it 'should return 400 with invalid email' do
+      it 'should return 422 with invalid email' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
       end
 
-      it 'should return 400 with invalid email' do
+      it 'should return 422 with invalid email' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
       end
 
       it 'should return 400 with empty first_name' do
@@ -69,11 +69,6 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 400 with birthday is after today' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail.com', birthday: '2999-02-02', joined_company_date: '2019-11-23' }
-        expect(response.status).to eq(400)
-      end
-
-      it 'should return 400 with joined company date is after today' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail.com', birthday: '1999-02-02', joined_company_date: '2919-11-23' }
         expect(response.status).to eq(400)
       end
     end
