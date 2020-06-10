@@ -4,8 +4,37 @@ RSpec.describe Employee, type: :model do
   before(:all) do
     Employee.delete_all
     FactoryBot.create(:employee, first_name: 'aaabbbccc', last_name: 'gmail.com', phone_number: '0935208940')
+    FactoryBot.create(:employee, first_name: 'Tu', last_name: 'Quyen', phone_number: '0905123456')
+    FactoryBot.create(:employee, first_name: 'Ngoc', last_name: 'Diem', phone_number: '0907567765')
+    FactoryBot.create(:employee, first_name: 'Ngoc', last_name: 'An', phone_number: '0817227509')
     @employee = FactoryBot.create(:employee, first_name: 'Tran', last_name: 'Huy', phone_number: '0935270046')
   end
+  describe 'sort' do
+    it 'should returns sorted employee list with first_name' do
+      employees = Employee.sort_by('first_name asc')
+      expect(employees.first.first_name).to eq('aaabbbccc')
+      expect(employees.second.last_name).to eq('Diem')
+      expect(employees.third.last_name).to eq('An')
+      expect(employees.fourth).to eq(@employee)
+    end
+
+    it 'should returns sorted employee list with last_name' do
+      employees = Employee.sort_by('last_name asc')
+      expect(employees.first.last_name).to eq('An')
+      expect(employees.second.last_name).to eq('Diem')
+      expect(employees.third.last_name).to eq('gmail.com')
+      expect(employees.fourth).to eq(@employee)
+    end
+
+    it 'should returns sorted employee list with last_name and first_name' do
+      employees = Employee.sort_by('first_name asc,last_name asc')
+      expect(employees.first.first_name).to eq('aaabbbccc')
+      expect(employees.second.last_name).to eq('An')
+      expect(employees.third.last_name).to eq('Diem')
+      expect(employees.fourth).to eq(@employee)
+    end
+  end
+
   describe 'search' do
     it 'should return employe in list employees with search first name' do
       employees = Employee.search({ search: 'tra' })

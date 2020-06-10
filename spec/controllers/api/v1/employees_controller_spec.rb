@@ -34,6 +34,16 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     end
 
     describe 'GET#list employees' do
+      it 'should pass with real param id' do
+        get :index, params: { sort: 'first_name:ASC,last_name:desc' }
+        expect(response.status).to eq(200)
+      end
+
+      it 'should not pass with real param id' do
+        get :index, params: { sort: 'first_nameq:ASC,last_name:desc' }
+        expect(response.status).to eq(400)
+      end
+
       it 'should pass with token and params search' do
         get :index, params: { search: Employee.first.first_name }
         expect(response.status).to eq(200)
