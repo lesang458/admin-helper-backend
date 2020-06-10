@@ -47,29 +47,29 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(422)
       end
 
-      it 'should return 400 with empty first_name' do
+      it 'should return 422 with empty first_name' do
         post :create, params: { first_name: '', last_name: 'hanh', email: 'danghanh+1@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
       end
 
-      it 'should return 400 with empty last_name' do
+      it 'should return 422 with empty last_name' do
         post :create, params: { first_name: 'dang', last_name: '', email: 'danghanh+1@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
       end
 
-      it 'should return 400 without first_name' do
+      it 'should return 422 without first_name' do
         post :create, params: { last_name: 'hanh', email: 'danghanh+1@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
       end
 
-      it 'should return 400 without last_name' do
+      it 'should return 422 without last_name' do
         post :create, params: { first_name: 'dang', email: 'danghanh+1@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
       end
 
-      it 'should return 400 with birthday is after today' do
+      it 'should return 422 with birthday is after today' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail.com', birthday: '2999-02-02', joined_company_date: '2019-11-23' }
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
       end
     end
     describe 'GET# employee' do

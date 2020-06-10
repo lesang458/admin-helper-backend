@@ -1,4 +1,5 @@
 class Employee < ApplicationRecord
+  DEFAULTPASSWORD = '123456'.freeze
   belongs_to :user
   validates :first_name, presence: true, length: { in: 2..20 }
   validates :last_name, presence: true, length: { in: 2..20 }
