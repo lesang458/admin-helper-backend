@@ -3,12 +3,12 @@ require 'rails_helper'
 RSpec.describe Employee, type: :model do
   before(:all) do
     Employee.delete_all
-    FactoryBot.create(:employee, birthday: '1995-10-30', joined_company_date: '2015-11-24')
-    FactoryBot.create(:employee, birthday: '1997-10-30', joined_company_date: '2017-11-24')
-    FactoryBot.create(:employee, birthday: '1999-10-30', joined_company_date: '2019-11-24')
-    @employee = FactoryBot.create(:employee, birthday: '1999-10-04', joined_company_date: '2020-01-24')
-    FactoryBot.create(:employee, birthday: '1998-05-27', joined_company_date: '2019-09-22')
-    FactoryBot.create(:employee, birthday: '1995-12-30', joined_company_date: '2015-12-24', status: 'FORMER')
+    FactoryBot.create(:employee, first_name: 'Le', last_name: 'Diem', birthday: '1995-10-30', joined_company_date: '2015-11-24')
+    FactoryBot.create(:employee, first_name: 'Nguyen', last_name: 'An', birthday: '1997-10-30', joined_company_date: '2017-11-24')
+    FactoryBot.create(:employee, first_name: 'Dao', last_name: 'Huong', birthday: '1999-10-30', joined_company_date: '2019-11-24')
+    @employee = FactoryBot.create(:employee, birthday: '1999-10-04', joined_company_date: '2020-01-24', phone_number: '0935208940')
+    FactoryBot.create(:employee, first_name: 'Tao', last_name: 'Quyen', birthday: '1998-05-27', joined_company_date: '2019-09-22')
+    FactoryBot.create(:employee, first_name: 'Ho', last_name: 'Trieu', birthday: '1995-12-30', joined_company_date: '2015-12-24', status: 'FORMER')
   end
 
   describe 'search' do
@@ -56,20 +56,20 @@ RSpec.describe Employee, type: :model do
 
     it 'should return employe in list employees with search first name' do
       employees = Employee.search({ search: 'tra' })
-      expect(employees.count).to eq(6)
+      expect(employees.count).to eq(1)
       expect(employees.ids).to include @employee.id
     end
 
     it 'should return employe in list employees with search last name' do
       employees = Employee.search({ search: 'hu' })
-      expect(employees.count).to eq(6)
+      expect(employees.count).to eq(2)
       expect(employees.ids).to include @employee.id
     end
 
     it 'should return employe in list employees with search phone number' do
       employees = Employee.search({ search: '0935' })
-      expect(employees.count).to eq(0)
-      expect(employees.ids).not_to include @employee.id
+      expect(employees.count).to eq(1)
+      expect(employees.ids).to include @employee.id
     end
 
     it 'should return employe not in list employees' do

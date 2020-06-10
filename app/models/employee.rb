@@ -25,13 +25,12 @@ class Employee < ApplicationRecord
   end
 
   def self.search_by_date_range(name, date_from, date_to, employees)
-    @time_now = Date.parse(Time.now.to_s)
-    query = "#{name} >= ? and #{name} <= ?"
-    query_to = "#{name} <= ?"
     return employees if date_from.nil? && date_to.nil?
-    from = date_from || @time_now
-    to = date_to || @time_now
+    query_between_date = "#{name} >= ? and #{name} <= ?"
+    query_to = "#{name} <= ?"
+    from = date_from || Date.today
+    to = date_to || Date.today
     return employees.where(query_to, to) unless date_from
-    employees.where(query, from, to)
+    employees.where(query_between_date, from, to)
   end
 end
