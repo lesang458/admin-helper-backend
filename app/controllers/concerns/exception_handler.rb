@@ -4,7 +4,12 @@ module ExceptionHandler
   class DecodeError < StandardError; end
   class ExpiredSignature < StandardError; end
   class Unauthorized < StandardError; end
+  class BadRequest < StandardError; end
   included do
+    rescue_from ExceptionHandler::BadRequest do
+      render_bad_request_error('should have sort type')
+    end
+
     rescue_from ExceptionHandler::Unauthorized do
       render_error('User authentication failed', :unauthorized)
     end
