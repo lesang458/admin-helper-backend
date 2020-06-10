@@ -1,14 +1,13 @@
 require 'rails_helper'
-
 RSpec.describe Api::V1::SessionsController do
   describe 'Success Sessions' do
     before(:each) do
       @user = FactoryBot.create :user
-      @user.create_employee first_name: 'dang', last_name: 'hanh', status: 'ACTIVE', birthday: '1999-02-02', joined_company_date: '2019-11-23', phone_number: '0123456789'
+      @employee = FactoryBot.create :employee
     end
 
     it 'should response 200' do
-      post :create, params: { email: @user.email, password: '123456' }
+      post :create, params: { email: @employee.user.email, password: '123456' }
       expect(response).to have_http_status(200)
     end
   end
