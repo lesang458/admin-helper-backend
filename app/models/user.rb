@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  DEFAULTPASSWORD = '123456'.freeze
   has_one :employee, dependent: :destroy
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
   validates :email, presence: true, length: { maximum: 255 },
