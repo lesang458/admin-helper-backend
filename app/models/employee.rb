@@ -7,6 +7,7 @@ class Employee < ApplicationRecord
   VALID_PHONE_NUMBER_REGEX = /\d[0-9]\)*\z/.freeze
   validates :phone_number, presence: true, length: { maximum: 25 },
                            format: { with: VALID_PHONE_NUMBER_REGEX }
+  scope :query_by_date, ->(field, value, operator) { where "#{field} #{operator} ?", value }
   def user_email
     user.email
   end
@@ -24,13 +25,11 @@ class Employee < ApplicationRecord
     employees
   end
 
-  def self.search_by_date_range(name, date_from, date_to, employees)
-    return employees if date_from.nil? && date_to.nil?
-    query_between_date = "#{name} >= ? and #{name} <= ?"
-    query_to = "#{name} <= ?"
-    from = date_from || Date.today
-    to = date_to || Date.today
-    return employees.where(query_to, to) unless date_from
-    employees.where(query_between_date, from, to)
+  def self.search_by_date_range(name, from_date, to_date, employees)
+    return employees if from_date.nil? && to_date.nil?
+    to_date ||= Date.today
+    employees = employees.query_by_date(name, to_date, '<=')
+    employees = employees.query_by_date(name, from_date, '>=') if from_date.present?
+    employees
   end
 end

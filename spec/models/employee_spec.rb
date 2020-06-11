@@ -48,31 +48,31 @@ RSpec.describe Employee, type: :model do
       expect(employees.ids).to include @employee.id
     end
 
-    it 'should count eq 1 with birthday to and joined_company_date_from and status' do
+    it 'should count eq 1 with birthday_to and joined_company_date_from and status' do
       employees = Employee.search({ birthday_to: '1998-10-30', joined_company_date_from: '2015-01-24', status: 'FORMER' })
       expect(employees.count).to eq(1)
       expect(employees.ids).to_not include @employee.id
     end
 
-    it 'should return employe in list employees with search first name' do
+    it 'should return employee in list employees with search first name' do
       employees = Employee.search({ search: 'tra' })
       expect(employees.count).to eq(1)
       expect(employees.ids).to include @employee.id
     end
 
-    it 'should return employe in list employees with search last name' do
+    it 'should return employee in list employees with search last name' do
       employees = Employee.search({ search: 'hu' })
       expect(employees.count).to eq(2)
       expect(employees.ids).to include @employee.id
     end
 
-    it 'should return employe in list employees with search phone number' do
+    it 'should return employee in list employees with search phone_number' do
       employees = Employee.search({ search: '0935' })
       expect(employees.count).to eq(1)
       expect(employees.ids).to include @employee.id
     end
 
-    it 'should return employe not in list employees' do
+    it 'should return employee not in list employees' do
       employees = Employee.search({ search: 'false' })
       expect(employees.count).to eq(0)
       expect(employees.ids).not_to include @employee.id
