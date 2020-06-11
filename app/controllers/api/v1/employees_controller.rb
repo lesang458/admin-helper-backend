@@ -17,7 +17,7 @@ class Api::V1::EmployeesController < ApplicationController
     employee = Employee.new(employee_params)
     employee.user = user if user.save!
     employee.save!
-    render_resource employee, :created unless employee.errors.messages.present?
+    render_resource employee, :created
   end
 
   private
