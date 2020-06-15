@@ -22,8 +22,12 @@ module ExceptionHandler
       render_error('User authentication failed', :unauthorized)
     end
 
-    rescue_from ExceptionHandler::ExpiredSignature do |_e|
+    rescue_from ExceptionHandler::ExpiredSignature do
       render_error('You seem to have an expired token', :unauthorized)
+    end
+
+    rescue_from ActiveRecord::RecordInvalid do |e|
+      render_error(e.message, :unprocessable_entity)
     end
   end
 end

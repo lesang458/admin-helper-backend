@@ -10,7 +10,15 @@ class Api::V1::EmployeesController < ApplicationController
 
   def show
     employee = Employee.find(params[:id])
-    render_resource employee
+    render_resource employee, :ok
+  end
+
+  def create
+    user = User.new email: params[:email], encrypted_password: User.generate_encrypted_password(User::DEFAULTPASSWORD)
+    employee = Employee.new(employee_params)
+    employee.user = user if user.save!
+    employee.save!
+    render_resource employee, :created
   end
 
   private 
@@ -25,5 +33,9 @@ class Api::V1::EmployeesController < ApplicationController
     @query.split(',') do |query|
       raise(ExceptionHandler::BadRequest, 'should have sort type') unless Employee.check_params_sort_type query.split(' ')[0].downcase, query.split(' ')[1].downcase
     end
+  end
+
+  def employee_params
+    params.permit(:first_name, :last_name, :birthday, :joined_company_date, :phone_number)
   end
 end
