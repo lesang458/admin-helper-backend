@@ -2,10 +2,10 @@ require 'rails_helper'
 require 'jwt_token'
 
 RSpec.describe Api::V1::EmployeesController, type: :controller do
-  before(:all) {
+  before(:all) do
     Employee.delete_all
     FactoryBot.create_list(:employee, 50)
-  }
+  end
 
   describe 'token' do
     let!(:valid_token) { JwtToken.encode({ user_id: User.first.id }) }
