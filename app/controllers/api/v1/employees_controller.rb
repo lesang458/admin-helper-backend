@@ -3,7 +3,7 @@ class Api::V1::EmployeesController < ApplicationController
   def index
     set_paginate
     set_query_sort if params[:sort].present?
-    employees = Employee.sort_by(@query).search(params)
+    employees = Employee.search(params).order(@query)
     employees = @page.to_i <= 0 ? employees : employees.page(@page).per(@per_page)
     render_collection(employees, EmployeeSerializer)
   end
@@ -13,7 +13,7 @@ class Api::V1::EmployeesController < ApplicationController
     render_resource employee
   end
 
-  private
+  private 
 
   def set_paginate
     @per_page = params[:per_page] || 20
@@ -23,7 +23,7 @@ class Api::V1::EmployeesController < ApplicationController
   def set_query_sort
     @query = params[:sort].tr(':', ' ')
     @query.split(',') do |query|
-      raise ExceptionHandler::BadRequest unless Employee.check_params_sort_type query.split(' ')[0].downcase, query.split(' ')[1].downcase
+      raise(ExceptionHandler::BadRequest, 'should have sort type') unless Employee.check_params_sort_type query.split(' ')[0].downcase, query.split(' ')[1].downcase
     end
   end
 end
