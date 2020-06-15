@@ -14,6 +14,63 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     let!(:invalid_headers) { { authorization: invalid_token } }
     before(:each) { request.headers.merge! valid_headers }
 
+    describe 'POST# employee' do
+      it 'return status 401 with token false' do
+        request.headers.merge! invalid_headers
+        get :index
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 201' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23', phone_number: '0123456789' }
+        expect(response.status).to eq(201)
+      end
+
+      it 'should return 201 without phone_number' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
+        expect(response.status).to eq(201)
+      end
+
+      it 'should return 422 with empty email' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with invalid email' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with invalid email' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with empty first_name' do
+        post :create, params: { first_name: '', last_name: 'hanh', email: 'danghanh+1@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with empty last_name' do
+        post :create, params: { first_name: 'dang', last_name: '', email: 'danghanh+1@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 without first_name' do
+        post :create, params: { last_name: 'hanh', email: 'danghanh+1@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 without last_name' do
+        post :create, params: { first_name: 'dang', email: 'danghanh+1@mail.com', birthday: '1999-02-02', joined_company_date: '2019-11-23' }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with birthday is after today' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail.com', birthday: '2999-02-02', joined_company_date: '2019-11-23' }
+        expect(response.status).to eq(422)
+      end
+    end
     describe 'GET# employee' do
       it 'should pass with real param id' do
         get :show, params: { id: Employee.first.id }

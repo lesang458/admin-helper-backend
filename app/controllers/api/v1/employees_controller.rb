@@ -9,7 +9,15 @@ class Api::V1::EmployeesController < ApplicationController
 
   def show
     employee = Employee.find(params[:id])
-    render_resource employee
+    render_resource employee, :ok
+  end
+
+  def create
+    user = User.new email: params[:email], encrypted_password: User.generate_encrypted_password(User::DEFAULTPASSWORD)
+    employee = Employee.new(employee_params)
+    employee.user = user if user.save!
+    employee.save!
+    render_resource employee, :created
   end
 
   private
@@ -17,5 +25,9 @@ class Api::V1::EmployeesController < ApplicationController
   def set_paginate
     @per_page = params[:per_page] || 20
     @page     = params[:page] || 1
+  end
+
+  def employee_params
+    params.permit(:first_name, :last_name, :birthday, :joined_company_date, :phone_number)
   end
 end
