@@ -7,18 +7,15 @@ class Employee < ApplicationRecord
   VALID_PHONE_NUMBER_REGEX = /\d[0-9]\)*\z/.freeze
   validates :phone_number, presence: true, allow_nil: true, length: { maximum: 25 },
                            format: { with: VALID_PHONE_NUMBER_REGEX }
-<<<<<<< HEAD
   scope :birthday_to, ->(to) { where('birthday <= ?', to) if to }
   scope :birthday_from, ->(from) { where('birthday >= ?', from) if from }
   scope :join_date_to, ->(to) { where('joined_company_date <= ?', to) if to }
   scope :join_date_from, ->(from) { where('joined_company_date >= ?', from) if from }
-=======
   validate :birthday_in_future
   def birthday_in_future
     errors.add(:birthday, 'is in future') if birthday.present? && birthday > Time.zone.now
   end
 
->>>>>>> f08be31b427f99e52f23dd00fa31f4c094521ee0
   def user_email
     user.email
   end
