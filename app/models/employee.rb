@@ -24,10 +24,6 @@ class Employee < ApplicationRecord
     user.id
   end
 
-  def self.check_params_sort_type(column, sort_type)
-    (Employee.column_names.include? column) && (%w[asc desc].include? sort_type)
-  end
-
   # rubocop:disable Metrics/AbcSize
   def self.search(params)
     employees = Employee.includes(:user)

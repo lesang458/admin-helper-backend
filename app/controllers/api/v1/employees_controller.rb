@@ -21,7 +21,7 @@ class Api::V1::EmployeesController < ApplicationController
     render_resource employee, :created
   end
 
-  private 
+  private
 
   def set_paginate
     @per_page = params[:per_page] || 20
@@ -29,10 +29,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def set_query_sort
-    @query = params[:sort].tr(':', ' ')
-    @query.split(',') do |query|
-      raise(ExceptionHandler::BadRequest, 'should have sort type') unless Employee.check_params_sort_type query.split(' ')[0].downcase, query.split(' ')[1].downcase
-    end
+    @query = SortParams.new(params[:sort], Employee).sort_query
   end
 
   def employee_params
