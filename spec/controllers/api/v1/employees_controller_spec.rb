@@ -4,6 +4,11 @@ require 'jwt_token'
 RSpec.describe Api::V1::EmployeesController, type: :controller do
   before(:all) do
     Employee.delete_all
+    FactoryBot.create(:employee, first_name: 'An', last_name: 'da')
+    FactoryBot.create(:employee, first_name: 'Bo', last_name: 'Ba')
+    FactoryBot.create(:employee, first_name: 'Ca', last_name: 'Co')
+    FactoryBot.create(:employee, first_name: 'Du', last_name: 'Da')
+    @employee = FactoryBot.create(:employee, first_name: 'An', last_name: 'Ba')
     FactoryBot.create_list(:employee, 50)
   end
 
@@ -71,6 +76,35 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(422)
       end
     end
+
+    describe 'sort' do
+      it 'should returns sorted employee list with first_name' do
+        get :index, params: { sort: 'first_name:ASC' }
+        employees = JSON.parse(response.body)['data']
+        expect(employees.first['first_name']).to eq(@employee.first_name)
+        expect(employees.second['first_name']).to eq('An')
+        expect(employees.third['first_name']).to eq('Bo')
+      end
+
+      it 'should returns sorted employee list with last_name' do
+        get :index, params: { sort: 'last_name:ASC' }
+        employees = JSON.parse(response.body)['data']
+        expect(employees.first['last_name']).to eq(@employee.last_name)
+        expect(employees.second['last_name']).to eq('Ba')
+        expect(employees.third['last_name']).to eq('Co')
+      end
+
+      it 'should returns sorted employee list with last_name and first_name' do
+        get :index, params: { sort: 'first_name:ASC,last_name:DESC' }
+        employees = JSON.parse(response.body)['data']
+        expect(employees.first['first_name']).to eq('An')
+        expect(employees.first['last_name']).to eq('da')
+        expect(employees.second['first_name']).to eq('An')
+        expect(employees.second['last_name']).to eq('Ba')
+        expect(employees.third['first_name']).to eq('Bo')
+      end
+    end
+
     describe 'GET# employee' do
       it 'should pass with real param id' do
         get :show, params: { id: Employee.first.id }
@@ -90,6 +124,15 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     end
 
     describe 'GET#list employees' do
+      it 'should pass with real param id' do
+        get :index, params: { sort: 'first_name:ASC,last_name:desc' }
+        expect(response.status).to eq(200)
+      end
+
+      it 'should not pass with real param id' do
+        get :index, params: { sort: 'first_nameq:ASC,last_name:desc' }
+        expect(response.status).to eq(400)
+      end
       it 'should status 200 with birthday and joined company date' do
         get :index, params: { birthday_from: '1995-10-30', birthday_to: '1999-10-30', joined_company_date_from: '2015-11-24', joined_company_date_to: '2020-01-24', status: 'ACTIVE' }
         expect(response.status).to eq(200)
@@ -108,7 +151,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(json_response['current_page']).to eq(1)
         expect(json_response['page_size']).to eq(20)
         expect(json_response['total_pages']).to eq(3)
-        expect(json_response['total_count']).to eq(50)
+        expect(json_response['total_count']).to eq(52)
       end
 
       it 'should return 200' do
@@ -122,7 +165,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       end
 
       it 'shoud pass with upper case' do
-        get :index, params: { search: Employee.first.last_name.upcase }
+        get :index, params: { search: 'Tran'.upcase }
         expect(response.status).to eq(200)
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(1)
@@ -132,7 +175,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       end
 
       it 'should pass with lower case' do
-        get :index, params: { search: Employee.first.last_name.downcase }
+        get :index, params: { search: 'HUY'.downcase }
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(1)
         expect(json_response['page_size']).to eq(20)
@@ -161,8 +204,8 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(3)
         expect(json_response['page_size']).to eq(3)
-        expect(json_response['total_pages']).to eq(17)
-        expect(json_response['total_count']).to eq(50)
+        expect(json_response['total_pages']).to eq(19)
+        expect(json_response['total_count']).to eq(55)
       end
 
       it 'should pass with token and non params' do
@@ -172,7 +215,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(json_response['current_page']).to eq(1)
         expect(json_response['page_size']).to eq(20)
         expect(json_response['total_pages']).to eq(3)
-        expect(json_response['total_count']).to eq(50)
+        expect(json_response['total_count']).to eq(55)
       end
 
       it 'should pass with token and params' do
@@ -181,8 +224,8 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(3)
         expect(json_response['page_size']).to eq(3)
-        expect(json_response['total_pages']).to eq(17)
-        expect(json_response['total_count']).to eq(50)
+        expect(json_response['total_pages']).to eq(19)
+        expect(json_response['total_count']).to eq(55)
       end
 
       it 'return status 401 with token false' do
