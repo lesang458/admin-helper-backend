@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'jwt_token'
 
 RSpec.describe AuthorizeApiRequest, type: :service do
-  before { FactoryBot.create_list(:employee, 50) }
+  before { FactoryBot.create_list(:user, 50) }
 
   payload = { 'id' => 404 }
   describe 'decode' do
