@@ -165,22 +165,22 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       end
 
       it 'shoud pass with upper case' do
-        get :index, params: { search: 'Tran'.upcase }
+        get :index, params: { search: 'an'.upcase }
         expect(response.status).to eq(200)
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(1)
-        expect(json_response['page_size']).to eq(0)
-        expect(json_response['total_pages']).to eq(0)
-        expect(json_response['total_count']).to eq(0)
+        expect(json_response['page_size']).to eq(2)
+        expect(json_response['total_pages']).to eq(1)
+        expect(json_response['total_count']).to eq(2)
       end
 
       it 'should pass with lower case' do
-        get :index, params: { search: 'HUY'.downcase }
+        get :index, params: { search: 'DU'.downcase }
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(1)
-        expect(json_response['page_size']).to eq(0)
-        expect(json_response['total_pages']).to eq(0)
-        expect(json_response['total_count']).to eq(0)
+        expect(json_response['page_size']).to eq(1)
+        expect(json_response['total_pages']).to eq(1)
+        expect(json_response['total_count']).to eq(1)
       end
 
       it 'should pass with phone number and return 200' do
@@ -189,21 +189,21 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       end
 
       it 'should pass with phone number and return 200' do
-        get :index, params: { search: '093527', per_page: 1, page: 1 }
+        get :index, params: { search: '012345', per_page: 1, page: 1 }
         expect(response.status).to eq(200)
         json_response = JSON.parse(response.body)['pagination']
         expect(json_response['current_page']).to eq(1)
-        expect(json_response['page_size']).to eq(0)
-        expect(json_response['total_pages']).to eq(0)
-        expect(json_response['total_count']).to eq(0)
+        expect(json_response['page_size']).to eq(1)
+        expect(json_response['total_pages']).to eq(5)
+        expect(json_response['total_count']).to eq(5)
       end
 
       it 'should pass with token and params search and params pagination' do
-        get :index, params: { per_page: 3, page: 3, search: '0123456789' }
+        get :index, params: { per_page: 3, page: 2, search: '0123456789' }
         expect(response.status).to eq(200)
         json_response = JSON.parse(response.body)['pagination']
-        expect(json_response['current_page']).to eq(3)
-        expect(json_response['page_size']).to eq(0)
+        expect(json_response['current_page']).to eq(2)
+        expect(json_response['page_size']).to eq(2)
         expect(json_response['total_pages']).to eq(2)
         expect(json_response['total_count']).to eq(5)
       end
@@ -219,11 +219,11 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       end
 
       it 'should pass with token and params' do
-        get :index, params: { per_page: 3, page: 3 }
+        get :index, params: { per_page: 3, page: 2 }
         expect(response.status).to eq(200)
         json_response = JSON.parse(response.body)['pagination']
-        expect(json_response['current_page']).to eq(3)
-        expect(json_response['page_size']).to eq(0)
+        expect(json_response['current_page']).to eq(2)
+        expect(json_response['page_size']).to eq(2)
         expect(json_response['total_pages']).to eq(2)
         expect(json_response['total_count']).to eq(5)
       end
