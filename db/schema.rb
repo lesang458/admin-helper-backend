@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_143828) do
     t.date "join_date"
     t.string "status", default: "ACTIVE"
     t.string "phone_number"
-    t.string "roles", default: ["EMPLOYEE"], array: true
+    t.string "roles", default: [], array: true
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

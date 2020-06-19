@@ -12,9 +12,20 @@ class User < ApplicationRecord
   VALID_PHONE_NUMBER_REGEX = /\d[0-9]\)*\z/.freeze
   validates :phone_number, presence: true, allow_nil: true, length: { maximum: 25 },
                            format: { with: VALID_PHONE_NUMBER_REGEX }
+  ALLOWED_ROLES_TYPES = %w[SUPER_ADMIN ADMIN EMPLOYEE].freeze
+
+  scope :employees, -> { where roles: 'EMPLOYEE' }
+  scope :admins, -> { where roles: 'ADMIN' }
+  scope :super_admins, -> { where roles: 'SUPER_ADMIN' }
+
+  def self.build_employee(user_params)
+    user = User.new(user_params)
+    user.roles << 'EMPLOYEE'
+    user
+  end
 
   def roles_have_to_include
-    errors.add('roles have to include [EMPLOYEE ADMIN SUPER_ADMIN]') unless roles.include?('ADMIN') || roles.include?('SUPER_ADMIN') || roles.include?('EMPLOYEE')
+    errors.add('roles have to include [EMPLOYEE ADMIN SUPER_ADMIN]') if roles.any? { |it| ALLOWED_ROLES_TYPES.exclude?(it) }
   end
 
   def self.generate_encrypted_password(password, password_salt = BCrypt::Engine.generate_salt)
@@ -25,11 +36,7 @@ class User < ApplicationRecord
     encrypted_password == User.generate_encrypted_password(password, encrypted_password.first(29))
   end
 
-  def check_roles
-    roles.include?('ADMIN') || roles.include?('SUPER_ADMIN')
-  end
-
-  def render_payload
+  def jwt_payload
     {
       'user_id' => id,
       'roles' => roles

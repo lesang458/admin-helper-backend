@@ -6,15 +6,11 @@ RSpec.describe Api::V1::SessionsController do
     end
 
     it 'should response 200 with ADMIN' do
-      @user.roles << 'ADMIN'
-      @user.save
       post :create, params: { email: @user.email, password: '123456' }
       expect(response).to have_http_status(200)
     end
 
     it 'should response 200 with SUPER_ADMIN' do
-      @user.roles << 'SUPER_ADMIN'
-      @user.save
       post :create, params: { email: @user.email, password: '123456' }
     end
   end
