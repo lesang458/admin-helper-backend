@@ -14,7 +14,7 @@ class User < ApplicationRecord
                            format: { with: VALID_PHONE_NUMBER_REGEX }
   ALLOWED_ROLES = %w[SUPER_ADMIN ADMIN EMPLOYEE].freeze
 
-  scope :employees, ->  { where('roles @> ?', '{EMPLOYEE}}') }
+  scope :employees, -> { where('roles @> ?', '{EMPLOYEE}}') }
   scope :admins, -> { where('roles @> ?', '{ADMIN}') }
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
