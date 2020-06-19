@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_143828) do
     t.string "encrypted_password"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "roles", default: ["EMPLOYEE"], array: true
+    t.string "roles", default: ["EMPLOYEE"], array: true
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
