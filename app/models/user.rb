@@ -4,7 +4,7 @@ class User < ApplicationRecord
   validates :email, presence: true, length: { maximum: 255 },
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
-  validate :roles_have_to_include
+  validate :validate_roles_inclusion
   validates :first_name, presence: true, length: { in: 2..20 }
   validates :last_name, presence: true, length: { in: 2..20 }
   enum status: { ACTIVE: 'ACTIVE', FORMER: 'FORMER' }
@@ -12,20 +12,21 @@ class User < ApplicationRecord
   VALID_PHONE_NUMBER_REGEX = /\d[0-9]\)*\z/.freeze
   validates :phone_number, presence: true, allow_nil: true, length: { maximum: 25 },
                            format: { with: VALID_PHONE_NUMBER_REGEX }
-  ALLOWED_ROLES_TYPES = %w[SUPER_ADMIN ADMIN EMPLOYEE].freeze
+  ALLOWED_ROLES = %w[SUPER_ADMIN ADMIN EMPLOYEE].freeze
 
-  scope :employees, -> { where roles: 'EMPLOYEE' }
-  scope :admins, -> { where roles: 'ADMIN' }
-  scope :super_admins, -> { where roles: 'SUPER_ADMIN' }
+  scope :employees, ->  { where('roles @> ?', '{EMPLOYEE}}') }
+  scope :admins, -> { where('roles @> ?', '{ADMIN}') }
+  scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
   def self.build_employee(user_params)
     user = User.new(user_params)
     user.roles << 'EMPLOYEE'
+    user.roles << user_params[:roles] if user_params[:roles]
     user
   end
 
-  def roles_have_to_include
-    errors.add('roles have to include [EMPLOYEE ADMIN SUPER_ADMIN]') if roles.any? { |it| ALLOWED_ROLES_TYPES.exclude?(it) }
+  def validate_roles_inclusion
+    errors.add(:record, 'roles have to include [EMPLOYEE ADMIN SUPER_ADMIN]') if roles.any? { |it| ALLOWED_ROLES.exclude?(it) }
   end
 
   def self.generate_encrypted_password(password, password_salt = BCrypt::Engine.generate_salt)
@@ -38,8 +39,8 @@ class User < ApplicationRecord
 
   def jwt_payload
     {
-      'user_id' => id,
-      'roles' => roles
+      user_id: id,
+      roles: roles
     }
   end
 

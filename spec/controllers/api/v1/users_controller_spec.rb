@@ -36,6 +36,21 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         expect(response.status).to eq(201)
       end
 
+      it 'should return 200 with roles: ADMIN' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthdate: '1999-02-02', join_date: '2019-11-23', role: 'ADMIN' }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 200 with roles: SUPER_ADMIN' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthdate: '1999-02-02', join_date: '2019-11-23', role: 'SUPER_ADMIN' }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with invalid roles' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthdate: '1999-02-02', join_date: '2019-11-23', role: 'ADMIN FAKE' }
+        expect(response.status).to eq(422)
+      end
+
       it 'should return 422 with empty email' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthdate: '1999-02-02', join_date: '2019-11-23' }
         expect(response.status).to eq(422)

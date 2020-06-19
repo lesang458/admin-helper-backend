@@ -32,6 +32,6 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     params[:encrypted_password] = User.generate_encrypted_password(params[:encrypted_password])
-    params.permit(:email, :encrypted_password, :first_name, :last_name, :birthdate, :join_date, :phone_number)
+    params.permit(:email, :encrypted_password, :first_name, :last_name, :birthdate, :join_date, :phone_number, :roles)
   end
 end
