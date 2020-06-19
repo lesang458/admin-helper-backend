@@ -6,7 +6,16 @@ RSpec.describe Api::V1::SessionsController do
       @employee = FactoryBot.create :employee
     end
 
-    it 'should response 200' do
+    it 'should response 200 with ADMIN' do
+      @employee.user.roles << 'ADMIN'
+      @employee.user.save
+      post :create, params: { email: @employee.user.email, password: '123456' }
+      expect(response).to have_http_status(200)
+    end
+
+    it 'should response 200 with SUPER_ADMIN' do
+      @employee.user.roles << 'SUPER_ADMIN'
+      @employee.user.save
       post :create, params: { email: @employee.user.email, password: '123456' }
       expect(response).to have_http_status(200)
     end
