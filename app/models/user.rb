@@ -18,10 +18,9 @@ class User < ApplicationRecord
   scope :admins, -> { where('roles @> ?', '{ADMIN}') }
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
-  def self.build_employee(user_params, role)
+  def self.build_employee(user_params)
     user = User.new(user_params)
     user.roles << 'EMPLOYEE'
-    user.roles << role if role
     user
   end
 

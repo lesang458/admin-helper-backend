@@ -2,16 +2,17 @@ require 'rails_helper'
 RSpec.describe Api::V1::SessionsController do
   describe 'Success Sessions' do
     before(:each) do
-      @user = FactoryBot.create(:user)
+      @admin = FactoryBot.create(:user, roles: 'ADMIN')
+      @super_admin = FactoryBot.create(:user, roles: 'SUPER_ADMIN')
     end
 
     it 'should response 200 with ADMIN' do
-      post :create, params: { email: @user.email, password: '123456' }
+      post :create, params: { email: @admin.email, password: '123456' }
       expect(response).to have_http_status(200)
     end
 
     it 'should response 200 with SUPER_ADMIN' do
-      post :create, params: { email: @user.email, password: '123456' }
+      post :create, params: { email: @super_admin.email, password: '123456' }
     end
   end
 

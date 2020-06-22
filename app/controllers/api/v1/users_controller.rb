@@ -14,7 +14,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def create
-    user = User.build_employee(user_params, params[:role])
+    user = User.build_employee(user_params)
     user.save!
     render_resource user, :created
   end
