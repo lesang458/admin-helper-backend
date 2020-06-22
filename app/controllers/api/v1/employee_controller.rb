@@ -1,4 +1,4 @@
-class Api::V1::UsersController < ApplicationController
+class Api::V1::EmployeeController < ApplicationController
   before_action :set_current_user
   def index
     set_paginate
