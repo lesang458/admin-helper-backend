@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'jwt_token'
 
-RSpec.describe Api::V1::EmployeeController, type: :controller do
+RSpec.describe Api::V1::EmployeesController, type: :controller do
   before(:all) do
     User.delete_all
     FactoryBot.create(:user, first_name: 'An', last_name: 'da')
@@ -34,21 +34,6 @@ RSpec.describe Api::V1::EmployeeController, type: :controller do
       it 'should return 201 without phone_number' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23' }
         expect(response.status).to eq(201)
-      end
-
-      it 'should return 201 with roles: ADMIN' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23', role: 'ADMIN' }
-        expect(response.status).to eq(201)
-      end
-
-      it 'should return 201 with roles: SUPER_ADMIN' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23', role: 'SUPER_ADMIN' }
-        expect(response.status).to eq(201)
-      end
-
-      it 'should return 422 with invalid roles' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthdate: '1999-02-02', join_date: '2019-11-23', role: 'ADMIN FAKE' }
-        expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty email' do
