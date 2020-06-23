@@ -1,4 +1,4 @@
-class Api::V1::UsersController < ApplicationController
+class Api::V1::EmployeesController < ApplicationController
   before_action :set_current_user
   def index
     set_paginate
@@ -14,7 +14,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def create
-    user = User.new(user_params)
+    user = User.build_employee(user_params)
     user.save!
     render_resource user, :created
   end

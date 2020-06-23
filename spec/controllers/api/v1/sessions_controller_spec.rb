@@ -5,7 +5,7 @@ RSpec.describe Api::V1::SessionsController do
       @user = FactoryBot.create(:user)
     end
 
-    it 'should response 200' do
+    it 'should response 200 ' do
       post :create, params: { email: @user.email, password: '123456' }
       expect(response).to have_http_status(200)
     end

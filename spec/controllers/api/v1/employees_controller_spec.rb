@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'jwt_token'
 
-RSpec.describe Api::V1::UsersController, type: :controller do
+RSpec.describe Api::V1::EmployeesController, type: :controller do
   before(:all) do
     User.delete_all
     FactoryBot.create(:user, first_name: 'An', last_name: 'da')
