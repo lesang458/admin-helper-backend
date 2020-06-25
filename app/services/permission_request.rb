@@ -7,13 +7,9 @@ class PermissionRequest
     validate_action
   end
 
-  def permissions
-    YAML.load_file('config/roles.yml')
-  end
-
   def set_permission
     @current_user.roles.each do |role|
-      @actions.push(*permissions.dig(role.downcase, @name_controller))
+      @actions.push(*Permissions.dig(role.downcase, @name_controller))
     end
   end
 
