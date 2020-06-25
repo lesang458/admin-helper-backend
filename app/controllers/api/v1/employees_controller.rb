@@ -1,5 +1,5 @@
 class Api::V1::EmployeesController < ApplicationController
-  before_action :set_current_user
+  before_action :set_current_user, :set_permissions
   def index
     set_paginate
     set_query_sort if params[:sort].present?

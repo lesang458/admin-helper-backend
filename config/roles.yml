@@ -1,0 +1,13 @@
+employee:
+  employees:
+  sessions:
+admin:
+  employees:
+    - index
+    - show
+    - create
+  sessions:
+    - create
+super_admin:
+  employees:
+  sessions:
