@@ -9,5 +9,6 @@ FactoryBot.define do
     join_date { '1990-01-01' }
     status { 'ACTIVE' }
     phone_number { '0123456789' }
+    roles { ['EMPLOYEE'] }
   end
 end
