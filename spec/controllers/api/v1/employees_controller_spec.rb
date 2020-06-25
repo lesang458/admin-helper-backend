@@ -4,11 +4,11 @@ require 'jwt_token'
 RSpec.describe Api::V1::EmployeesController, type: :controller do
   before(:all) do
     User.delete_all
-    @super_admin = FactoryBot.create(:user, first_name: 'An', last_name: 'da', roles: %w[EMPLOYEE ADMIN SUPER_ADMIN])
+    @super_admin = FactoryBot.create(:user, :super_admin, first_name: 'An', last_name: 'da')
     FactoryBot.create(:user, first_name: 'Bo', last_name: 'Ba')
     FactoryBot.create(:user, first_name: 'Ca', last_name: 'Co')
     FactoryBot.create(:user, first_name: 'Du', last_name: 'Da')
-    @user = FactoryBot.create(:user, first_name: 'An', last_name: 'Ba', roles: %w[EMPLOYEE ADMIN])
+    @user = FactoryBot.create(:user, :admin, first_name: 'An', last_name: 'Ba')
   end
 
   describe 'token' do
