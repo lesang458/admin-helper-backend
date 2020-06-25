@@ -19,7 +19,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     before(:each) { request.headers.merge! valid_headers }
 
     describe 'PUT# employee' do
-      it 'return status 401 status code with token false' do
+      it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
         put :update, params: { id: @user.id }
         expect(response.status).to eq(401)
@@ -82,7 +82,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     end
 
     describe 'POST# employee' do
-      it 'return status 401 status code with token false' do
+      it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
         get :index
         expect(response.status).to eq(401)
