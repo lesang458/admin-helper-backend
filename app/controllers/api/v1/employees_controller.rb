@@ -10,13 +10,19 @@ class Api::V1::EmployeesController < ApplicationController
 
   def show
     user = User.find(params[:id])
-    render_resource user, :ok
+    render_resource user, :ok, UserSerializer
   end
 
   def create
     user = User.build_employee(user_params)
     user.save!
-    render_resource user, :created
+    render_resource user, :created, UserSerializer
+  end
+
+  def update
+    user = User.find(params[:id])
+    user.update!(user_params)
+    render_resource user, :ok, UserSerializer
   end
 
   private
@@ -32,6 +38,6 @@ class Api::V1::EmployeesController < ApplicationController
 
   def user_params
     params[:encrypted_password] = User.generate_encrypted_password(params[:encrypted_password])
-    params.permit(:email, :encrypted_password, :first_name, :last_name, :birthdate, :join_date, :phone_number)
+    params.permit(:email, :encrypted_password, :first_name, :last_name, :birthdate, :join_date, :phone_number, :status)
   end
 end
