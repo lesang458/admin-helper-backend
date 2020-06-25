@@ -35,7 +35,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
                               encrypted_password: '123456',
                               birthdate: '1999-02-02',
                               join_date: '2019-11-23',
-                              phone_number: '0123456789',
+                              phone_number: '0123456789'
                             }
         expect(response.status).to eq(200)
       end
