@@ -7,7 +7,7 @@ RSpec.describe PermissionRequest, type: :service do
       @employee = FactoryBot.create(:user, email: 'employee@gmail.com')
       expect do
         PermissionRequest.new(@employee, 'employees', 'index')
-      end.to raise_error ExceptionHandler::Unauthorized
+      end.to raise_error ExceptionHandler::Forbidden
     end
 
     it 'should return data with roles is admin' do
