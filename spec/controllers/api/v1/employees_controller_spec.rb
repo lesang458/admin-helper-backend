@@ -51,6 +51,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       it 'should return 422 with empty email' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthdate: '1999-02-02', join_date: '2019-11-23' }
         expect(response.status).to eq(422)
+        expect(response.body).to include("Email can't be blank")
       end
 
       it 'should return 422 with invalid email' do
