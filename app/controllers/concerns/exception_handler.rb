@@ -5,13 +5,18 @@ module ExceptionHandler
   class ExpiredSignature < StandardError; end
   class Unauthorized < StandardError; end
   class BadRequest < StandardError; end
+  class Forbidden < StandardError; end
   included do
     rescue_from ExceptionHandler::BadRequest do |exception|
       render_bad_request_error(exception.message)
     end
 
-    rescue_from ExceptionHandler::Unauthorized do
-      render_error('User authentication failed', :unauthorized)
+    rescue_from ExceptionHandler::Unauthorized do |exception|
+      render_error(exception.message, :unauthorized)
+    end
+
+    rescue_from ExceptionHandler::Forbidden do |exception|
+      render_error(exception.message, :forbidden)
     end
 
     rescue_from ActiveRecord::RecordNotFound do |e|
