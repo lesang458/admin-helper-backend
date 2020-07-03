@@ -57,35 +57,42 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       it 'should return 422 with invalid email' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@', birthdate: '1999-02-02', join_date: '2019-11-23' }
         expect(response.status).to eq(422)
+        expect(response.body).to include('Email is invalid')
       end
 
       it 'should return 422 with invalid email' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail', birthdate: '1999-02-02', join_date: '2019-11-23' }
         expect(response.status).to eq(422)
+        expect(response.body).to include('Email is invalid')
       end
 
       it 'should return 422 with empty first_name' do
         post :create, params: { first_name: '', last_name: 'hanh', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        expect(response.body).to include("First name can't be blank")
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty last_name' do
         post :create, params: { first_name: 'dang', last_name: '', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        expect(response.body).to include("Last name can't be blank")
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 without first_name' do
         post :create, params: { last_name: 'hanh', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        expect(response.body).to include("First name can't be blank")
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 without last_name' do
         post :create, params: { first_name: 'dang', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        expect(response.body).to include("Last name can't be blank")
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with birthdate is after today' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail.com', birthdate: '2999-02-02', join_date: '2019-11-23' }
+        expect(response.body).to include('Birthdate is in future')
         expect(response.status).to eq(422)
       end
     end
