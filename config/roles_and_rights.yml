@@ -4,6 +4,7 @@ admin:
     - index
     - show
     - create
+    - update
   sessions:
     - create
 super_admin:
