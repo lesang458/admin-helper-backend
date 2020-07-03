@@ -9,7 +9,7 @@ class PermissionRequest
 
   def set_permission
     @current_user.roles.each do |role|
-      @actions.push(*Permissions.config.dig(role.downcase, @controller_name))
+      @actions.push(*PermissionConfig.config.dig(role.downcase, @controller_name))
     end
   end
 

@@ -1,3 +1,3 @@
 Rails.configuration.to_prepare do
-  Permissions.init
+  PermissionConfig.init
 end

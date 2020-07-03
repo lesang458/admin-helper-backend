@@ -3,7 +3,7 @@ module Authenticatable
     @current_user = AuthorizeApiRequest.new(request.headers['Authorization']).current_user
   end
 
-  def set_permissions
+  def authorize_request
     PermissionRequest.new(set_current_user, params['controller'].split('/')[2], params['action'])
   end
 end
