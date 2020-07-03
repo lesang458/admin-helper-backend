@@ -37,7 +37,15 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
                               join_date: '2019-11-23',
                               phone_number: '0123456789'
                             }
+        @user.reload
         expect(response.status).to eq(200)
+        expect(@user.first_name).to eq('dang')
+        expect(@user.last_name).to eq('hanh')
+        expect(@user.email).to eq('danghanh@mail.com')
+        expect(@user.encrypted_password).to eq(User.generate_encrypted_password('123456', @user.encrypted_password.first(29)))
+        expect(@user.birthdate.to_s).to eq('1999-02-02')
+        expect(@user.join_date.to_s).to eq('2019-11-23')
+        expect(@user.phone_number).to eq('0123456789')
       end
 
       it 'should return 422 with empty email' do
