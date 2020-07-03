@@ -1,6 +1,4 @@
 employee:
-  employees:
-  sessions:
 admin:
   employees:
     - index
@@ -9,5 +7,3 @@ admin:
   sessions:
     - create
 super_admin:
-  employees:
-  sessions:

@@ -1,7 +1,7 @@
 class PermissionRequest
-  def initialize(current_user, name_controller, action_params)
+  def initialize(current_user, controller_name, action_params)
     @current_user = current_user
-    @name_controller = name_controller
+    @controller_name = controller_name
     @action_params = action_params
     @actions = []
     validate_action
@@ -9,7 +9,7 @@ class PermissionRequest
 
   def set_permission
     @current_user.roles.each do |role|
-      @actions.push(*Permissions.dig(role.downcase, @name_controller))
+      @actions.push(*Permissions.config.dig(role.downcase, @controller_name))
     end
   end
 

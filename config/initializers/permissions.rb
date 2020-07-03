@@ -1,1 +1,1 @@
-Permissions = YAML.load_file('config/roles.yml')
+Permissions.init
