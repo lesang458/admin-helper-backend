@@ -18,6 +18,54 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     let!(:invalid_headers) { { authorization: invalid_token } }
     before(:each) { request.headers.merge! valid_headers }
 
+    describe 'PATCH# employee' do
+      it 'return status 401 status code with invalid token' do
+        request.headers.merge! invalid_headers
+        put :update, params: { id: @user.id }
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 200' do
+        put :update, params:
+                            {
+                              id: @user.id,
+                              status: 'ACTIVE'
+                            }
+        @user.reload
+        expect(response.status).to eq(200)
+        expect(@user.status).to eq('ACTIVE')
+      end
+
+      it 'should return 200' do
+        put :update, params:
+                            {
+                              id: @user.id,
+                              status: 'FORMER'
+                            }
+        @user.reload
+        expect(response.status).to eq(200)
+        expect(@user.status).to eq('FORMER')
+      end
+
+      it 'should return 422 with invalid status' do
+        put :update, params:
+                            {
+                              id: @user.id,
+                              status: 'ACTIVE FAKE'
+                            }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with empty status' do
+        put :update, params:
+                            {
+                              id: @user.id,
+                              status: ''
+                            }
+        expect(response.status).to eq(422)
+      end
+    end
+
     describe 'PUT# employee' do
       it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
