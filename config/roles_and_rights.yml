@@ -5,6 +5,7 @@ admin:
     - show
     - create
     - update
+    - update_status
   sessions:
     - create
 super_admin:

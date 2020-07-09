@@ -5,7 +5,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
   before(:all) do
     User.delete_all
     @super_admin = FactoryBot.create(:user, :super_admin, first_name: 'An', last_name: 'da')
-    FactoryBot.create(:user, first_name: 'Bo', last_name: 'Ba')
+    @employee = FactoryBot.create(:user, first_name: 'Bo', last_name: 'Ba', roles: ['EMPLOYEE'])
     FactoryBot.create(:user, first_name: 'Ca', last_name: 'Co')
     FactoryBot.create(:user, first_name: 'Du', last_name: 'Da')
     @user = FactoryBot.create(:user, :admin, first_name: 'An', last_name: 'Ba')
@@ -17,6 +17,62 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     let!(:invalid_token) { SecureRandom.hex(64) }
     let!(:invalid_headers) { { authorization: invalid_token } }
     before(:each) { request.headers.merge! valid_headers }
+
+    describe 'PATCH# employee' do
+      it 'return status 401 status code with invalid token' do
+        request.headers.merge! invalid_headers
+        patch :update_status, params: { id: @user.id }
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 403 with employee' do
+        valid_token = JwtToken.encode({ user_id: @employee.id })
+        valid_headers = { authorization: valid_token }
+        request.headers.merge! valid_headers
+        patch :update_status, params: { id: @user.id }
+        expect(response.status).to eq(403)
+      end
+
+      it 'should return 200' do
+        patch :update_status, params:
+                                    {
+                                      id: @user.id,
+                                      status: 'ACTIVE'
+                                    }
+        @user.reload
+        expect(response.status).to eq(200)
+        expect(@user.status).to eq('ACTIVE')
+      end
+
+      it 'should return 200' do
+        patch :update_status, params:
+                                    {
+                                      id: @user.id,
+                                      status: 'FORMER'
+                                    }
+        @user.reload
+        expect(response.status).to eq(200)
+        expect(@user.status).to eq('FORMER')
+      end
+
+      it 'should return 422 with invalid status' do
+        patch :update_status, params:
+                                    {
+                                      id: @user.id,
+                                      status: 'ACTIVE fake'
+                                    }
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with empty status' do
+        patch :update_status, params:
+                                    {
+                                      id: @user.id,
+                                      status: ''
+                                    }
+        expect(response.status).to eq(422)
+      end
+    end
 
     describe 'PUT# employee' do
       it 'return status 401 status code with invalid token' do
