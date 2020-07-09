@@ -5,7 +5,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
   before(:all) do
     User.delete_all
     @super_admin = FactoryBot.create(:user, :super_admin, first_name: 'An', last_name: 'da')
-    FactoryBot.create(:user, first_name: 'Bo', last_name: 'Ba')
+    @employee = FactoryBot.create(:user, first_name: 'Bo', last_name: 'Ba', roles: ['EMPLOYEE'])
     FactoryBot.create(:user, first_name: 'Ca', last_name: 'Co')
     FactoryBot.create(:user, first_name: 'Du', last_name: 'Da')
     @user = FactoryBot.create(:user, :admin, first_name: 'An', last_name: 'Ba')
@@ -26,7 +26,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       end
 
       it 'should return 403 with employee' do
-        valid_token = JwtToken.encode({ user_id: User.second.id })
+        valid_token = JwtToken.encode({ user_id: @employee.id })
         valid_headers = { authorization: valid_token }
         request.headers.merge! valid_headers
         patch :update_status, params: { id: @user.id }
