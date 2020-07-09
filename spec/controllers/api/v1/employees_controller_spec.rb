@@ -21,47 +21,55 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     describe 'PATCH# employee' do
       it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
-        put :update, params: { id: @user.id }
+        patch :update_status, params: { id: @user.id }
         expect(response.status).to eq(401)
       end
 
+      it 'should return 403 with employee' do
+        valid_token = JwtToken.encode({ user_id: User.second.id })
+        valid_headers = { authorization: valid_token }
+        request.headers.merge! valid_headers
+        patch :update_status, params: { id: @user.id }
+        expect(response.status).to eq(403)
+      end
+
       it 'should return 200' do
-        put :update, params:
-                            {
-                              id: @user.id,
-                              status: 'ACTIVE'
-                            }
+        patch :update_status, params:
+                                    {
+                                      id: @user.id,
+                                      status: 'ACTIVE'
+                                    }
         @user.reload
         expect(response.status).to eq(200)
         expect(@user.status).to eq('ACTIVE')
       end
 
       it 'should return 200' do
-        put :update, params:
-                            {
-                              id: @user.id,
-                              status: 'FORMER'
-                            }
+        patch :update_status, params:
+                                    {
+                                      id: @user.id,
+                                      status: 'FORMER'
+                                    }
         @user.reload
         expect(response.status).to eq(200)
         expect(@user.status).to eq('FORMER')
       end
 
       it 'should return 422 with invalid status' do
-        put :update, params:
-                            {
-                              id: @user.id,
-                              status: 'ACTIVE FAKE'
-                            }
+        patch :update_status, params:
+                                    {
+                                      id: @user.id,
+                                      status: 'ACTIVE fake'
+                                    }
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty status' do
-        put :update, params:
-                            {
-                              id: @user.id,
-                              status: ''
-                            }
+        patch :update_status, params:
+                                    {
+                                      id: @user.id,
+                                      status: ''
+                                    }
         expect(response.status).to eq(422)
       end
     end
