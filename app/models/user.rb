@@ -18,6 +18,24 @@ class User < ApplicationRecord
   scope :admins, -> { where('roles @> ?', '{ADMIN}') }
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
+  def generate_password_token
+    self.reset_password_token = SecureRandom.rand(100_000..999_999)
+    self.reset_password_sent_at = Time.now
+    save!
+  end
+
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  def password_token_valid?(token)
+    self.reset_password_token == token
+  end
+
+  def password_reset_expired?
+    Time.now < (self.reset_password_sent_at + 15.minutes).localtime
+  end
+
   def self.build_employee(user_params)
     user = User.new(user_params)
     user.roles << 'EMPLOYEE'
