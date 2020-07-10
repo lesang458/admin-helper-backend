@@ -9,7 +9,6 @@ gem 'active_model_serializers'
 gem 'bcrypt', '~> 3.1.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
-gem 'dotenv-rails', groups: %i[development test]
 # Create fake data
 gem 'ffaker'
 # Use to create tokens with high security and security, avoiding theft between different systems
