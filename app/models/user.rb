@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_many :day_off_infos, dependent: :destroy
   DEFAULTPASSWORD = '123456'.freeze
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
+  RESET_TOKEN_LIFESPAN = 15.minutes
   validates :email, presence: true, length: { maximum: 255 },
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
@@ -18,6 +19,24 @@ class User < ApplicationRecord
   scope :employees, -> { where('roles @> ?', '{EMPLOYEE}}') }
   scope :admins, -> { where('roles @> ?', '{ADMIN}') }
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
+
+  def generate_password_token
+    self.reset_password_token = SecureRandom.rand(100_000..999_999)
+    self.reset_password_sent_at = Time.now
+    save!
+  end
+
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  def password_token_valid?(token)
+    self.reset_password_token == token && self.password_reset_not_expired?
+  end
+
+  def password_reset_not_expired?
+    Time.now < (self.reset_password_sent_at + RESET_TOKEN_LIFESPAN).localtime
+  end
 
   def self.build_employee(user_params)
     user = User.new(user_params)
