@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       put 'employees/:id', :to => 'employees#update'
       patch 'employees/:id/status', :to => 'employees#update_status'
       resources :password, only: %i[create update]
-      get 'password/check_token', to: 'password#valid_token'
+      post 'password/validate_token', to: 'password#validate_token'
     end
   end
 end

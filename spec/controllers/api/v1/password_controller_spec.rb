@@ -23,24 +23,24 @@ RSpec.describe Api::V1::PasswordController do
     it 'should return 200 with valid token' do
       post :create, params: { email: @user.email }
       @user.reload
-      get :valid_token, params: { email: @user.email, token: @user.reset_password_token }
+      post :validate_token, params: { email: @user.email, token: @user.reset_password_token }
       expect(response.status).to eq(200)
     end
 
-    it 'should return 400 with invalid token' do
+    it 'should return 401 with invalid token' do
       post :create, params: { email: @user.email }
       @user.reload
-      get :valid_token, params: { email: @user.email, token: '404notfound' }
-      expect(response.status).to eq(400)
+      post :validate_token, params: { email: @user.email, token: '404notfound' }
+      expect(response.status).to eq(401)
     end
 
-    it 'should return 400 with invalid token' do
+    it 'should return 401 with invalid token' do
       post :create, params: { email: @user.email }
       @user.reload
       @user.reset_password_sent_at -= 15.minutes
       @user.save
-      get :valid_token, params: { email: @user.email, token: @user.reset_password_token }
-      expect(response.status).to eq(400)
+      post :validate_token, params: { email: @user.email, token: @user.reset_password_token }
+      expect(response.status).to eq(401)
     end
   end
 

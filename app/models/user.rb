@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   DEFAULTPASSWORD = '123456'.freeze
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
+  RESET_TOKEN_LIFESPAN = 15.minutes
   validates :email, presence: true, length: { maximum: 255 },
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
@@ -29,11 +30,11 @@ class User < ApplicationRecord
   end
 
   def password_token_valid?(token)
-    self.reset_password_token == token
+    self.reset_password_token == token && self.password_reset_not_expired?
   end
 
   def password_reset_not_expired?
-    Time.now < (self.reset_password_sent_at + 15.minutes).localtime
+    Time.now < (self.reset_password_sent_at + RESET_TOKEN_LIFESPAN).localtime
   end
 
   def self.build_employee(user_params)
