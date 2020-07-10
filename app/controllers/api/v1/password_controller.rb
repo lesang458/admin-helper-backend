@@ -1,16 +1,15 @@
 class Api::V1::PasswordController < ApplicationController
-  skip_before_action :authorize_request, only: %i[create valid_token? update]
-  before_action :find_user
+  skip_before_action :authorize_request, only: %i[create valid_token update]
+  before_action :set_user
   before_action :check_expired, only: [:update]
   def create
-    user = find_user
-    user.generate_password_token
-    user.send_password_reset_email
+    @user.generate_password_token
+    @user.send_password_reset_email
     render json: 'ok', status: :ok
   end
 
-  def valid_token?
-    if @user.password_token_valid?(params[:token]) && @user.password_reset_expired?
+  def valid_token
+    if @user.password_token_valid?(params[:token]) && @user.password_reset_not_expired?
       render json: { message: 'isValid: true' }, status: :ok
     else
       render_bad_request_error('isValid: false')
@@ -18,7 +17,7 @@ class Api::V1::PasswordController < ApplicationController
   end
 
   def update
-    @user.update(password_params)
+    @user.update!(password_params)
     render json: { message: 'Update success' }, status: :ok
   end
 
@@ -30,7 +29,7 @@ class Api::V1::PasswordController < ApplicationController
     params.permit(:encrypted_password)
   end
 
-  def find_user
+  def set_user
     @user = User.find_by!(email: params[:email])
   end
 
