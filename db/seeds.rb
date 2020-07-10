@@ -21,3 +21,7 @@ former_user = User.create!(
   status: "FORMER",
   phone_number: "0935270046"
 )
+
+DayOffCategory.create! name: 'VACATION'
+
+DayOffCategory.create! name: 'ILLNESS'
