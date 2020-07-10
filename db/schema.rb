@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_09_092715) do
+ActiveRecord::Schema.define(version: 2020_07_10_021916) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,5 +46,5 @@ ActiveRecord::Schema.define(version: 2020_07_09_092715) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "day_off_infos", "users"
+  add_foreign_key "day_off_infos", "users", on_delete: :cascade
 end
