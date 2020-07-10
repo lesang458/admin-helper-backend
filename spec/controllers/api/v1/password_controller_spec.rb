@@ -34,7 +34,7 @@ RSpec.describe Api::V1::PasswordController do
       expect(response.status).to eq(401)
     end
 
-    it 'should return 401 with invalid token' do
+    it 'should return 401 with expired token' do
       post :create, params: { email: @user.email }
       @user.reload
       @user.reset_password_sent_at -= 15.minutes
@@ -45,21 +45,21 @@ RSpec.describe Api::V1::PasswordController do
   end
 
   describe 'password' do
-    it 'shouldreturn 200 with params new password empty' do
+    it 'should return 400 with empty password' do
       post :create, params: { email: @user.email }
       @user.reload
       put :update, params: { id: @user.id, email: @user.email, token: @user.reset_password_token, new_password: '' }
       expect(response.status).to eq(400)
     end
 
-    it 'should return 200 with params new password presence' do
+    it 'should return 200 with new valid password' do
       post :create, params: { email: @user.email }
       @user.reload
       put :update, params: { id: @user.id, email: @user.email, token: @user.reset_password_token, new_password: '123456789' }
       expect(response.status).to eq(200)
     end
 
-    it 'should return 401 with params new password presence and invalid token' do
+    it 'should return 401 with params new valid password and invalid token' do
       post :create, params: { email: @user.email }
       @user.reload
       put :update, params: { id: @user.id, email: @user.email, token: '404notfound', new_password: '123456789' }

@@ -9,7 +9,7 @@ class Api::V1::PasswordController < ApplicationController
   end
 
   def validate_token
-    render json: { message: 'isValid: true' }, status: :ok
+    render json: { valid: true }, status: :ok
   end
 
   def update
