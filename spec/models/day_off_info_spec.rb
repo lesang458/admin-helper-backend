@@ -5,7 +5,7 @@ RSpec.describe DayOffInfo, type: :model do
     DayOffInfo.delete_all
     DayOffCategory.delete_all
     User.delete_all
-    @user = FactoryBot.create(:user, first_name: 'dang', last_name: 'hanh', birthdate: '1995-12-01', join_date: '2015-12-01')
+    @user = FactoryBot.create(:user, :employee)
 
     @day_off_category_vacation = FactoryBot.create(:day_off_category, :day_off_category_vacation)
     @day_off_category_illness = FactoryBot.create(:day_off_category, :day_off_category_illness)
