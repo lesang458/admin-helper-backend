@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_10_030228) do
+ActiveRecord::Schema.define(version: 2020_07_10_072547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,17 @@ ActiveRecord::Schema.define(version: 2020_07_10_030228) do
     t.index ["user_id"], name: "index_day_off_infos_on_user_id"
   end
 
+  create_table "day_off_requests", force: :cascade do |t|
+    t.datetime "from_date"
+    t.datetime "to_date"
+    t.integer "hours_per_day"
+    t.text "notes"
+    t.bigint "day_off_info_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["day_off_info_id"], name: "index_day_off_requests_on_day_off_info_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password"
@@ -48,4 +59,5 @@ ActiveRecord::Schema.define(version: 2020_07_10_030228) do
   end
 
   add_foreign_key "day_off_infos", "users", on_delete: :cascade
+  add_foreign_key "day_off_requests", "day_off_infos"
 end

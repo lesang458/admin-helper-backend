@@ -7,7 +7,8 @@
     birthdate: FFaker::IdentificationESCO.expedition_date,
     join_date: FFaker::IdentificationESCO.expedition_date,
     status: "ACTIVE",
-    phone_number: "0123456789"
+    phone_number: "0123456789",
+    roles: %w[EMPLOYEE]
   )
 end
 
@@ -19,7 +20,8 @@ former_user = User.create!(
   birthdate: FFaker::IdentificationESCO.expedition_date,
   join_date: FFaker::IdentificationESCO.expedition_date,
   status: "FORMER",
-  phone_number: "0935270046"
+  phone_number: "0935270046",
+  roles: %w[EMPLOYEE ADMIN]
 )
 
 DayOffCategory.create! name: 'VACATION'
