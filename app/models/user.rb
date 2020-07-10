@@ -32,7 +32,7 @@ class User < ApplicationRecord
     self.reset_password_token == token
   end
 
-  def password_reset_expired?
+  def password_reset_not_expired?
     Time.now < (self.reset_password_sent_at + 15.minutes).localtime
   end
 
