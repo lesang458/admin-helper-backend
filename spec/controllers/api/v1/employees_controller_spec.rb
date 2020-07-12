@@ -3,12 +3,20 @@ require 'jwt_token'
 
 RSpec.describe Api::V1::EmployeesController, type: :controller do
   before(:all) do
+    DayOffInfo.delete_all
+    DayOffCategory.delete_all
     User.delete_all
     @super_admin = FactoryBot.create(:user, :super_admin, first_name: 'An', last_name: 'da')
     @employee = FactoryBot.create(:user, first_name: 'Bo', last_name: 'Ba', roles: ['EMPLOYEE'])
     FactoryBot.create(:user, first_name: 'Ca', last_name: 'Co')
     FactoryBot.create(:user, first_name: 'Du', last_name: 'Da')
     @user = FactoryBot.create(:user, :admin, first_name: 'An', last_name: 'Ba')
+
+    @day_off_category_vacation = FactoryBot.create(:day_off_category, :day_off_category_vacation)
+    @day_off_category_illness = FactoryBot.create(:day_off_category, :day_off_category_illness)
+
+    @day_off_info_vacation = FactoryBot.create(:day_off_info, :day_off_info_vacation)
+    @day_off_info_illness = FactoryBot.create(:day_off_info, :day_off_info_illness)
   end
 
   describe 'token' do
@@ -162,13 +170,27 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 201' do
         post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23',
-                                phone_number: '0123456789' }
+                                phone_number: '0123456789',
+                                day_off_info: [{ day_off_categories_id: @day_off_category_vacation.id, hours: 160 }, { day_off_categories_id: @day_off_category_illness.id, hours: 160 }] }
         expect(response.status).to eq(201)
       end
 
       it 'should return 201 without phone_number' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23', 
+                                day_off_info: [{ day_off_categories_id: @day_off_category_vacation.id, hours: 160 }, { day_off_categories_id: @day_off_category_illness.id, hours: 160 }] }
         expect(response.status).to eq(201)
+      end
+
+      it 'should return 404 with invalid day_off_categories_id' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23', 
+                                day_off_info: [{ day_off_categories_id: @day_off_category_vacation.id + @day_off_category_illness.id, hours: 160 }, { day_off_categories_id: @day_off_category_illness.id, hours: 160 }] }
+        expect(response.status).to eq(404)
+      end
+
+      it 'should return 422 with invalid hours' do
+        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23', 
+                                day_off_info: [{ day_off_categories_id: @day_off_category_vacation.id, hours: -160 }, { day_off_categories_id: @day_off_category_illness.id, hours: 160 }] }
+        expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty email' do

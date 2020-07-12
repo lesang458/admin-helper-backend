@@ -25,4 +25,8 @@ module JsonResponseHandler
   def render_resource(obj, status_code_symbol, serializer_class)
     render json: { "#{obj.class.to_s.downcase}": serializer_class.new(obj) }, status: status_code_symbol
   end
+
+  def render_resource_user(obj, status_code_symbol)
+    render json: { user: UserSerializer.new(obj), day_off_info: obj.day_off_infos.collect { |day_off| DayOffInfoSerializer.new(day_off) } }, status: status_code_symbol
+  end
 end
