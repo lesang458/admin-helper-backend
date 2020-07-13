@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       resources :employees, only: %i[index create show]
       put 'employees/:id', :to => 'employees#update'
       patch 'employees/:id/status', :to => 'employees#update_status'
+      post 'employees/:id/day-off-requests', to: 'day_off_request#create'
     end
   end
 end
