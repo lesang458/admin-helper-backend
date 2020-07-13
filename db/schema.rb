@@ -57,6 +57,8 @@ ActiveRecord::Schema.define(version: 2020_07_10_072547) do
     t.string "status", default: "ACTIVE"
     t.string "phone_number"
     t.string "roles", default: [], array: true
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
