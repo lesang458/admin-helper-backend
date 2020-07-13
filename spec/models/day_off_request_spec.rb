@@ -22,9 +22,14 @@ RSpec.describe DayOffRequest, type: :model do
 
   describe DayOffRequest do
     it { should belong_to(:day_off_info) }
+    it { should belong_to(:user) }
   end
 
   describe DayOffInfo do
+    it { should have_many(:day_off_request) }
+  end
+
+  describe User do
     it { should have_many(:day_off_request) }
   end
 end
