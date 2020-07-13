@@ -26,7 +26,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
   describe 'Create day off with request failed' do
     let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
     let!(:valid_headers) { { authorization: valid_token } }
-    let!(:invalid_token) { JwtToken.encode({ user_id: @employee.id}) }
+    let!(:invalid_token) { JwtToken.encode({ user_id: @employee.id }) }
     let!(:invalid_headers) { { authorization: invalid_token } }
     before(:each) { request.headers.merge! valid_headers }
     it 'should return 422 with from date or to date empty' do
