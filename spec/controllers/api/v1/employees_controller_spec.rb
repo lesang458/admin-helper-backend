@@ -196,11 +196,11 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(201)
       end
 
-      it 'should return 404 with invalid day_off_category_id' do
+      it 'should return 422 with invalid day_off_category_id' do
         params = employee_params.dup
         params[:day_off_info].first[:day_off_category_id] = invalid_day_off_category_id
         post :create, params: params
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(422)
       end
 
       it 'should return 422 with invalid hours' do
