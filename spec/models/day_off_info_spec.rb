@@ -7,28 +7,28 @@ RSpec.describe DayOffInfo, type: :model do
     User.delete_all
     @user = FactoryBot.create(:user, :employee)
 
-    @day_off_category_vacation = FactoryBot.create(:day_off_category, :day_off_category_vacation)
-    @day_off_category_illness = FactoryBot.create(:day_off_category, :day_off_category_illness)
+    FactoryBot.create(:day_off_category, :vacation)
+    FactoryBot.create(:day_off_category, :illness)
 
-    @day_off_info_vacation = FactoryBot.create(:day_off_info, :day_off_info_vacation)
-    @day_off_info_illness = FactoryBot.create(:day_off_info, :day_off_info_illness)
+    @info_vacation = FactoryBot.create(:day_off_info, :vacation)
+    @info_illness = FactoryBot.create(:day_off_info, :illness)
   end
 
   it 'should return user_id eq first user id ' do
-    expect(@day_off_info_vacation.user_id).to eq(@user.id)
+    expect(@info_vacation.user_id).to eq(@user.id)
   end
 
   it 'should return user_id eq first user id ' do
-    expect(@day_off_info_illness.user_id).to eq(@user.id)
+    expect(@info_illness.user_id).to eq(@user.id)
   end
 
   it 'should return day_off_category have name VACATION' do
-    vacation = DayOffCategory.find(@day_off_info_vacation.day_off_category_id)
+    vacation = DayOffCategory.find(@info_vacation.day_off_category_id)
     expect(vacation.name).to eq('VACATION')
   end
 
   it 'should return day_off_category have name ILLNESS' do
-    illness = DayOffCategory.find(@day_off_info_illness.day_off_category_id)
+    illness = DayOffCategory.find(@info_illness.day_off_category_id)
     expect(illness.name).to eq('ILLNESS')
   end
 

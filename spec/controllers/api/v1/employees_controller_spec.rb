@@ -12,11 +12,10 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     FactoryBot.create(:user, first_name: 'Du', last_name: 'Da')
     @user = FactoryBot.create(:user, :admin, first_name: 'An', last_name: 'Ba')
 
-    @day_off_category_vacation = FactoryBot.create(:day_off_category, :day_off_category_vacation)
-    @day_off_category_illness = FactoryBot.create(:day_off_category, :day_off_category_illness)
-
-    @day_off_info_vacation = FactoryBot.create(:day_off_info, :day_off_info_vacation)
-    @day_off_info_illness = FactoryBot.create(:day_off_info, :day_off_info_illness)
+    @category_vacation = FactoryBot.create(:day_off_category, :vacation)
+    @category_illness = FactoryBot.create(:day_off_category, :illness)
+    @info_vacation = FactoryBot.create(:day_off_info, :vacation)
+    @info_illness = FactoryBot.create(:day_off_info, :illness)
   end
 
   describe 'token' do
@@ -171,11 +170,11 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
           join_date: '2019-11-23',
           phone_number: '0123456789',
           day_off_info: [
-            { day_off_category_id: @day_off_category_vacation.id, hours: 160 },
-            { day_off_category_id: @day_off_category_illness.id, hours: 160 }
+            { day_off_category_id: @category_vacation.id, hours: 160 },
+            { day_off_category_id: @category_illness.id, hours: 160 }
           ] }
       }
-      let!(:invalid_day_off_category_id) { @day_off_category_vacation.id + @day_off_category_illness.id }
+      let!(:invalid_day_off_category_id) { @category_vacation.id + @category_illness.id }
 
       it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
