@@ -162,6 +162,21 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     end
 
     describe 'POST# employee' do
+      let!(:employee_params) {
+        { first_name: 'dang',
+          last_name: 'hanh',
+          email: 'danghanh@mail.com',
+          encrypted_password: '123456',
+          birthdate: '1999-02-02',
+          join_date: '2019-11-23',
+          phone_number: '0123456789',
+          day_off_info: [
+            { day_off_category_id: @day_off_category_vacation.id, hours: 160 },
+            { day_off_category_id: @day_off_category_illness.id, hours: 160 }
+          ] }
+      }
+      let!(:invalid_day_off_category_id) { @day_off_category_vacation.id + @day_off_category_illness.id }
+
       it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
         get :index
@@ -169,76 +184,85 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       end
 
       it 'should return 201' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23',
-                                phone_number: '0123456789',
-                                day_off_info: [
-                                  { day_off_categories_id: @day_off_category_vacation.id, hours: 160 },
-                                  { day_off_categories_id: @day_off_category_illness.id, hours: 160 }
-                                ] }
+        params = employee_params.dup
+        post :create, params: params
         expect(response.status).to eq(201)
       end
 
       it 'should return 201 without phone_number' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23',
-                                day_off_info: [
-                                  { day_off_categories_id: @day_off_category_vacation.id, hours: 160 },
-                                  { day_off_categories_id: @day_off_category_illness.id, hours: 160 }
-                                ] }
+        params = employee_params.dup
+        params.delete(:phone_number)
+        post :create, params: params
         expect(response.status).to eq(201)
       end
 
-      it 'should return 404 with invalid day_off_categories_id' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23',
-                                day_off_info: [
-                                  { day_off_categories_id: @day_off_category_vacation.id + @day_off_category_illness.id, hours: 160 },
-                                  { day_off_categories_id: @day_off_category_illness.id, hours: 160 }
-                                ] }
+      it 'should return 404 with invalid day_off_category_id' do
+        params = employee_params.dup
+        params[:day_off_info].first[:day_off_category_id] = invalid_day_off_category_id
+        post :create, params: params
         expect(response.status).to eq(404)
       end
 
       it 'should return 422 with invalid hours' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@mail.com', encrypted_password: '123456', birthdate: '1999-02-02', join_date: '2019-11-23',
-                                day_off_info: [{ day_off_categories_id: @day_off_category_vacation.id, hours: -160 }, { day_off_categories_id: @day_off_category_illness.id, hours: 160 }] }
+        params = employee_params.dup
+        params[:day_off_info].first[:hours] = -160
+        post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty email' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = employee_params.dup
+        params[:email] = ''
+        post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with invalid email' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = employee_params.dup
+        params[:email] = 'danghanh@'
+        post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with invalid email' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = employee_params.dup
+        params[:email] = 'danghanh@gmail'
+        post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty first_name' do
-        post :create, params: { first_name: '', last_name: 'hanh', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = employee_params.dup
+        params[:first_name] = ''
+        post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty last_name' do
-        post :create, params: { first_name: 'dang', last_name: '', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = employee_params.dup
+        params[:last_name] = ''
+        post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 without first_name' do
-        post :create, params: { last_name: 'hanh', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = employee_params.dup
+        params.delete(:first_name)
+        post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 without last_name' do
-        post :create, params: { first_name: 'dang', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = employee_params.dup
+        params.delete(:last_name)
+        post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with birthdate is after today' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail.com', birthdate: '2999-02-02', join_date: '2019-11-23' }
+        params = employee_params.dup
+        params[:birthdate] = '2999-02-02'
+        post :create, params: params
         expect(response.status).to eq(422)
       end
     end
