@@ -8,4 +8,6 @@ admin:
     - update_status
   sessions:
     - create
+  day_off_request:
+    - create
 super_admin:

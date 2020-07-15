@@ -32,6 +32,19 @@ ActiveRecord::Schema.define(version: 2020_07_14_071130) do
     t.index ["user_id"], name: "index_day_off_infos_on_user_id"
   end
 
+  create_table "day_off_requests", force: :cascade do |t|
+    t.datetime "from_date"
+    t.datetime "to_date"
+    t.integer "hours_per_day"
+    t.text "notes"
+    t.bigint "day_off_info_id"
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["day_off_info_id"], name: "index_day_off_requests_on_day_off_info_id"
+    t.index ["user_id"], name: "index_day_off_requests_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password"
@@ -51,4 +64,6 @@ ActiveRecord::Schema.define(version: 2020_07_14_071130) do
 
   add_foreign_key "day_off_infos", "day_off_categories", on_delete: :cascade
   add_foreign_key "day_off_infos", "users", on_delete: :cascade
+  add_foreign_key "day_off_requests", "day_off_infos"
+  add_foreign_key "day_off_requests", "users"
 end
