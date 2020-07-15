@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_many :day_off_infos, dependent: :destroy
-  has_many :day_off_request, dependent: :destroy
+  has_many :day_off_requests, dependent: :destroy
   DEFAULTPASSWORD = '123456'.freeze
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
   RESET_TOKEN_LIFESPAN = 15.minutes

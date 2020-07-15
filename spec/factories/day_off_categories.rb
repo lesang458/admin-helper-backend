@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :day_off_category do
-    trait :day_off_category_vacation do
+    trait :vacation do
       name { 'VACATION' }
     end
-    trait :day_off_category_illness do
+    trait :illness do
       name { 'ILLNESS' }
     end
   end

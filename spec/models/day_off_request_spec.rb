@@ -26,10 +26,10 @@ RSpec.describe DayOffRequest, type: :model do
   end
 
   describe DayOffInfo do
-    it { should have_many(:day_off_request) }
+    it { should have_many(:day_off_requests) }
   end
 
   describe User do
-    it { should have_many(:day_off_request) }
+    it { should have_many(:day_off_requests) }
   end
 end
