@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe Api::V1::DayOffRequestController, type: :controller do
   before(:all) do
     DayOffCategory.delete_all
-    @day_off_category = FactoryBot.create(:day_off_category, :day_off_category_vacation)
+    @day_off_category = FactoryBot.create(:day_off_category, :vacation)
     @admin = FactoryBot.create(:user, :admin)
     @employee = FactoryBot.create(:user, :employee)
-    @day_off_info = FactoryBot.create(:day_off_info, :day_off_info_vacation)
+    @day_off_info = FactoryBot.create(:day_off_info, :vacation)
   end
 
   let!(:request_params) { { from_date: Time.now, to_date: Time.now, hours_per_day: 4, notes: 'ok', id: @admin.id, day_off_info_id: @day_off_info.id } }
