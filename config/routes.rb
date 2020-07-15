@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       put 'employees/:id', :to => 'employees#update'
       patch 'employees/:id/status', :to => 'employees#update_status'
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
+      get 'employees/:id/day-off-requests', to: 'day_off_request#index'
       post 'password/validate_token', to: 'password#validate_token'
       resources :password, only: %i[create update]
     end

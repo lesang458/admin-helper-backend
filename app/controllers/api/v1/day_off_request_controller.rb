@@ -1,4 +1,9 @@
 class Api::V1::DayOffRequestController < ApplicationController
+  def index
+    day_off_request = DayOffRequest.search(params)
+    render_list_request(day_off_request, DayOffRequestSerializer)
+  end
+
   def create
     employee = User.find(params[:id])
     day_off_request = employee.day_off_request.build(day_off_request_params)

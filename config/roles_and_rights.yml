@@ -10,4 +10,5 @@ admin:
     - create
   day_off_request:
     - create
+    - index
 super_admin:
