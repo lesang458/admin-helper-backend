@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::DayOffRequestController, type: :controller do
   before(:all) do
+    DayOffRequest.delete_all
+    DayOffInfo.delete_all
     DayOffCategory.delete_all
     @day_off_category = FactoryBot.create(:day_off_category, :vacation)
     @admin = FactoryBot.create(:user, :admin)
@@ -9,12 +11,26 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     @day_off_info = FactoryBot.create(:day_off_info, :vacation)
   end
 
+  let!(:params) { { day_off_category_id: @day_off_category.id, from_date: Time.now, to_date: Time.now, id: @admin.id } }
   let!(:request_params) { { from_date: Time.now, to_date: Time.now, hours_per_day: 4, notes: 'ok', id: @admin.id, day_off_info_id: @day_off_info.id } }
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
   let!(:valid_headers) { { authorization: valid_token } }
   let!(:invalid_token) { JwtToken.encode({ user_id: @employee.id }) }
   let!(:invalid_headers) { { authorization: invalid_token } }
   before(:each) { request.headers.merge! valid_headers }
+
+  describe 'Get Hisory' do
+    it 'should return 403' do
+      request.headers.merge! invalid_headers
+      get :index, params: params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 200' do
+      get :index, params: params
+      expect(response.status).to eq(200)
+    end
+  end
 
   describe 'Create day off request success' do
     it 'should return 201 ' do
