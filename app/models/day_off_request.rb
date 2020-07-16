@@ -6,10 +6,15 @@ class DayOffRequest < ApplicationRecord
   validates :hours_per_day, presence: true, numericality: { only_integer: true, greater_than: 0 }
   delegate :email, :first_name, :last_name, to: :user
 
-  scope :from_date, ->(to) { where('from_date <= ?', to) if to }
-  scope :to_date, ->(from) { where('to_date >= ?', from) if from }
+  scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
+  scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
 
   def self.search(params)
-    DayOffRequest.includes(day_off_info: :day_off_category).from_date(params[:to_date]).to_date(params[:from_date])
+    day_off_request = DayOffRequest.joins("INNER JOIN day_off_infos ON day_off_infos.id = day_off_requests.day_off_info_id
+      INNER JOIN day_off_categories ON day_off_categories.id = day_off_infos.day_off_category_id")
+    day_off_request = day_off_request.where("day_off_categories.id = #{params[:day_off_category_id]}") if params[:day_off_category_id]
+    day_off_request = day_off_request.to_date(params[:to_date])
+    day_off_request = day_off_request.from_date(params[:from_date])
+    day_off_request
   end
 end
