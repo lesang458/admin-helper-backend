@@ -25,7 +25,7 @@ RSpec.describe DayOffRequest, type: :model do
   describe 'GET history day off request' do
     it 'ID must be in the list with vacation and from date, to date' do
       day_off_requests = DayOffRequest.search(request_params)
-      expect(day_off_requests.map(&:user_id).uniq.first).to eq(request_params[:id])
+      expect(day_off_requests.map(&:user_id).uniq).to eq([request_params[:id]])
       expect(day_off_requests.ids).to include @day_off_request.id
     end
 
@@ -33,7 +33,7 @@ RSpec.describe DayOffRequest, type: :model do
       params = request_params.dup
       params.delete(:from_date)
       day_off_requests = DayOffRequest.search(params)
-      expect(day_off_requests.map(&:user_id).uniq.first).to eq(request_params[:id])
+      expect(day_off_requests.map(&:user_id).uniq).to eq([request_params[:id]])
       expect(day_off_requests.ids).to include @day_off_request.id
     end
 
@@ -41,7 +41,7 @@ RSpec.describe DayOffRequest, type: :model do
       params = request_params.dup
       params.delete(:to_date)
       day_off_requests = DayOffRequest.search(params)
-      expect(day_off_requests.map(&:user_id).uniq.first).to eq(request_params[:id])
+      expect(day_off_requests.map(&:user_id).uniq).to eq([request_params[:id]])
       expect(day_off_requests.ids).to include @day_off_request.id
     end
 
