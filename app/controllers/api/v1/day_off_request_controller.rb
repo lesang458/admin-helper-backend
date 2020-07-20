@@ -1,7 +1,7 @@
 class Api::V1::DayOffRequestController < ApplicationController
   def index
-    day_off_request = DayOffRequest.search(params)
-    render_list_request(day_off_request, DayOffRequestSerializer)
+    day_off_requests = DayOffRequest.search(params)
+    render_list_request(day_off_requests, DayOffRequestSerializer)
   end
 
   def create
