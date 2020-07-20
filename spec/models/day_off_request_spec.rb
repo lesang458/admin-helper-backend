@@ -11,6 +11,7 @@ RSpec.describe DayOffRequest, type: :model do
     @vacation_info = FactoryBot.create(:day_off_info, :vacation)
     @illness_info = FactoryBot.create(:day_off_info, :illness)
     @day_off_request = FactoryBot.create(:day_off_request, user: @admin, day_off_info: @vacation_info, from_date: '2020-07-07', to_date: '2020-07-20')
+    FactoryBot.create(:day_off_request, user: @admin, day_off_info: @vacation_info, from_date: '2020-07-07', to_date: '2020-07-20')
     FactoryBot.create(:day_off_request, user: @admin, day_off_info: @illness_info, from_date: '2020-07-20', to_date: '2020-07-24')
   end
   describe 'hours per day' do
@@ -24,9 +25,7 @@ RSpec.describe DayOffRequest, type: :model do
   describe 'GET history day off request' do
     it 'ID must be in the list with vacation and from date, to date' do
       day_off_requests = DayOffRequest.search(request_params)
-      day_off_requests.each do |request|
-        expect(request.user_id).to eq(request_params[:id])
-      end
+      expect(day_off_requests.map(&:user_id).uniq.first).to eq(request_params[:id])
       expect(day_off_requests.ids).to include @day_off_request.id
     end
 
@@ -34,9 +33,7 @@ RSpec.describe DayOffRequest, type: :model do
       params = request_params.dup
       params.delete(:from_date)
       day_off_requests = DayOffRequest.search(params)
-      day_off_requests.each do |request|
-        expect(request.user_id).to eq(request_params[:id])
-      end
+      expect(day_off_requests.map(&:user_id).uniq.first).to eq(request_params[:id])
       expect(day_off_requests.ids).to include @day_off_request.id
     end
 
@@ -44,9 +41,7 @@ RSpec.describe DayOffRequest, type: :model do
       params = request_params.dup
       params.delete(:to_date)
       day_off_requests = DayOffRequest.search(params)
-      day_off_requests.each do |request|
-        expect(request.user_id).to eq(request_params[:id])
-      end
+      expect(day_off_requests.map(&:user_id).uniq.first).to eq(request_params[:id])
       expect(day_off_requests.ids).to include @day_off_request.id
     end
 
