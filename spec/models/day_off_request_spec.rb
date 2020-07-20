@@ -20,10 +20,12 @@ RSpec.describe DayOffRequest, type: :model do
     it { should_not allow_value(-123).for(:hours_per_day) }
   end
 
-  let!(:request_params) { { day_off_category_id: @vacation.id, from_date: '2020-07-10', to_date: '2020-07-15' } }
+  let!(:request_params) { { id: @admin.id, day_off_category_id: @vacation.id, from_date: '2020-07-10', to_date: '2020-07-15' } }
   describe 'GET history day off request' do
     it 'ID must be in the list with vacation and from date, to date' do
       day_off_request = DayOffRequest.search(request_params)
+      request = day_off_request.first
+      expect(request.user_id).to eq(request_params[:id])
       expect(day_off_request.ids).to include @day_off_request.id
     end
 
@@ -31,6 +33,8 @@ RSpec.describe DayOffRequest, type: :model do
       params = request_params.dup
       params.delete(:from_date)
       day_off_request = DayOffRequest.search(params)
+      request = day_off_request.first
+      expect(request.user_id).to eq(params[:id])
       expect(day_off_request.ids).to include @day_off_request.id
     end
 
@@ -38,6 +42,8 @@ RSpec.describe DayOffRequest, type: :model do
       params = request_params.dup
       params.delete(:to_date)
       day_off_request = DayOffRequest.search(params)
+      request = day_off_request.first
+      expect(request.user_id).to eq(params[:id])
       expect(day_off_request.ids).to include @day_off_request.id
     end
 

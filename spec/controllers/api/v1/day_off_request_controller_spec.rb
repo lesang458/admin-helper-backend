@@ -11,7 +11,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     @day_off_info = FactoryBot.create(:day_off_info, :vacation)
   end
 
-  let!(:params) { { day_off_category_id: @day_off_category.id, from_date: Time.now, to_date: Time.now, id: @admin.id } }
+  let!(:params) { { day_off_category_id: @day_off_category.id, from_date: Time.now, to_date: Time.now, id: @employee.id } }
   let!(:request_params) { { from_date: Time.now, to_date: Time.now, hours_per_day: 4, notes: 'ok', id: @admin.id, day_off_info_id: @day_off_info.id } }
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
   let!(:valid_headers) { { authorization: valid_token } }

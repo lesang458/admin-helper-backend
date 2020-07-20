@@ -13,6 +13,7 @@ class DayOffRequest < ApplicationRecord
   def self.search(params)
     day_off_request = DayOffRequest.all
     day_off_request = DayOffCategory.find(params[:day_off_category_id]).day_off_requests if params[:day_off_category_id]
+    day_off_request = day_off_request.where('day_off_requests.user_id = ?', params[:id])
     day_off_request = day_off_request.to_date(params[:to_date])
     day_off_request = day_off_request.from_date(params[:from_date])
     day_off_request
