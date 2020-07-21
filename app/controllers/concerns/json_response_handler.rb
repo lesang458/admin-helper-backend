@@ -22,17 +22,6 @@ module JsonResponseHandler
     }
   end
 
-  def render_list_request(list, serializer_class)
-    render json: {
-      data: list.map do |item|
-        {
-          request: serializer_class.new(item),
-          day_off_category: item.day_off_info.day_off_category
-        }
-      end
-    }
-  end
-
   def render_resource(obj, status_code_symbol, serializer_class)
     render json: { "#{obj.class.to_s.downcase}": serializer_class.new(obj) }, status: status_code_symbol
   end
