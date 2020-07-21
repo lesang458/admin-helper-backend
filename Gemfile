@@ -11,10 +11,16 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 # Create fake data
 gem 'ffaker'
+# These client libraries are officially supported by Google
+gem 'google-api-client'
 # Use to create tokens with high security and security, avoiding theft between different systems
 gem 'jwt'
 # Use pagination
 gem 'kaminari-activerecord'
+# OmniAuth is a library that standardizes multi-provider authentication for web applications.
+gem 'omniauth'
+# Strategy to authenticate with Google via OAuth2 in OmniAuth
+gem 'omniauth-google-oauth2'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
 # Puma processes requests using a C-optimized Ragel extension  that provides fast, accurate HTTP 1.1 protocol parsing in a portable way. Puma then serves the request using a thread pool

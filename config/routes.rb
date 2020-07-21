@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
       post 'password/validate_token', to: 'password#validate_token'
       resources :password, only: %i[create update]
+      get 'oauth/:provider/google_login', to: 'sessions#google_login'
     end
   end
 end
