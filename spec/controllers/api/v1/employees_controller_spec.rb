@@ -19,6 +19,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
   end
 
   describe 'token' do
+    let!(:request_params) { { day_off_from_date: '2020-07-05', day_off_to_date: '2020-07-12' } }
     let!(:valid_token) { JwtToken.encode({ user_id: @user.id }) }
     let!(:valid_headers) { { authorization: valid_token } }
     let!(:invalid_token) { SecureRandom.hex(64) }
@@ -326,6 +327,25 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         valid_headers = { authorization: valid_token }
         request.headers.merge! valid_headers
         get :index
+        expect(response.status).to eq(200)
+      end
+
+      it 'should return 200 with day off from date and day off to date' do
+        get :index, params: request_params
+        expect(response.status).to eq(200)
+      end
+
+      it 'should return 200 with day off from date' do
+        params = request_params.dup
+        params.delete(:day_off_to_date)
+        get :index, params: params
+        expect(response.status).to eq(200)
+      end
+
+      it 'should return 200 with day off to date' do
+        params = request_params.dup
+        params.delete(:day_off_from_date)
+        get :index, params: params
         expect(response.status).to eq(200)
       end
 
