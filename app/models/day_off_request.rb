@@ -6,6 +6,7 @@ class DayOffRequest < ApplicationRecord
   validates :hours_per_day, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validate :validate_date_range
   delegate :email, :first_name, :last_name, to: :user
+  delegate :day_off_category, to: :day_off_info
 
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
