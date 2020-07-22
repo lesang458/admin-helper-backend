@@ -17,8 +17,6 @@ gem 'google-api-client'
 gem 'jwt'
 # Use pagination
 gem 'kaminari-activerecord'
-# OmniAuth is a library that standardizes multi-provider authentication for web applications.
-gem 'omniauth'
 # Strategy to authenticate with Google via OAuth2 in OmniAuth
 gem 'omniauth-google-oauth2'
 # Use postgresql as the database for Active Record

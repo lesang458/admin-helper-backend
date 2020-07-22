@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'google/apis/oauth2_v2'
 RSpec.describe Api::V1::SessionsController do
   describe 'Success Sessions' do
     before(:each) do
