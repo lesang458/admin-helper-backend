@@ -1,5 +1,5 @@
 require 'google/apis/oauth2_v2'
-module GoogleApis::OAuth2
+module GoogleApis::Oauth2
   def self.get_user_info(authorization_code)
     google = Google::Apis::Oauth2V2::Oauth2Service.new
     signet = response_signet
@@ -16,10 +16,10 @@ module GoogleApis::OAuth2
       grant_type: 'authorization_code',
       authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
       token_credential_uri: 'https://www.googleapis.com/oauth2/v3/token',
-      client_id: '632249869598-6ki4aqovptqpgl23slvsrtrft37mbmrm.apps.googleusercontent.com',
-      client_secret: '6Vx_XGOaLyF-7kqwRk4OcilN',
+      client_id: Rails.application.credentials.CLIENT_ID,
+      client_secret: Rails.application.credentials.CLIENT_SECRET,
       scope: 'email profile',
-      redirect_uri: 'http://localhost:3000/api/v1/oauth/google_oauth2/callback'
+      redirect_uri: Rails.application.config.redirect_uri_callback
     )
   end
 end

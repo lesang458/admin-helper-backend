@@ -60,4 +60,5 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  config.redirect_uri_callback = 'http://localhost:3000/api/v1/oauth/google_oauth2/callback'
 end
