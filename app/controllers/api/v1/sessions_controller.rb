@@ -11,7 +11,7 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def google_login
-    user = User.find_by(email: response_login_email)
+    user = User.find_by(email: google_user_email)
     if user
       jwt = JwtToken.render_user_authorized_token user.jwt_payload
       render json: { token: "Bearer #{jwt}", user: UserSerializer.new(user) }
@@ -22,7 +22,7 @@ class Api::V1::SessionsController < ApplicationController
 
   private
 
-  def response_login_email
-    GetGoogleUserinfo.get_access_token(params[:authorization_code]).email
+  def google_user_email
+    GoogleApis::OAuth2.get_user_info(params[:authorization_code]).email
   end
 end

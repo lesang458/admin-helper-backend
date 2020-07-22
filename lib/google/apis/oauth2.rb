@@ -1,6 +1,6 @@
 require 'google/apis/oauth2_v2'
-module GetGoogleUserinfo
-  def self.get_access_token(authorization_code)
+module GoogleApis::OAuth2
+  def self.get_user_info(authorization_code)
     google = Google::Apis::Oauth2V2::Oauth2Service.new
     signet = response_signet
     signet.code = authorization_code
