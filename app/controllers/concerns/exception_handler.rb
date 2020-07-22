@@ -11,9 +11,7 @@ module ExceptionHandler
   included do
     rescue_from ExceptionHandler::BadRequest, with: :bad_request
     rescue_from ExceptionHandler::TokenExpired, with: :token_expired
-    rescue_from ExceptionHandler::InvalidAuthorizationCode, with: :bad_request 
-    
-
+    rescue_from ExceptionHandler::InvalidAuthorizationCode, with: :invalid_authorization_code
     rescue_from ExceptionHandler::Unauthorized do |exception|
       render_error(exception.message, :unauthorized)
     end
