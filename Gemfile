@@ -17,8 +17,6 @@ gem 'google-api-client'
 gem 'jwt'
 # Use pagination
 gem 'kaminari-activerecord'
-# Strategy to authenticate with Google via OAuth2 in OmniAuth
-gem 'omniauth-google-oauth2'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
 # Puma processes requests using a C-optimized Ragel extension  that provides fast, accurate HTTP 1.1 protocol parsing in a portable way. Puma then serves the request using a thread pool
