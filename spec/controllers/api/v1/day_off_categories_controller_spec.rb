@@ -10,8 +10,6 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
     @employee = FactoryBot.create(:user, first_name: 'employee', last_name: 'user', roles: ['EMPLOYEE'])
     @category_vacation = FactoryBot.create(:day_off_category, :vacation)
     @category_illness = FactoryBot.create(:day_off_category, :illness)
-    @vacation_info = FactoryBot.create(:day_off_info, :vacation)
-    @illness_info = FactoryBot.create(:day_off_info, :illness)
   end
 
   describe 'GET# day-off-categories' do
