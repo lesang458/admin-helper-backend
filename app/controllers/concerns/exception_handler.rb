@@ -7,9 +7,11 @@ module ExceptionHandler
   class BadRequest < StandardError; end
   class Forbidden < StandardError; end
   class TokenExpired < StandardError; end
+  class InvalidAuthorizationCode < StandardError; end
   included do
     rescue_from ExceptionHandler::BadRequest, with: :bad_request
     rescue_from ExceptionHandler::TokenExpired, with: :token_expired
+    rescue_from ExceptionHandler::InvalidAuthorizationCode, with: :invalid_authorization_code
     rescue_from ExceptionHandler::Unauthorized do |exception|
       render_error(exception.message, :unauthorized)
     end
@@ -45,5 +47,9 @@ module ExceptionHandler
 
   def token_expired
     render_error('You seem to have an expired token', :unauthorized)
+  end
+
+  def invalid_authorization_code
+    render_bad_request_error('You seem to have an invalid authorization_code')
   end
 end
