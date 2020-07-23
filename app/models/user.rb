@@ -68,6 +68,8 @@ class User < ApplicationRecord
   scope :birthday_from, ->(from) { where('birthdate >= ?', from) if from }
   scope :join_date_to, ->(to) { where('join_date <= ?', to) if to }
   scope :join_date_from, ->(from) { where('join_date >= ?', from) if from }
+  scope :day_off_request_to, ->(to) { where('day_off_requests.from_date <= ? OR day_off_requests.to_date <= ?', to, to) if to }
+  scope :day_off_request_from, ->(from) { where('day_off_requests.from_date >= ? OR day_off_requests.to_date >= ?', from, from) if from }
   validate :birthday_in_future
   def birthday_in_future
     errors.add(:birthdate, 'is in future') if birthdate.present? && birthdate > Time.zone.now
@@ -76,6 +78,7 @@ class User < ApplicationRecord
   # rubocop:disable Metrics/AbcSize
   def self.search(params)
     users = User.all
+    users = User.joins(:day_off_requests).day_off_request_to(params[:day_off_to_date]).day_off_request_from(params[:day_off_from_date]).group('id') if params[:day_off_to_date] || params[:day_off_from_date]
     users = users.where('first_name ILIKE :search OR last_name ILIKE :search OR phone_number ILIKE :search', search: "%#{params[:search]}%") if params[:search].present?
     users = users.where('status = :search', search: params[:status]) if params[:status]
     users = users.birthday_to(params[:birthday_to])
