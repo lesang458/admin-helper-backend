@@ -3,6 +3,7 @@ require 'jwt_token'
 
 RSpec.describe Api::V1::EmployeesController, type: :controller do
   before(:all) do
+    DayOffRequest.delete_all
     DayOffInfo.delete_all
     DayOffCategory.delete_all
     User.delete_all
