@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       get 'employees/:id/day-off-requests', to: 'day_off_request#index'
       post 'password/validate_token', to: 'password#validate_token'
       resources :password, only: %i[create update]
-      post 'employees/:id/day-off-info', to: 'day_off_info#update'
+      put 'day-off-infos/:id', to: 'day_off_info#update'
     end
   end
 end
