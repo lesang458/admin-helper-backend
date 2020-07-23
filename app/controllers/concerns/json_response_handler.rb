@@ -25,4 +25,8 @@ module JsonResponseHandler
   def render_resource(obj, status_code_symbol, serializer_class)
     render json: { "#{obj.class.to_s.downcase}": serializer_class.new(obj) }, status: status_code_symbol
   end
+
+  def render_resources(objs, status_code_symbol, serializer_class)
+    render json: objs, each_serializer: serializer_class, adapter: :json, status: status_code_symbol
+  end
 end
