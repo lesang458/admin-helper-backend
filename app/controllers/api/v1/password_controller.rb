@@ -30,6 +30,6 @@ class Api::V1::PasswordController < ApplicationController
   end
 
   def check_token
-    raise ExceptionHandler::TokenExpired unless @user.password_token_valid?(params[:token])
+    raise ExceptionHandler::ExpiredToken unless @user.password_token_valid?(params[:token])
   end
 end

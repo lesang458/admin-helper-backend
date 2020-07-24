@@ -19,7 +19,7 @@ employee = User.create!(
   last_name: FFaker::Name.last_name,
   birthdate: FFaker::IdentificationESCO.expedition_date,
   join_date: FFaker::IdentificationESCO.expedition_date,
-  status: "FORMER",
+  status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE]
 )
@@ -31,7 +31,7 @@ admin = User.create!(
   last_name: FFaker::Name.last_name,
   birthdate: FFaker::IdentificationESCO.expedition_date,
   join_date: FFaker::IdentificationESCO.expedition_date,
-  status: "FORMER",
+  status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN]
 )
@@ -43,10 +43,35 @@ super_admin = User.create!(
   last_name: FFaker::Name.last_name,
   birthdate: FFaker::IdentificationESCO.expedition_date,
   join_date: FFaker::IdentificationESCO.expedition_date,
-  status: "FORMER",
+  status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
 )
+
+User.create!(
+  email: "hanhle@novahub.vn",
+  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
+  first_name: "dang",
+  last_name: "hanh",
+  birthdate: "1999-02-02",
+  join_date: "2019-11-25",
+  status: "ACTIVE",
+  phone_number: "0935270046",
+  roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
+)
+
+User.create!(
+  email: "huytran@novahub.vn",
+  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
+  first_name: "huy",
+  last_name: "tran",
+  birthdate: "1999-01-01",
+  join_date: "2019-11-25",
+  status: "ACTIVE",
+  phone_number: "0935270046",
+  roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
+)
+
 day_off_category_vacation = DayOffCategory.create! name: 'VACATION'
 day_off_category_illness = DayOffCategory.create! name: 'ILLNESS'
 
