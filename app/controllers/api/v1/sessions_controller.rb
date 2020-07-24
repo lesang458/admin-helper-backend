@@ -23,6 +23,6 @@ class Api::V1::SessionsController < ApplicationController
   private
 
   def google_user_email
-    GoogleApis::Oauth2.get_user_info(params[:authorization_code]).email
+    GoogleApis::Oauth2.get_user_info(params[:code]).email
   end
 end

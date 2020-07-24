@@ -2,7 +2,7 @@ require 'google/apis/oauth2_v2'
 module GoogleApis::Oauth2
   def self.get_user_info(authorization_code)
     google = Google::Apis::Oauth2V2::Oauth2Service.new
-    signet = response_signet
+    signet = GoogleApis::Oauth2.response_signet
     signet.code = authorization_code
     signet.fetch_access_token!
     google.authorization = signet
@@ -11,7 +11,7 @@ module GoogleApis::Oauth2
     raise ExceptionHandler::InvalidAuthorizationCode
   end
 
-  def response_signet
+  def self.response_signet
     Signet::OAuth2::Client.new(
       grant_type: 'authorization_code',
       authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
