@@ -34,14 +34,14 @@ RSpec.describe Api::V1::SessionsController do
 
     it 'should response 200 with valid email' do
       allow(GoogleApis::IdTokens).to receive(:get_user_info).and_return(@user)
-      post :google_login, params: { provider: 'google_oauth2' }
+      post :google_login
       expect(response).to have_http_status(200)
     end
 
     it 'should response 400 invalid email' do
       @user.email = 'fake@email.com'
       allow(GoogleApis::IdTokens).to receive(:get_user_info).and_return(@user)
-      post :google_login, params: { provider: 'google_oauth2' }
+      post :google_login
       expect(response).to have_http_status(400)
     end
   end
