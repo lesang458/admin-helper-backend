@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       post 'password/validate_token', to: 'password#validate_token'
       resources :password, only: %i[create update]
       get 'day-off-categories', to: 'day_off_categories#index'
-      get 'google_login', to: 'sessions#google_login'
+      post 'google_login', to: 'sessions#google_login'
     end
   end
 end

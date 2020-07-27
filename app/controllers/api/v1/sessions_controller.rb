@@ -23,6 +23,6 @@ class Api::V1::SessionsController < ApplicationController
   private
 
   def google_user_email
-    GoogleApis::IdTokens.get_user_info(params[:id_token], params[:client_id])['email']
+    GoogleApis::IdTokens.get_user_info(params[:id_token])['email']
   end
 end
