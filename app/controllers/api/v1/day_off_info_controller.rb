@@ -2,7 +2,7 @@ class Api::V1::DayOffInfoController < ApplicationController
   def update
     day_off_info = DayOffInfo.find(params[:id])
     day_off_info.update!(info_params)
-    render json: { "day-off-info": day_off_info }, status: :ok
+    render_resource(day_off_info, :ok, DayOffInfoSerializer)
   end
 
   private
