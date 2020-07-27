@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
   before(:all) do
+    DayOffRequest.delete_all
     User.delete_all
     DayOffCategory.delete_all
     DayOffInfo.delete_all
