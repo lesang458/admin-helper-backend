@@ -18,7 +18,7 @@ RSpec.describe DayOffRequest, type: :model do
   describe 'total number of hours off of a request' do
     it 'return hours off of a request' do
       total_hours_off = @day_off_request.total_hours_off
-      expect(total_hours_off).to eq((@day_off_request.to_date.to_date - @day_off_request.from_date.to_date + 1).to_i * @day_off_request.hours_per_day)
+      expect(total_hours_off).to eq(112)
     end
   end
 
