@@ -4,14 +4,12 @@ class DayOffInfo < ApplicationRecord
   belongs_to :day_off_category
   validates :hours, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
-  def hours_availability
+  def available_hours
     self.hours - total_hours_of_request
   end
 
   def total_hours_of_request
-    total = 0
-    self.day_off_requests.map { |request| total += request.total_hours_off }
-    total
+    self.day_off_requests.sum(&:total_hours_off)
   end
 
   def self.create_day_off_info(day_off_info, user)
