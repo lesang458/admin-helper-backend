@@ -6,7 +6,6 @@ module ExceptionHandler
   class Unauthorized < StandardError; end
   class BadRequest < StandardError; end
   class Forbidden < StandardError; end
-  class TokenExpired < StandardError; end
   class InvalidIdToken < StandardError; end
   class ExpiredToken < StandardError; end
   class InvalidClientId < StandardError; end
