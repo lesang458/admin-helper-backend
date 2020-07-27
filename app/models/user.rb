@@ -83,7 +83,9 @@ class User < ApplicationRecord
   # rubocop:disable Layout/LineLength
   def self.search(params)
     users = User.all
-    users = User.joins(:day_off_requests).day_off_request_to(params[:day_off_to_date]).day_off_request_from(params[:day_off_from_date]).group('id') if params[:day_off_to_date] || params[:day_off_from_date]
+    if params[:day_off_to_date] || params[:day_off_from_date]
+      users = User.joins(:day_off_requests).day_off_request_to(params[:day_off_to_date]).day_off_request_from(params[:day_off_from_date]).group('id')
+    end
     users = users.where('first_name ILIKE :search OR last_name ILIKE :search OR phone_number ILIKE :search', search: "%#{params[:search]}%") if params[:search].present?
     users = users.where('status = :search', search: params[:status]) if params[:status]
     users = users.birthday_to(params[:birthday_to])
