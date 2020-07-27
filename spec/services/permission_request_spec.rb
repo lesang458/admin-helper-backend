@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe PermissionRequest, type: :service do
-  before(:all) { User.delete_all }
+  before(:all) do
+    DayOffRequest.delete_all
+    User.delete_all
+  end
   describe 'permissions' do
     it 'should not return data' do
       @employee = FactoryBot.create(:user, email: 'employee@gmail.com')

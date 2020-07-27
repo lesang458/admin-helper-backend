@@ -10,6 +10,12 @@ RSpec.describe User, type: :model do
     FactoryBot.create(:user, birthdate: '1999-10-04', join_date: '2020-01-24', phone_number: '0935208940')
     FactoryBot.create(:user, first_name: 'Tao', last_name: 'Quyen', birthdate: '1998-05-27', join_date: '2019-09-22')
     FactoryBot.create(:user, first_name: 'Ho', last_name: 'Trieu', birthdate: '1995-12-30', join_date: '2015-12-24', status: 'FORMER')
+    @admin = FactoryBot.create(:user, :admin, status: 'FORMER')
+    @day_off_info = FactoryBot.create(:day_off_info, :vacation)
+    FactoryBot.create(:day_off_request, user: @user, day_off_info: @day_off_info)
+    FactoryBot.create(:day_off_request, user: @user, day_off_info: @day_off_info, from_date: '2020-07-20', to_date: '2020-07-30')
+    FactoryBot.create(:day_off_request, user: @admin, day_off_info: @day_off_info)
+    FactoryBot.create(:day_off_request, user: @admin, day_off_info: @day_off_info, from_date: '2020-07-20', to_date: '2020-07-30')
   end
 
   it { should respond_to(:email) }
@@ -27,7 +33,33 @@ RSpec.describe User, type: :model do
   it { should_not allow_value('email@domain').for(:email) } # Missing top level domain (.com/.net/.org/etc)
   it { should_not allow_value('email@111.222.333.44444').for(:email) } # Invalid IP format
 
-  describe 'search' do
+  let!(:params) { { day_off_from_date: '2020-07-05', day_off_to_date: '2020-07-12' } }
+  describe 'should return list user with day off from date and day off to date' do
+    it 'should return ' do
+      users = User.search(params)
+      expect(users.ids).to include @admin.id
+      expect(users.ids).to include @user.id
+      expect(users.count).to eq({ @admin.id => 1, @user.id => 1 })
+    end
+
+    it 'should return list user with day off from date' do
+      request_params = params.dup
+      request_params.delete(:day_off_to_date)
+      users = User.search(request_params)
+      expect(users.ids).to include @admin.id
+      expect(users.ids).to include @user.id
+      expect(users.count).to eq({ @admin.id => 2, @user.id => 2 })
+    end
+
+    it 'should return list user with day off to date' do
+      request_params = params.dup
+      request_params.delete(:day_off_from_date)
+      users = User.search(request_params)
+      expect(users.ids).to include @admin.id
+      expect(users.ids).to include @user.id
+      expect(users.count).to eq({ @admin.id => 1, @user.id => 1 })
+    end
+
     it 'should birthday >= 1995-10-30 and birthday <= 1999-10-30' do
       users = User.search({ birthday_from: '1995-10-30', birthday_to: '1999-10-30' })
       expect(users.count).to eq(7)
