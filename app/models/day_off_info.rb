@@ -5,11 +5,11 @@ class DayOffInfo < ApplicationRecord
   validates :hours, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   def available_hours
-    self.hours - total_hours_of_request
+    hours - total_hours_of_request
   end
 
   def total_hours_of_request
-    self.day_off_requests.sum(&:total_hours_off)
+    day_off_requests.sum(&:total_hours_off)
   end
 
   def self.create_day_off_info(day_off_info, user)
