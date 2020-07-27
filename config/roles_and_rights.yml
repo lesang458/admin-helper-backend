@@ -13,4 +13,6 @@ admin:
     - index
   day_off_info:
     - update
+  day_off_categories:
+    - index
 super_admin:
