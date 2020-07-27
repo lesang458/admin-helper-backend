@@ -1,0 +1,7 @@
+Metrics/BlockLength:
+  Exclude:
+    - 'lib/**/*_job.rb'
+    - 'spec/**/*'
+
+Metrics/ClassLength:
+  Enabled: false
