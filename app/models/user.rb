@@ -21,6 +21,10 @@ class User < ApplicationRecord
   scope :admins, -> { where('roles @> ?', '{ADMIN}') }
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
+  def hours
+    self.day_off_infos.map { |info| { category: info.day_off_category.name, hours: info.hours, hours_availability: info.hours_availability } }
+  end
+
   def generate_password_token
     self.reset_password_token = SecureRandom.rand(100_000..999_999)
     self.reset_password_sent_at = Time.now
@@ -76,6 +80,7 @@ class User < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Layout/LineLength
   def self.search(params)
     users = User.all
     users = User.joins(:day_off_requests).day_off_request_to(params[:day_off_to_date]).day_off_request_from(params[:day_off_from_date]).group('id') if params[:day_off_to_date] || params[:day_off_from_date]
@@ -87,5 +92,6 @@ class User < ApplicationRecord
     users = users.join_date_from(params[:joined_company_date_from])
     users
   end
+  # rubocop:enable Layout/LineLength
   # rubocop:enable Metrics/AbcSize
 end

@@ -11,6 +11,10 @@ class DayOffRequest < ApplicationRecord
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
 
+  def total_hours_off
+    (to_date.to_date - from_date.to_date + 1).to_i * hours_per_day
+  end
+
   def self.search(params)
     day_off_request = DayOffRequest.all
     day_off_request = DayOffCategory.find(params[:day_off_category_id]).day_off_requests if params[:day_off_category_id]
