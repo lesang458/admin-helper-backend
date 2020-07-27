@@ -89,8 +89,7 @@ class User < ApplicationRecord
     users = users.birthday_to(params[:birthday_to])
     users = users.birthday_from(params[:birthday_from])
     users = users.join_date_to(params[:joined_company_date_to])
-    users = users.join_date_from(params[:joined_company_date_from])
-    users
+    users.join_date_from(params[:joined_company_date_from])
   end
   # rubocop:enable Layout/LineLength
   # rubocop:enable Metrics/AbcSize
