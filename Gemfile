@@ -11,8 +11,8 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 # Create fake data
 gem 'ffaker'
-# These client libraries are officially supported by Google
-gem 'google-api-client'
+# Allows simple authorization for accessing Google APIs
+gem 'googleauth'
 # Use to create tokens with high security and security, avoiding theft between different systems
 gem 'jwt'
 # Use pagination
