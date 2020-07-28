@@ -14,6 +14,14 @@ RSpec.describe DayOffRequest, type: :model do
     FactoryBot.create(:day_off_request, user: @admin, day_off_info: @vacation_info, from_date: '2020-07-07', to_date: '2020-07-20')
     FactoryBot.create(:day_off_request, user: @admin, day_off_info: @illness_info, from_date: '2020-07-20', to_date: '2020-07-24')
   end
+
+  describe 'total number of hours off of a request' do
+    it 'return hours off of a request' do
+      total_hours_off = @day_off_request.total_hours_off
+      expect(total_hours_off).to eq(112)
+    end
+  end
+
   describe 'hours per day' do
     it { should respond_to(:hours_per_day) }
     it { should allow_value(123).for(:hours_per_day) }
