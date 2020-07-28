@@ -22,7 +22,7 @@ class User < ApplicationRecord
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
   def hours
-    self.day_off_infos.map { |info| { category: info.day_off_category.name, hours: info.hours, hours_availability: info.available_hours } }
+    day_off_infos.map { |info| { category: info.day_off_category.name, hours: info.hours, hours_availability: info.available_hours } }
   end
 
   def generate_password_token
@@ -36,11 +36,11 @@ class User < ApplicationRecord
   end
 
   def password_token_valid?(token)
-    self.reset_password_token == token && self.password_reset_not_expired?
+    reset_password_token == token && password_reset_not_expired?
   end
 
   def password_reset_not_expired?
-    Time.now < (self.reset_password_sent_at + RESET_TOKEN_LIFESPAN).localtime
+    Time.now < (reset_password_sent_at + RESET_TOKEN_LIFESPAN).localtime
   end
 
   def self.build_employee(user_params)
