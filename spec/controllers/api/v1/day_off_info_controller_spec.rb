@@ -56,13 +56,17 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
       params = update_params.dup
       params[:hours] = -160
       put :update, params: params
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Hours must be greater than 0'
       expect(response.status).to eq(422)
     end
 
-    it 'should return 422 with invalid day_off_category_id' do
+    it 'should return 422 with unexist day_off_category_id' do
       params = update_params.dup
-      params[:day_off_category_id] = 'invalid day_off_category_id'
+      params[:day_off_category_id] = 'unexist day_off_category_id'
       put :update, params: params
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Day off category must exist'
       expect(response.status).to eq(422)
     end
   end
