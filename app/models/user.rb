@@ -22,7 +22,7 @@ class User < ApplicationRecord
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
   def hours
-    day_off_infos.map { |info| { category: info.day_off_category.name, hours: info.hours, hours_availability: info.available_hours } }
+    day_off_infos.map { |info| { category: info.day_off_category.name, hours: info.hours, available_hours: info.available_hours } }
   end
 
   def generate_password_token
