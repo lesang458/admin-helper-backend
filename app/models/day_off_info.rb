@@ -4,7 +4,7 @@ class DayOffInfo < ApplicationRecord
   belongs_to :day_off_category
   validates :hours, presence: true, numericality: { only_integer: true, greater_than: 0 }
   delegate :email, :first_name, :last_name, to: :user
-  delegate :id, :name, :description, to: :day_off_category
+  delegate :name, :description, to: :day_off_category
 
   def self.create_day_off_info(day_off_info, user)
     day_off_info.each do |day_off|
