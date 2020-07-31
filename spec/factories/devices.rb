@@ -1,8 +1,9 @@
 FactoryBot.define do
   factory :device do
-    name { 'first device' }
-    price { 1000 }
-    description { 'description' }
-    user
+    trait :iphone do
+      name { 'Iphone 12 Pro Max' }
+      price { 39_990_000 }
+    end
+    device_category_id { DeviceCategory.first.id }
   end
 end

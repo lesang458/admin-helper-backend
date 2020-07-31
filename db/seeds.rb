@@ -78,7 +78,12 @@ day_off_category_illness = DayOffCategory.create! name: 'ILLNESS'
 admin.day_off_infos.create! day_off_category_id: day_off_category_vacation.id, hours: 160
 admin.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
 
-DeviceCategory.create! name: 'Laptop'
-DeviceCategory.create! name: 'Phone'
-DeviceCategory.create! name: 'Tablet' 
-DeviceCategory.create! name: 'Monitor'
+laptop = DeviceCategory.create! name: 'Laptop'
+phone = DeviceCategory.create! name: 'Phone'
+tablet = DeviceCategory.create! name: 'Tablet' 
+monitor = DeviceCategory.create! name: 'Monitor'
+
+Device.create! name: 'MacBook Pro', price: 30_000_000, device_category_id: laptop.id
+Device.create! name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: phone.id
+Device.create! name: 'IPad Pro 12.9 inch', price: 27_490_000, device_category_id: tablet.id
+Device.create! name: 'DELL E2020H', price: 2_290_000, device_category_id: monitor.id

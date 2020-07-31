@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_31_015827) do
+ActiveRecord::Schema.define(version: 2020_07_31_025236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,6 +57,8 @@ ActiveRecord::Schema.define(version: 2020_07_31_015827) do
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "device_category_id"
+    t.index ["device_category_id"], name: "index_devices_on_device_category_id", unique: true
     t.index ["user_id"], name: "index_devices_on_user_id"
   end
 
@@ -81,5 +83,6 @@ ActiveRecord::Schema.define(version: 2020_07_31_015827) do
   add_foreign_key "day_off_infos", "users", on_delete: :cascade
   add_foreign_key "day_off_requests", "day_off_infos"
   add_foreign_key "day_off_requests", "users"
-  add_foreign_key "devices", "users"
+  add_foreign_key "devices", "device_categories", on_delete: :cascade
+  add_foreign_key "devices", "users", on_delete: :cascade
 end
