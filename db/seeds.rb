@@ -77,3 +77,8 @@ day_off_category_illness = DayOffCategory.create! name: 'ILLNESS'
 
 admin.day_off_infos.create! day_off_category_id: day_off_category_vacation.id, hours: 160
 admin.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
+
+DeviceCategory.create! name: 'Laptop'
+DeviceCategory.create! name: 'Phone'
+DeviceCategory.create! name: 'Tablet' 
+DeviceCategory.create! name: 'Monitor'
