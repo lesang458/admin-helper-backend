@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_31_015459) do
+ActiveRecord::Schema.define(version: 2020_07_31_042600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,18 @@ ActiveRecord::Schema.define(version: 2020_07_31_015459) do
     t.text "description"
   end
 
+  create_table "devices", force: :cascade do |t|
+    t.string "name"
+    t.integer "price"
+    t.text "description"
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "device_category_id"
+    t.index ["device_category_id"], name: "index_devices_on_device_category_id", unique: true
+    t.index ["user_id"], name: "index_devices_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password"
@@ -69,6 +81,8 @@ ActiveRecord::Schema.define(version: 2020_07_31_015459) do
 
   add_foreign_key "day_off_infos", "day_off_categories", on_delete: :cascade
   add_foreign_key "day_off_infos", "users", on_delete: :cascade
-  add_foreign_key "day_off_requests", "day_off_infos"
-  add_foreign_key "day_off_requests", "users"
+  add_foreign_key "day_off_requests", "day_off_infos", on_delete: :cascade
+  add_foreign_key "day_off_requests", "users", on_delete: :cascade
+  add_foreign_key "devices", "device_categories", on_delete: :cascade
+  add_foreign_key "devices", "users", on_delete: :cascade
 end

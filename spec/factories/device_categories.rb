@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :device_category do
-    name { 'MyString' }
-    description { 'MyText' }
+    trait :phone do
+      name { 'Iphone' }
+    end
   end
 end
