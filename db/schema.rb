@@ -45,6 +45,11 @@ ActiveRecord::Schema.define(version: 2020_07_31_015827) do
     t.index ["user_id"], name: "index_day_off_requests_on_user_id"
   end
 
+  create_table "device_categories", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+  end
+
   create_table "devices", force: :cascade do |t|
     t.string "name"
     t.integer "price"
