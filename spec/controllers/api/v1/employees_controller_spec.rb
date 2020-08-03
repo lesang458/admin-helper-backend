@@ -6,6 +6,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     DayOffRequest.delete_all
     DayOffInfo.delete_all
     DayOffCategory.delete_all
+    DeviceHistory.delete_all
     User.delete_all
     @super_admin = FactoryBot.create(:user, :super_admin, first_name: 'An', last_name: 'da')
     @employee = FactoryBot.create(:user, first_name: 'Bo', last_name: 'Ba', roles: ['EMPLOYEE'])

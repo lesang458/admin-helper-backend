@@ -2,6 +2,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   before(:all) do
     DayOffRequest.delete_all
+    DeviceHistory.delete_all
     User.delete_all
     @user = FactoryBot.create(:user, first_name: 'Tran', last_name: 'Huy', birthdate: '1995-12-01', join_date: '2015-12-01')
     FactoryBot.create(:user, first_name: 'Le', last_name: 'Diem', birthdate: '1995-10-30', join_date: '2015-11-24')

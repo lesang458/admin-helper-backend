@@ -1,6 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe DeviceHistory, type: :model do
+  before(:all) do
+    DeviceHistory.delete_all
+    Device.delete_all
+    DeviceCategory.delete_all
+    @phone = FactoryBot.create(:device_category, :phone)
+    @iphone = FactoryBot.create(:device, :iphone, device_category: @phone)
+    @admin = FactoryBot.create(:user, :admin)
+    @employee = FactoryBot.create(:user, :employee)
+    @device_history = FactoryBot.create(:device_history, from_date: '2020-07-15', to_date: '2020-07-31', status: 'INVENTORY', device: @iphone)
+    FactoryBot.create(:device_history, from_date: '2020-07-31', to_date: '2020-08-15', status: 'ASSIGNED', device: @iphone, user: @employee)
+  end
   describe 'from date' do
     it { should respond_to(:from_date) }
     it { should validate_presence_of(:from_date) }
@@ -34,5 +45,36 @@ RSpec.describe DeviceHistory, type: :model do
 
   describe User do
     it { should have_many(:device_histories) }
+  end
+
+  let!(:request_params) { { id: @admin.id, device_category_id: @phone.id, from_date: '2020-07-10', to_date: '2020-07-20', status: 'INVENTORY' } }
+  describe 'GET device history' do
+    it 'ID must be in the list with vacation and from date, to date' do
+      device_histories = DeviceHistory.search(request_params)
+      devices = DeviceCategory.find(request_params[:device_category_id]).devices
+      expect(device_histories.map(&:device_id).uniq).to eq(devices.map(&:id))
+      expect(device_histories.ids).to include @device_history.id
+    end
+
+    it 'ID must be in the list with vacation and to date' do
+      params = request_params.dup
+      params.delete(:from_date)
+      params.delete(:id)
+      device_histories = DeviceHistory.search(params)
+      devices = DeviceCategory.find(request_params[:device_category_id]).devices
+      expect(device_histories.map(&:device_id).uniq).to eq(devices.map(&:id))
+      expect(device_histories.ids).to include @device_history.id
+    end
+
+    it 'ID must be in the list with vacation and to date' do
+      params = request_params.dup
+      params.delete(:from_date)
+      params.delete(:id)
+      params[:status] = 'ASSIGNED'
+      device_histories = DeviceHistory.search(params)
+      devices = DeviceCategory.find(request_params[:device_category_id]).devices
+      expect(device_histories.map(&:device_id).uniq).to eq(devices.map(&:id))
+      expect(device_histories.ids).to_not include @device_history.id
+    end
   end
 end
