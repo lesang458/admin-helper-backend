@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2020_07_31_042600) do
 
   create_table "device_histories", force: :cascade do |t|
     t.datetime "from_date"
+    t.datetime "to_date"
     t.string "status"
     t.bigint "user_id"
     t.bigint "device_id"

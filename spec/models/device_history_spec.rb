@@ -8,6 +8,13 @@ RSpec.describe DeviceHistory, type: :model do
     it { should_not allow_value('2020').for(:from_date) }
   end
 
+  describe 'to date' do
+    it { should respond_to(:from_date) }
+    it { should allow_value('2020-12-12').for(:to_date) }
+    it { should allow_value('').for(:to_date) }
+    it { should validate_presence_of(:to_date) }
+  end
+
   describe 'status' do
     it { should respond_to(:status) }
     it { should allow_value('DISCARDED').for(:status) }
