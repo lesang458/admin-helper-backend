@@ -6,7 +6,7 @@ RSpec.describe Device, type: :model do
     Device.delete_all
     DeviceCategory.delete_all
     @phone = FactoryBot.create(:device_category, :phone)
-    @iphone = FactoryBot.create(:device, :iphone)
+    @iphone = FactoryBot.create(:device, :iphone, device_category: @phone)
   end
 
   it { should respond_to(:name) }

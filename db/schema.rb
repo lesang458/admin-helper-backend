@@ -50,6 +50,18 @@ ActiveRecord::Schema.define(version: 2020_07_31_042600) do
     t.text "description"
   end
 
+  create_table "device_histories", force: :cascade do |t|
+    t.datetime "from_date"
+    t.datetime "to_date"
+    t.string "status"
+    t.bigint "user_id"
+    t.bigint "device_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["device_id"], name: "index_device_histories_on_device_id"
+    t.index ["user_id"], name: "index_device_histories_on_user_id"
+  end
+
   create_table "devices", force: :cascade do |t|
     t.string "name"
     t.integer "price"
@@ -83,6 +95,8 @@ ActiveRecord::Schema.define(version: 2020_07_31_042600) do
   add_foreign_key "day_off_infos", "users", on_delete: :cascade
   add_foreign_key "day_off_requests", "day_off_infos", on_delete: :cascade
   add_foreign_key "day_off_requests", "users", on_delete: :cascade
+  add_foreign_key "device_histories", "devices"
+  add_foreign_key "device_histories", "users"
   add_foreign_key "devices", "device_categories", on_delete: :cascade
   add_foreign_key "devices", "users", on_delete: :cascade
 end
