@@ -15,4 +15,6 @@ admin:
     - update
   day_off_categories:
     - index
+  device_histories:
+    - index
 super_admin:

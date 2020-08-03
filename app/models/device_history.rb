@@ -5,6 +5,22 @@ class DeviceHistory < ApplicationRecord
   validate :validate_date_range
   enum status: { discarded: 'DISCARDED', assigned: 'ASSIGNED', inventory: 'INVENTORY' }
   validates :status, presence: true, inclusion: { in: %w[discarded assigned inventory] }
+  delegate :email, :first_name, :last_name, to: :user, allow_nil: true
+  delegate :id, :name, :price, :description, to: :device
+
+  scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
+  scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
+
+  # rubocop:disable Metrics/AbcSize
+  def self.search(params)
+    device_histories = DeviceHistory.all
+    device_histories = DeviceHistory.joins(:device).where('device_category_id = ?', params[:device_category_id]) if params[:device_category_id].present?
+    device_histories = device_histories.to_date(params[:history_to]).from_date(params[:history_from]) if params[:history_to].present? && params[:history_from].present?
+    device_histories = device_histories.where('user_id = ?', params[:user_id]) if params[:user_id].present?
+    device_histories = device_histories.where('device_id = ?', params[:device_id]) if params[:device_id].present?
+    device_histories
+  end
+  # rubocop:enable Metrics/AbcSize
 
   private
 
