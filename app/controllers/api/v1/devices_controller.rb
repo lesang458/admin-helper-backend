@@ -2,12 +2,8 @@ class Api::V1::DevicesController < ApplicationController
   before_action :set_current_user
 
   def create
-    Device.transaction do
-      User.find(params[:user_id]) if params[:user_id]
-      device = Device.create!(device_params)
-      DeviceHistory.create_device_history(params[:from_date] || Time.zone.now, device)
-      render_resource device, :created, DeviceSerializer
-    end
+    device = Device.create_device(device_params, params[:from_date])
+    render_resource device, :created, DeviceSerializer
   end
 
   private
