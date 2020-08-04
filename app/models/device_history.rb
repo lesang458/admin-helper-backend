@@ -3,11 +3,11 @@ class DeviceHistory < ApplicationRecord
   belongs_to :device
   validates :from_date, presence: true
   validate :validate_date_range
-  enum status: { discarded: 'DISCARDED', assigned: 'ASSIGNED', inventory: 'INVENTORY' }
-  validates :status, presence: true, inclusion: { in: %w[discarded assigned inventory] }
+  enum status: { discarded: 'DISCARDED', assigned: 'ASSIGNED', in_inventory: 'IN_INVENTORY' }
+  validates :status, presence: true, inclusion: { in: %w[discarded assigned in_inventory] }
 
-  def self.create_device_history(params_history, device)
-    device.device_histories.create! from_date: params_history[:from_date], status: 'inventory', user_id: params_history[:user_id]
+  def self.create_device_history(from_date, device)
+    device.device_histories.create! from_date: from_date, status: 'in_inventory'
   end
 
   private

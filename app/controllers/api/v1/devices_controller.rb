@@ -5,8 +5,7 @@ class Api::V1::DevicesController < ApplicationController
     Device.transaction do
       User.find(params[:user_id]) if params[:user_id]
       device = Device.create!(device_params)
-      device.save!
-      DeviceHistory.create_device_history(params[:device_history], device)
+      DeviceHistory.create_device_history(params[:from_date] || Time.zone.now, device)
       render_resource device, :created, DeviceSerializer
     end
   end

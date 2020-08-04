@@ -19,7 +19,7 @@ RSpec.describe DeviceHistory, type: :model do
     it { should respond_to(:status) }
     it { should allow_value('DISCARDED').for(:status) }
     it { should allow_value('ASSIGNED').for(:status) }
-    it { should allow_value('INVENTORY').for(:status) }
+    it { should allow_value('IN_INVENTORY').for(:status) }
     it { should_not allow_value('').for(:status) }
   end
 

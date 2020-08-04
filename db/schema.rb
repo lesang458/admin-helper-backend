@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 2020_08_03_081124) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "device_category_id"
+    t.index ["device_category_id"], name: "index_devices_on_device_category_id"
     t.index ["user_id"], name: "index_devices_on_user_id"
   end
 

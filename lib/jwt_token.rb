@@ -1,7 +1,8 @@
 require 'jwt'
-ALGORITHM = 'HS256'.freeze
 
 module JwtToken
+  ALGORITHM = 'HS256'.freeze
+
   def self.render_secret_key_base
     Rails.application.credentials.secret_key_base
   end
