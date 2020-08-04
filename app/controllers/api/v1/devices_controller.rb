@@ -2,7 +2,7 @@ class Api::V1::DevicesController < ApplicationController
   before_action :set_current_user
 
   def create
-    device = Device.create_device(device_params, params[:from_date])
+    device = Device.create_device(device_params, params[:from_date], params[:status])
     render_resource device, :created, DeviceSerializer
   end
 

@@ -30,7 +30,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
         price: 10_000_000,
         description: 'Designed by Apple in California',
         device_category_id: @category_phone.id,
-        from_date: '2020-10-10'
+        from_date: '2020-10-10',
+        status: 'assigned'
       }
     }
 
