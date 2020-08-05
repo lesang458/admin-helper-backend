@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::DayOffInfoController, type: :controller do
   before(:all) do
+    DeviceHistory.delete_all
     User.delete_all
     DayOffCategory.delete_all
     DayOffInfo.delete_all
-
     @admin = FactoryBot.create(:user, :admin, first_name: 'admin', last_name: 'user')
     @employee = FactoryBot.create(:user, first_name: 'employee', last_name: 'user', roles: ['EMPLOYEE'])
 
