@@ -5,8 +5,6 @@ class DeviceHistory < ApplicationRecord
   validate :validate_date_range
   enum status: { discarded: 'DISCARDED', assigned: 'ASSIGNED', inventory: 'INVENTORY' }
   validates :status, presence: true, inclusion: { in: %w[discarded assigned inventory] }
-  delegate :devices, to: :device
-
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
 
