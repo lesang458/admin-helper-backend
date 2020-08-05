@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       get 'day-off-categories', to: 'day_off_categories#index'
       post 'google_login', to: 'sessions#google_login'
       get 'device_histories', to: 'device_histories#index'
+      get 'device_history/:id', to: 'device_histories#show'
       post 'devices', to: 'devices#create'
     end
   end
