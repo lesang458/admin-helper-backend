@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe DayOffInfo, type: :model do
   before(:all) do
     DayOffRequest.delete_all
+    DeviceHistory.delete_all
     User.delete_all
     DayOffInfo.delete_all
     DayOffCategory.delete_all

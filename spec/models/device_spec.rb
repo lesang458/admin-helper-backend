@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Device, type: :model do
   before(:all) do
+    DeviceHistory.delete_all
     User.delete_all
     Device.delete_all
     DeviceCategory.delete_all

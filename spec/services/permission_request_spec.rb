@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe PermissionRequest, type: :service do
   before(:all) do
     DayOffRequest.delete_all
+    DeviceHistory.delete_all
     User.delete_all
   end
   describe 'permissions' do

@@ -1,6 +1,7 @@
 require 'rails_helper'
 RSpec.describe Api::V1::PasswordController do
   before(:all) do
+    DeviceHistory.delete_all
     User.delete_all
     @super_admin = FactoryBot.create(:user, :super_admin, first_name: 'An', last_name: 'da')
     @user = FactoryBot.create(:user, :admin, first_name: 'An', last_name: 'Ba')

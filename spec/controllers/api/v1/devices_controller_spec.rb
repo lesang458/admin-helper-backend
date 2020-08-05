@@ -2,11 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::DevicesController, type: :controller do
   before(:all) do
+    DeviceHistory.delete_all
     User.delete_all
     Device.delete_all
     DeviceCategory.delete_all
-    DeviceHistory.delete_all
-
     @admin = FactoryBot.create(:user, :admin, first_name: 'user', last_name: 'admin')
     @employee = FactoryBot.create(:user, :employee, first_name: 'user', last_name: 'employee')
 
