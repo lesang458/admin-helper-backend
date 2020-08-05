@@ -9,7 +9,7 @@ RSpec.describe DeviceHistory, type: :model do
     @iphone = FactoryBot.create(:device, :iphone, device_category: @phone)
     @admin = FactoryBot.create(:user, :admin)
     @employee = FactoryBot.create(:user, :employee)
-    @device_history = FactoryBot.create(:device_history, from_date: '2020-07-15', to_date: '2020-07-31', status: 'INVENTORY', device: @iphone)
+    @device_history = FactoryBot.create(:device_history, from_date: '2020-07-15', to_date: '2020-07-31', status: 'IN_INVENTORY', device: @iphone)
     FactoryBot.create(:device_history, from_date: '2020-07-31', to_date: '2020-08-15', status: 'ASSIGNED', device: @iphone, user: @employee)
   end
   describe 'from date' do
@@ -51,7 +51,7 @@ RSpec.describe DeviceHistory, type: :model do
     it { should have_many(:device_histories) }
   end
 
-  let!(:request_params) { { id: @admin.id, device_category_id: @phone.id, from_date: '2020-07-10', to_date: '2020-07-20', status: 'INVENTORY' } }
+  let!(:request_params) { { id: @admin.id, device_category_id: @phone.id, from_date: '2020-07-10', to_date: '2020-07-20', status: 'IN_INVENTORY' } }
   describe 'GET device history' do
     it 'ID must be in the list with vacation and from date, to date' do
       device_histories = DeviceHistory.search(request_params)
