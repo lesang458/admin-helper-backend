@@ -21,7 +21,7 @@ RSpec.describe Api::V1::DeviceHistoriesController, type: :controller do
 
   describe 'Get Device Hisory' do
     it 'return status 401 status code with invalid token' do
-      invalid_token = JwtToken.encode({ user_id: SecureRandom.rand(100_000..999_999) })
+      invalid_token = JwtToken.encode({ user_id: 'token false' })
       invalid_headers = { authorization: invalid_token }
       request.headers.merge! invalid_headers
       get :index, params: request_params
