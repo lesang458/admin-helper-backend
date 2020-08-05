@@ -17,4 +17,6 @@ admin:
     - index
   device_histories:
     - index
+  devices:
+    - create
 super_admin:

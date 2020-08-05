@@ -3,8 +3,8 @@ class DeviceHistory < ApplicationRecord
   belongs_to :device
   validates :from_date, presence: true
   validate :validate_date_range
-  enum status: { discarded: 'DISCARDED', assigned: 'ASSIGNED', inventory: 'INVENTORY' }
-  validates :status, presence: true, inclusion: { in: %w[discarded assigned inventory] }
+  enum status: { discarded: 'DISCARDED', assigned: 'ASSIGNED', in_inventory: 'IN_INVENTORY' }
+  validates :status, presence: true, inclusion: { in: %w[discarded assigned in_inventory] }
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
 
