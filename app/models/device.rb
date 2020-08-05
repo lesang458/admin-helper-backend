@@ -10,11 +10,11 @@ class Device < ApplicationRecord
     device_category.name
   end
 
-  def self.create_device(device_params, from_date, status)
+  def self.create_device(device_params, history_params)
     Device.transaction do
       User.find(device_params[:user_id]) if device_params[:user_id]
       device = Device.create!(device_params)
-      device.device_histories.create! from_date: from_date || Time.zone.now, status: status || 'IN_INVENTORY'
+      device.device_histories.create! from_date: history_params[:from_date] || Time.zone.now, status: history_params[:status] || 'IN_INVENTORY'
       device
     end
   end
