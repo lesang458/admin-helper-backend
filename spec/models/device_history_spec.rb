@@ -21,6 +21,10 @@ RSpec.describe DeviceHistory, type: :model do
     it { should allow_value('ASSIGNED').for(:status) }
     it { should allow_value('IN_INVENTORY').for(:status) }
     it { should_not allow_value('').for(:status) }
+    it 'should raise error with invald status' do
+      expect { FactoryBot.build(:device_history, status: :invalid_status) }
+        .to raise_error(ArgumentError)
+    end
   end
 
   describe DeviceHistory do

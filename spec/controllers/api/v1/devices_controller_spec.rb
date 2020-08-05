@@ -31,11 +31,11 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
         description: 'Designed by Apple in California',
         device_category_id: @category_phone.id,
         from_date: '2020-10-10',
-        status: 'assigned'
+        status: 'ASSIGNED'
       }
     }
 
-    let!(:without_date_params) {
+    let!(:without_history_params) {
       {
         user_id: '',
         name: 'iphone',
@@ -45,10 +45,10 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       }
     }
 
-    describe 'params without from_date' do
+    describe 'params without history params' do
       it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
-        post :create, params: without_date_params
+        post :create, params: without_history_params
         expect(response.status).to eq(401)
       end
 
@@ -56,12 +56,12 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
         valid_token = JwtToken.encode({ user_id: @employee.id })
         valid_headers = { authorization: valid_token }
         request.headers.merge! valid_headers
-        post :create, params: without_date_params
+        post :create, params: without_history_params
         expect(response.status).to eq(403)
       end
 
       it 'should return 201' do
-        params = without_date_params.dup
+        params = without_history_params.dup
         params.delete(:user_id)
         post :create, params: params
         expect(response.status).to eq(201)
@@ -73,7 +73,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       end
 
       it 'should return 404 with invalid user_id' do
-        params = without_date_params.dup
+        params = without_history_params.dup
         params[:user_id] = invalid_user_id
         post :create, params: params
         expect(response.status).to eq(404)
@@ -82,7 +82,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       end
 
       it 'should return 422 with invalid name' do
-        params = without_date_params.dup
+        params = without_history_params.dup
         params.delete(:user_id)
         params[:name] = invalid_name
         post :create, params: params
@@ -92,7 +92,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       end
 
       it 'should return 422 with invalid price' do
-        params = without_date_params.dup
+        params = without_history_params.dup
         params.delete(:user_id)
         params[:price] = invalid_price
         post :create, params: params
@@ -102,7 +102,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       end
     end
 
-    describe 'params with from_date' do
+    describe 'params with history params' do
       it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
         post :create, params: post_params
@@ -166,6 +166,16 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
         expect(response.status).to eq(422)
         message = JSON.parse(response.body)['message']
         expect(message).to include "From date can't be blank"
+      end
+
+      it 'should return 422 with invalid status' do
+        params = post_params.dup
+        params.delete(:user_id)
+        params[:status] = 'invalid status'
+        post :create, params: params
+        expect(response.status).to eq(422)
+        message = JSON.parse(response.body)['message']
+        expect(message).to include 'is not a valid status'
       end
     end
   end

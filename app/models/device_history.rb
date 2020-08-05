@@ -3,8 +3,8 @@ class DeviceHistory < ApplicationRecord
   belongs_to :device
   validates :from_date, presence: true
   validate :validate_date_range
-  enum status: { discarded: 'DISCARDED', assigned: 'ASSIGNED', in_inventory: 'IN_INVENTORY' }
-  validates :status, presence: true, inclusion: { in: %w[discarded assigned in_inventory] }
+  enum status: { DISCARDED: 'DISCARDED', ASSIGNED: 'ASSIGNED', IN_INVENTORY: 'IN_INVENTORY' }
+  validates :status, presence: true, inclusion: { in: %w[DISCARDED ASSIGNED IN_INVENTORY] }
 
   private
 
