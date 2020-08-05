@@ -8,8 +8,8 @@ FactoryBot.define do
     trait :ASSIGNED do
       status { 'ASSIGNED' }
     end
-    trait :INVENTORY do
-      status { 'INVENTORY' }
+    trait :IN_INVENTORY do
+      status { 'IN_INVENTORY' }
     end
     user
     device
