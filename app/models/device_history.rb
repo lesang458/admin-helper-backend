@@ -15,7 +15,7 @@ class DeviceHistory < ApplicationRecord
     device_histories = device_histories.where('status = ?', params[:status]) if params[:status].present?
     device_histories = device_histories.to_date(params[:history_to]) if params[:history_to].present?
     device_histories = device_histories..from_date(params[:history_from]) if params[:history_from].present?
-    device_histories = device_histories.where('user_id = ?', params[:user_id]) if params[:user_id].present?
+    device_histories = device_histories.where('device_histories.user_id = ?', params[:user_id]) if params[:user_id].present?
     device_histories = device_histories.where('device_id = ?', params[:device_id]) if params[:device_id].present?
     device_histories
   end
