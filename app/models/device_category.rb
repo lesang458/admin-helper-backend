@@ -4,7 +4,7 @@ class DeviceCategory < ApplicationRecord
   validates :name, presence: true
 
   def self.by_all_device_categories
-    Rails.cache.fetch('all_device_categories') { DeviceCategory.all }
+    Rails.cache.fetch('all_device_categories', expires_in: 1.day) { DeviceCategory.all }
   end
 
   private
