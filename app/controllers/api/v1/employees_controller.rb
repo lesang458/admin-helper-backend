@@ -10,7 +10,7 @@ class Api::V1::EmployeesController < ApplicationController
 
   def show
     user = User.find(params[:id])
-    render_resource user, :ok, UserSerializer
+    render_resource 'employee', user, :ok, UserSerializer
   end
 
   def create
@@ -18,20 +18,20 @@ class Api::V1::EmployeesController < ApplicationController
       user = User.build_employee(user_params)
       user.save!
       DayOffInfo.create_day_off_info(day_off_params[:day_off_info], user)
-      render_resource user, :created, UserSerializer
+      render_resource 'employee', user, :created, UserSerializer
     end
   end
 
   def update
     user = User.find(params[:id])
     user.update!(user_params)
-    render_resource user, :ok, UserSerializer
+    render_resource 'employee', user, :ok, UserSerializer
   end
 
   def update_status
     user = User.find(params[:id])
     user.update!(user_status_params)
-    render_resource user, :ok, UserSerializer
+    render_resource 'employee', user, :ok, UserSerializer
   end
 
   private

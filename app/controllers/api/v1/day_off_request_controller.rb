@@ -10,7 +10,7 @@ class Api::V1::DayOffRequestController < ApplicationController
     employee = User.find(params[:id])
     day_off_request = employee.day_off_requests.build(day_off_request_params)
     day_off_request.save!
-    render_resource(day_off_request, :created, DayOffRequestSerializer)
+    render_resource('day-off-request', day_off_request, :created, DayOffRequestSerializer)
   end
 
   private

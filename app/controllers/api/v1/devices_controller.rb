@@ -3,7 +3,7 @@ class Api::V1::DevicesController < ApplicationController
 
   def create
     device = Device.create_device(device_params, history_params)
-    render_resource device, :created, DeviceSerializer
+    render_resource 'device', device, :created, DeviceSerializer
   end
 
   private
