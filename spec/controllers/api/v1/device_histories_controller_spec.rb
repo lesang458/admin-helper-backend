@@ -10,7 +10,7 @@ RSpec.describe Api::V1::DeviceHistoriesController, type: :controller do
     @admin = FactoryBot.create(:user, :admin)
     @employee = FactoryBot.create(:user, :employee)
     FactoryBot.create_list(:device_history, 10, from_date: '2020-07-15', to_date: '2020-07-31', status: 'IN_INVENTORY', device: @iphone)
-    FactoryBot.create(:device_history, from_date: '2020-07-31', to_date: '2020-08-15', status: 'ASSIGNED', device: @iphone, user: @employee)
+    @device_history = FactoryBot.create(:device_history, from_date: '2020-07-31', to_date: '2020-08-15', status: 'ASSIGNED', device: @iphone, user: @employee)
   end
   let!(:request_params) { { id: @admin.id, device_category_id: @phone.id, from_date: '2020-07-10', to_date: '2020-07-20', status: 'IN_INVENTORY' } }
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
@@ -42,6 +42,36 @@ RSpec.describe Api::V1::DeviceHistoriesController, type: :controller do
       expect(json_response['page_size']).to eq(10)
       expect(json_response['total_pages']).to eq(1)
       expect(json_response['total_count']).to eq(10)
+    end
+  end
+
+  describe 'Get detail Device History' do
+    it 'return status 401 status code with invalid token' do
+      invalid_token = JwtToken.encode({ user_id: 'token false' })
+      invalid_headers = { authorization: invalid_token }
+      request.headers.merge! invalid_headers
+      get :show, params: { id: @device_history.id }
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      request.headers.merge! invalid_headers
+      get :show, params: { id: @device_history.id }
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404 with ID does not exist' do
+      request.headers.merge! valid_headers
+      get :show, params: { id: '404notfound' }
+      expect(response.status).to eq(404)
+    end
+
+    it 'should return 200 with ID already exists' do
+      request.headers.merge! valid_headers
+      get :show, params: { id: @device_history.id }
+      json_response = JSON.parse(response.body)
+      expect(json_response['devicehistory']['status']).to eq(@device_history.status)
+      expect(response.status).to eq(200)
     end
   end
 end

@@ -83,7 +83,13 @@ phone = DeviceCategory.create! name: 'Phone'
 tablet = DeviceCategory.create! name: 'Tablet' 
 monitor = DeviceCategory.create! name: 'Monitor'
 
-Device.create! name: 'MacBook Pro', price: 30_000_000, device_category_id: laptop.id
-Device.create! name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: phone.id
-Device.create! name: 'IPad Pro 12.9 inch', price: 27_490_000, device_category_id: tablet.id
+macbook = Device.create! name: 'MacBook Pro', price: 30_000_000, device_category_id: laptop.id
+iphone = Device.create! name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: phone.id
+ipad = Device.create! name: 'IPad Pro 12.9 inch', price: 27_490_000, device_category_id: tablet.id
 Device.create! name: 'DELL E2020H', price: 2_290_000, device_category_id: monitor.id
+
+20.times do |i|
+  DeviceHistory.create! from_date: Time.now, to_date: Time.now + 1.month, status: 'IN_INVENTORY', device_id: macbook.id
+end
+DeviceHistory.create! from_date: Time.now, to_date: Time.now + 1.month, status: 'ASSIGNED', device_id: iphone.id, user_id: 102
+DeviceHistory.create! from_date: Time.now, to_date: Time.now + 1.month, status: 'DISCARDED', device_id: ipad.id
