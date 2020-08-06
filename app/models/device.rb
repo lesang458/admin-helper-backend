@@ -18,4 +18,12 @@ class Device < ApplicationRecord
       device
     end
   end
+
+  def self.search(params)
+    devices = Device.all
+    devices = devices.where('user_id = ?', params[:user_id]) if params[:user_id].present?
+    devices = Device.joins(:device_histories).where('status = ?', params[:status]) if params[:status].present?
+    devices = devices.where('device_category_id = ?', params[:device_category_id]) if params[:device_category_id].present?
+    devices
+  end
 end

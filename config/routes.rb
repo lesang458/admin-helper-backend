@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       post 'google_login', to: 'sessions#google_login'
       get 'device_histories', to: 'device_histories#index'
       post 'devices', to: 'devices#create'
+      get 'devices', to: 'devices#index'
     end
   end
 end
