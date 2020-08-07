@@ -23,7 +23,7 @@ RSpec.describe DeviceCategory, type: :model do
 
   describe 'Get list device category' do
     it 'should return all device category' do
-      device_categories = DeviceCategory.by_all_device_categories
+      device_categories = DeviceCategory.all_categories
       expect(device_categories.ids).to include(@laptop.id)
       expect(device_categories.ids).to include(@phone.id)
       expect(device_categories.ids).to include(@tablet.id)

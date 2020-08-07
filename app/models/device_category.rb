@@ -3,7 +3,7 @@ class DeviceCategory < ApplicationRecord
   has_many :devices, dependent: :destroy
   validates :name, presence: true
 
-  def self.by_all_device_categories
+  def self.all_categories
     Rails.cache.fetch('all_device_categories', expires_in: 1.day) { DeviceCategory.all }
   end
 
