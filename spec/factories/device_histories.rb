@@ -7,6 +7,7 @@ FactoryBot.define do
     end
     trait :ASSIGNED do
       status { 'ASSIGNED' }
+      user { employee }
     end
     trait :IN_INVENTORY do
       status { 'IN_INVENTORY' }
