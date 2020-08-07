@@ -10,7 +10,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     @employee = FactoryBot.create(:user, :employee, first_name: 'user', last_name: 'employee')
 
     @category_phone = FactoryBot.create(:device_category, :phone)
-    @iphone = FactoryBot.create(:device, name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: @category_phone.id)
+    @iphone = FactoryBot.create(:device, user_id: @employee.id, name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: @category_phone.id)
     @assigned = FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, status: 'ASSIGNED')
   end
 
