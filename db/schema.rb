@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_03_081124) do
+ActiveRecord::Schema.define(version: 2020_08_06_041059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,8 +95,8 @@ ActiveRecord::Schema.define(version: 2020_08_03_081124) do
   add_foreign_key "day_off_infos", "users", on_delete: :cascade
   add_foreign_key "day_off_requests", "day_off_infos", on_delete: :cascade
   add_foreign_key "day_off_requests", "users", on_delete: :cascade
-  add_foreign_key "device_histories", "devices"
-  add_foreign_key "device_histories", "users"
+  add_foreign_key "device_histories", "devices", on_delete: :cascade
+  add_foreign_key "device_histories", "users", on_delete: :cascade
   add_foreign_key "devices", "device_categories", on_delete: :cascade
   add_foreign_key "devices", "users", on_delete: :cascade
 end

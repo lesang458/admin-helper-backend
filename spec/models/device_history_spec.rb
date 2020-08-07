@@ -51,19 +51,19 @@ RSpec.describe DeviceHistory, type: :model do
     it { should have_many(:device_histories) }
   end
 
-  let!(:request_params) { { id: @admin.id, device_category_id: @phone.id, from_date: '2020-07-10', to_date: '2020-07-20', status: 'IN_INVENTORY' } }
+  let!(:request_params) { { user_id: @employee.id, device_category_id: @phone.id, from_date: '2020-07-10', to_date: '2020-07-20', status: 'IN_INVENTORY' } }
   describe 'GET device history' do
     it 'ID must be in the list with vacation and from date, to date' do
       device_histories = DeviceHistory.search(request_params)
       devices = DeviceCategory.find(request_params[:device_category_id]).devices
-      expect(device_histories.map(&:device_id).uniq).to eq(devices.map(&:id))
-      expect(device_histories.ids).to include @device_history.id
+      expect(device_histories.map(&:device_id).uniq).to eq(devices.map(&:user_id).compact)
+      expect(device_histories.ids).not_to include @device_history.id
     end
 
     it 'ID must be in the list with vacation and to date' do
       params = request_params.dup
       params.delete(:from_date)
-      params.delete(:id)
+      params.delete(:user_id)
       device_histories = DeviceHistory.search(params)
       devices = DeviceCategory.find(request_params[:device_category_id]).devices
       expect(device_histories.map(&:device_id).uniq).to eq(devices.map(&:id))
@@ -73,7 +73,7 @@ RSpec.describe DeviceHistory, type: :model do
     it 'ID must be in the list with vacation and to date' do
       params = request_params.dup
       params.delete(:from_date)
-      params.delete(:id)
+      params.delete(:user_id)
       params[:status] = 'ASSIGNED'
       device_histories = DeviceHistory.search(params)
       devices = DeviceCategory.find(request_params[:device_category_id]).devices
