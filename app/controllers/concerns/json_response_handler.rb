@@ -22,8 +22,8 @@ module JsonResponseHandler
     }
   end
 
-  def render_resource(name_response, obj, status_code_symbol, serializer_class)
-    render json: { "#{name_response}": serializer_class.new(obj) }, status: status_code_symbol
+  def render_resource(obj, status_code_symbol, serializer_class)
+    render json: { "#{obj.class.to_s.underscore}": serializer_class.new(obj) }, status: status_code_symbol
   end
 
   def render_resources(objs, status_code_symbol, serializer_class)
