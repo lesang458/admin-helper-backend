@@ -70,7 +70,7 @@ RSpec.describe Api::V1::DeviceHistoriesController, type: :controller do
       request.headers.merge! valid_headers
       get :show, params: { id: @device_history.id }
       json_response = JSON.parse(response.body)
-      expect(json_response['devicehistory']['status']).to eq(@device_history.status)
+      expect(json_response['device_history']['status']).to eq(@device_history.status)
       expect(response.status).to eq(200)
     end
   end
