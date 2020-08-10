@@ -35,4 +35,47 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
       expect(response.status).to eq(200)
     end
   end
+
+  describe 'POST# device' do
+    let!(:invalid_name) { '' }
+    let!(:post_params) {
+      {
+        name: 'iphone',
+        description: 'Designed by Apple in California'
+      }
+    }
+
+    describe 'params without history params' do
+      it 'return status 401 status code with invalid token' do
+        invalid_token = JwtToken.encode({ user_id: 'token false' })
+        invalid_headers = { authorization: invalid_token }
+        request.headers.merge! invalid_headers
+        post :create, params: post_params
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 403 with employee' do
+        request.headers.merge! invalid_headers
+        post :create, params: post_params
+        expect(response.status).to eq(403)
+      end
+
+      it 'should return 201' do
+        post :create, params: post_params
+        expect(response.status).to eq(201)
+        response_body = JSON.parse(response.body)
+        expect(response_body['device_category']['name']).to eq('iphone')
+        expect(response_body['device_category']['description']).to include 'Designed by Apple in California'
+      end
+
+      it 'should return 422 with invalid name' do
+        params = post_params.dup
+        params[:name] = invalid_name
+        post :create, params: params
+        expect(response.status).to eq(422)
+        message = JSON.parse(response.body)['message']
+        expect(message).to include 'Name can'
+      end
+    end
+  end
 end
