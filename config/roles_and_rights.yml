@@ -22,5 +22,6 @@ admin:
     - show
   devices:
     - create
+    - show
     - index
 super_admin:

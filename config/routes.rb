@@ -14,7 +14,7 @@ Rails.application.routes.draw do
       get 'device_categories', to: 'device_categories#index'
       post 'google_login', to: 'sessions#google_login'
       resources :device_histories, only: %i[index show]
-      resources :devices, only: %i[index create]
+      resources :devices, only: %i[create show index]
     end
   end
 end

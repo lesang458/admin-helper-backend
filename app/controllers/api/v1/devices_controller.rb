@@ -6,6 +6,11 @@ class Api::V1::DevicesController < ApplicationController
     render_resource device, :created, DeviceSerializer
   end
 
+  def show
+    device = Device.find(params[:id])
+    render_resource(device, :ok, DeviceSerializer)
+  end
+
   def index
     set_paginate
     devices = Device.search(params)
