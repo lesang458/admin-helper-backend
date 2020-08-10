@@ -14,6 +14,12 @@ class Api::V1::DeviceCategoriesController < ApplicationController
     render json: { device_category: device_category }, status: :created
   end
 
+  def destroy
+    DeviceCategory.destroy(params[:id])
+    device_categories = DeviceCategory.all_categories
+    render json: device_categories, status: :ok
+  end
+
   private
 
   def device_category_params

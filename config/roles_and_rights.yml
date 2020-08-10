@@ -19,6 +19,7 @@ admin:
     - index
     - show
     - create
+    - destroy
   device_histories:
     - index
     - show
