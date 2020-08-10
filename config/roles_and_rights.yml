@@ -15,10 +15,13 @@ admin:
     - update
   day_off_categories:
     - index
+  device_categories:
+    - index
   device_histories:
     - index
     - show
   devices:
     - create
     - show
+    - index
 super_admin:
