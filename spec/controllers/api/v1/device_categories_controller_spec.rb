@@ -149,7 +149,7 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
       expect(response.status).to eq(200)
       response_body = JSON.parse(response.body)
       response_body.each do |response|
-        list_categories.push(response['id'])
+        list_categories.push(response['id'.to_i])
       end
       expect(list_categories).not_to include @laptop.id
     end
