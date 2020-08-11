@@ -1,9 +1,20 @@
 class Api::V1::DevicesController < ApplicationController
   before_action :set_current_user
 
+  def update
+    device = Device.find(params[:id])
+    device.update!(device_params)
+    render_resource device, :ok, DeviceSerializer
+  end
+
   def create
     device = Device.create_device(device_params, history_params)
     render_resource device, :created, DeviceSerializer
+  end
+
+  def show
+    device = Device.find(params[:id])
+    render_resource(device, :ok, DeviceSerializer)
   end
 
   def index

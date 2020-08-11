@@ -10,7 +10,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     @employee = FactoryBot.create(:user, :employee, first_name: 'user', last_name: 'employee')
 
     @category_phone = FactoryBot.create(:device_category, :phone)
-    @iphone = FactoryBot.create(:device, name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: @category_phone.id)
+    @iphone = FactoryBot.create(:device, user_id: @employee.id, name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: @category_phone.id)
     @assigned = FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, status: 'ASSIGNED')
   end
 
@@ -18,9 +18,65 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let!(:valid_headers) { { authorization: valid_token } }
   let!(:invalid_token) { SecureRandom.hex(64) }
   let!(:invalid_headers) { { authorization: invalid_token } }
+  let!(:invalid_price) { -999_999_999_999 }
   before(:each) { request.headers.merge! valid_headers }
 
-  describe 'GET# device' do
+  describe 'PUT# device' do
+    let!(:unexist_id) { 999_999_999_999 }
+    let!(:put_params) {
+      {
+        id: @iphone.id,
+        name: 'update name',
+        price: 10_000_000,
+        description: 'update description',
+        device_category_id: @category_phone.id
+      }
+    }
+
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      put :update, params: put_params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      valid_token = JwtToken.encode({ user_id: @employee.id })
+      valid_headers = { authorization: valid_token }
+      request.headers.merge! valid_headers
+      put :update, params: put_params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 200' do
+      put :update, params: put_params
+      @iphone.reload
+      expect(response.status).to eq(200)
+      expect(@iphone.name).to eq('update name')
+      expect(@iphone.price).to eq(10_000_000)
+      expect(@iphone.description).to eq('update description')
+      expect(@iphone.device_category_id).to eq(@category_phone.id)
+    end
+
+    it 'should return 422 with invalid price' do
+      params = put_params.dup
+      params[:price] = invalid_price
+      put :update, params: params
+      expect(response.status).to eq(422)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Price must be greater than 0'
+    end
+
+    it 'should return 404 with unexist device_id' do
+      params = put_params.dup
+      params[:id] = unexist_id
+      put :update, params: params
+      expect(response.status).to eq(404)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include "Couldn't find Device with 'id'"
+    end
+  end
+
+  describe 'GET#index device' do
     let!(:get_params) {
       {
         status: 'ASSIGNED',
@@ -28,6 +84,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
         device_category_id: @category_phone.id
       }
     }
+
     it 'return status 401 status code with invalid token' do
       request.headers.merge! invalid_headers
       get :index, params: get_params
@@ -65,10 +122,36 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
   end
 
+  describe 'GET#show device' do
+    let!(:get_params) { { id: @iphone.id } }
+
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      get :show, params: get_params
+    end
+
+    it 'should return 403 with employee' do
+      valid_token = JwtToken.encode({ user_id: @employee.id })
+      valid_headers = { authorization: valid_token }
+      request.headers.merge! valid_headers
+      get :show, params: get_params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 200' do
+      get :show, params: get_params
+      expect(response.status).to eq(200)
+      response_body = JSON.parse(response.body)
+      expect(response_body['device']['name']).to eq('Iphone 12 Pro Max')
+      expect(response_body['device']['price']).to eq(39_990_000)
+      expect(response_body['device']['device_category_id']).to eq(@category_phone.id)
+      expect(response_body['device']['category_name']).to eq('Iphone')
+    end
+  end
+
   describe 'POST# device' do
     let!(:invalid_user_id) { 999_999_999_999 }
     let!(:invalid_name) { 'i' }
-    let!(:invalid_price) { -999_999_999_999 }
     let!(:invalid_date) { '2020-50-40' }
     let!(:post_params) {
       {

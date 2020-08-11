@@ -17,10 +17,13 @@ admin:
     - index
   device_categories:
     - index
+    - show
   device_histories:
     - index
     - show
   devices:
     - create
+    - show
     - index
+    - update
 super_admin:

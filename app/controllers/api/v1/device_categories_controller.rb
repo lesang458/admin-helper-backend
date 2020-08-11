@@ -12,4 +12,9 @@ class Api::V1::DeviceCategoriesController < ApplicationController
     @per_page = params[:per_page] || 20
     @page = params[:page] || 1
   end
+
+  def show
+    device_category = DeviceCategory.find(params[:id])
+    render json: { device_category: device_category }, status: :ok
+  end
 end

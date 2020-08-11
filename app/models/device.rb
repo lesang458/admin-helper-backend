@@ -5,7 +5,6 @@ class Device < ApplicationRecord
   validates :name, presence: true, length: { in: 2..40 }
   validates :price, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :description, allow_nil: true, length: { minimum: 5 }
-
   def category_name
     device_category.name
   end
@@ -22,7 +21,7 @@ class Device < ApplicationRecord
   def self.search(params)
     devices = Device.all
     devices = devices.joins(:device_histories).where('status = ?', params[:status]) if params[:status].present?
-    devices = devices.where('device_histories.user_id = ?', params[:user_id]) if params[:user_id].present?
+    devices = devices.where('devices.user_id = ?', params[:user_id]) if params[:user_id].present?
     devices = devices.where('device_category_id = ?', params[:device_category_id]) if params[:device_category_id].present?
     devices
   end
