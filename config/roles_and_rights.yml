@@ -18,6 +18,7 @@ admin:
   device_categories:
     - index
     - show
+    - update
   device_histories:
     - index
     - show
