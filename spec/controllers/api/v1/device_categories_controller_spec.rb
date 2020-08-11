@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
   before(:all) do
+    DeviceCategory.delete_all
     @admin = FactoryBot.create :user, :admin
     @employee = FactoryBot.create :user, :employee
     @laptop = FactoryBot.create :device_category, :laptop
@@ -33,6 +34,21 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
     it 'should return 200' do
       get :index
       expect(response.status).to eq(200)
+      json_response = JSON.parse(response.body)
+      expect(json_response['pagination']['current_page']).to eq(1)
+      expect(json_response['pagination']['page_size']).to eq(4)
+      expect(json_response['pagination']['total_pages']).to eq(1)
+      expect(json_response['pagination']['total_count']).to eq(4)
+    end
+
+    it 'should return 200' do
+      get :index, params: { page: 1, per_page: 3 }
+      expect(response.status).to eq(200)
+      json_response = JSON.parse(response.body)
+      expect(json_response['pagination']['current_page']).to eq(1)
+      expect(json_response['pagination']['page_size']).to eq(3)
+      expect(json_response['pagination']['total_pages']).to eq(2)
+      expect(json_response['pagination']['total_count']).to eq(4)
     end
   end
 end
