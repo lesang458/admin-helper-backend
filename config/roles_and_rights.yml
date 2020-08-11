@@ -25,4 +25,5 @@ admin:
     - create
     - show
     - index
+    - update
 super_admin:
