@@ -6,15 +6,15 @@ class Api::V1::DeviceCategoriesController < ApplicationController
     render_collection(device_categories, DeviceCategorySerializer)
   end
 
+  def show
+    device_category = DeviceCategory.find(params[:id])
+    render_resource(device_category, :ok, DeviceCategorySerializer)
+  end
+
   private
 
   def set_paginate
     @per_page = params[:per_page] || 20
     @page = params[:page] || 1
-  end
-
-  def show
-    device_category = DeviceCategory.find(params[:id])
-    render json: { device_category: device_category }, status: :ok
   end
 end
