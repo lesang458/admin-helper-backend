@@ -18,6 +18,13 @@ class Api::V1::DevicesController < ApplicationController
     render_collection(devices, DeviceSerializer)
   end
 
+  def destroy
+    device = Device.find(params[:id])
+    device.device_histories.delete_all
+    device.destroy
+    render json: 'Deleted Device', status: :ok
+  end
+
   private
 
   def set_paginate

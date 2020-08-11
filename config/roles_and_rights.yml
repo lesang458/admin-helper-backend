@@ -24,4 +24,5 @@ admin:
     - create
     - show
     - index
+    - destroy
 super_admin:
