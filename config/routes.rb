@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       resources :password, only: %i[create update]
       put 'day-off-infos/:id', to: 'day_off_info#update'
       get 'day-off-categories', to: 'day_off_categories#index'
-      resources :device_categories, only: %i[index show create update]
+      resources :device_categories
       post 'google_login', to: 'sessions#google_login'
       resources :device_histories, only: %i[index show]
       resources :devices, only: %i[create show index update]
