@@ -174,7 +174,7 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
       post :create, params: params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Name can'
+      expect(message).to include "Name can't be blank"
     end
   end
 
