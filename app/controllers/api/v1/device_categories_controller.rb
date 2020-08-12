@@ -24,6 +24,12 @@ class Api::V1::DeviceCategoriesController < ApplicationController
     render_collection(device_categories, DeviceCategorySerializer)
   end
 
+  def update
+    category = DeviceCategory.find(params[:id])
+    category.update!(device_category_params)
+    render_resource category, :ok, DeviceCategorySerializer
+  end
+
   private
 
   def set_paginate
