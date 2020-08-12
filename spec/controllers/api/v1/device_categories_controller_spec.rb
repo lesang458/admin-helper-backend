@@ -177,4 +177,31 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
       expect(message).to include "Name can't be blank"
     end
   end
+
+  describe 'Destroy device category' do
+    let!(:params) { { id: @laptop.id } }
+    it 'return status 401 status code with invalid token' do
+      invalid_token = JwtToken.encode({ user_id: 'token false' })
+      invalid_headers = { authorization: invalid_token }
+      request.headers.merge! invalid_headers
+      delete :destroy, params: params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      request.headers.merge! invalid_headers
+      delete :destroy, params: params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404' do
+      delete :destroy, params: { id: 'IDnotfound' }
+      expect(response.status).to eq(404)
+    end
+
+    it 'should return 204' do
+      delete :destroy, params: params
+      expect(response.status).to eq(204)
+    end
+  end
 end
