@@ -18,7 +18,7 @@ class Api::V1::DeviceCategoriesController < ApplicationController
 
   def destroy
     DeviceCategory.destroy(params[:id])
-    head 204
+    head :no_content
   end
 
   def update
