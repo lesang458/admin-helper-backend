@@ -17,4 +17,16 @@ class Api::V1::DeviceCategoriesController < ApplicationController
     @per_page = params[:per_page] || 20
     @page = params[:page] || 1
   end
+
+  def update
+    category = DeviceCategory.find(params[:id])
+    category.update!(category_params)
+    render_resource category, :ok, DeviceCategorySerializer
+  end
+
+  private
+
+  def category_params
+    params.permit(:name, :description)
+  end
 end
