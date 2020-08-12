@@ -18,6 +18,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let!(:valid_headers) { { authorization: valid_token } }
   let!(:invalid_token) { SecureRandom.hex(64) }
   let!(:invalid_headers) { { authorization: invalid_token } }
+  let!(:invalid_price) { -999_999_999_999 }
   before(:each) { request.headers.merge! valid_headers }
   let!(:invalid_user_id) { 999_999_999_999 }
 
@@ -50,6 +51,61 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(204)
       expect(device).to be_nil
       expect(device_history).to be_nil
+    end
+  end
+
+  describe 'PUT# device' do
+    let!(:unexist_id) { 999_999_999_999 }
+    let!(:put_params) {
+      {
+        id: @iphone.id,
+        name: 'update name',
+        price: 10_000_000,
+        description: 'update description',
+        device_category_id: @category_phone.id
+      }
+    }
+
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      put :update, params: put_params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      valid_token = JwtToken.encode({ user_id: @employee.id })
+      valid_headers = { authorization: valid_token }
+      request.headers.merge! valid_headers
+      put :update, params: put_params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 200' do
+      put :update, params: put_params
+      @iphone.reload
+      expect(response.status).to eq(200)
+      expect(@iphone.name).to eq('update name')
+      expect(@iphone.price).to eq(10_000_000)
+      expect(@iphone.description).to eq('update description')
+      expect(@iphone.device_category_id).to eq(@category_phone.id)
+    end
+
+    it 'should return 422 with invalid price' do
+      params = put_params.dup
+      params[:price] = invalid_price
+      put :update, params: params
+      expect(response.status).to eq(422)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Price must be greater than 0'
+    end
+
+    it 'should return 404 with unexist device_id' do
+      params = put_params.dup
+      params[:id] = unexist_id
+      put :update, params: params
+      expect(response.status).to eq(404)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include "Couldn't find Device with 'id'"
     end
   end
 
@@ -129,7 +185,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   describe 'POST# device' do
     let!(:invalid_user_id) { 999_999_999_999 }
     let!(:invalid_name) { 'i' }
-    let!(:invalid_price) { -999_999_999_999 }
     let!(:invalid_date) { '2020-50-40' }
     let!(:post_params) {
       {

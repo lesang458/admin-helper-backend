@@ -17,6 +17,8 @@ admin:
     - index
   device_categories:
     - index
+    - show
+    - update
   device_histories:
     - index
     - show
@@ -25,4 +27,5 @@ admin:
     - show
     - index
     - destroy
+    - update
 super_admin:
