@@ -20,9 +20,8 @@ class Api::V1::DevicesController < ApplicationController
 
   def destroy
     device = Device.find(params[:id])
-    device.device_histories.delete_all
     device.destroy
-    render json: 'Deleted Device', status: :ok
+    render json: 'Deleted Device', status: :no_content
   end
 
   private

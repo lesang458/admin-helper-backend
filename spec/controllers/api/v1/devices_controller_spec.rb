@@ -43,11 +43,11 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(message).to include "Couldn't find Device"
     end
 
-    it 'should return 200' do
+    it 'should return 204' do
       delete :destroy, params: { id: @iphone.id }
       device = Device.find_by id: @iphone.id
       device_history = DeviceHistory.find_by device_id: @iphone.id
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
       expect(device).to be_nil
       expect(device_history).to be_nil
     end
