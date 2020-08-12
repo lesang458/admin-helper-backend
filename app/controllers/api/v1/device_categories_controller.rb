@@ -11,13 +11,6 @@ class Api::V1::DeviceCategoriesController < ApplicationController
     render_resource(device_category, :ok, DeviceCategorySerializer)
   end
 
-  private
-
-  def set_paginate
-    @per_page = params[:per_page] || 20
-    @page = params[:page] || 1
-  end
-
   def update
     category = DeviceCategory.find(params[:id])
     category.update!(category_params)
@@ -25,6 +18,11 @@ class Api::V1::DeviceCategoriesController < ApplicationController
   end
 
   private
+
+  def set_paginate
+    @per_page = params[:per_page] || 20
+    @page = params[:page] || 1
+  end
 
   def category_params
     params.permit(:name, :description)
