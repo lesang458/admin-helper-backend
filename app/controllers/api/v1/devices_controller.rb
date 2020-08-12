@@ -24,6 +24,11 @@ class Api::V1::DevicesController < ApplicationController
     render_collection(devices, DeviceSerializer)
   end
 
+  def discard
+    device = Device.set_status(params[:id], 'discarded')
+    render_resource device, :ok, DeviceSerializer
+  end
+
   private
 
   def set_paginate

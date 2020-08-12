@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       post 'google_login', to: 'sessions#google_login'
       resources :device_histories, only: %i[index show]
       resources :devices, only: %i[create show index update]
+      put 'devices/:id/discard', to: 'devices#discard'
     end
   end
 end

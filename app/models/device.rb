@@ -9,6 +9,17 @@ class Device < ApplicationRecord
     device_category.name
   end
 
+  def self.set_status(device_id, status)
+    Device.transaction do
+      device = Device.find device_id
+      device.update! user_id: nil
+      old_history = device.device_histories.last
+      old_history.update!(to_date: Time.zone.now) if old_history.present?
+      device.device_histories.create! from_date: Time.now, status: status
+      device
+    end
+  end
+
   def self.create_device(device_params, history_params)
     Device.transaction do
       User.find(device_params[:user_id]) if device_params[:user_id]

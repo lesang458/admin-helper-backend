@@ -29,4 +29,5 @@ admin:
     - show
     - index
     - update
+    - discard
 super_admin:
