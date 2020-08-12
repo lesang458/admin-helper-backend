@@ -199,7 +199,7 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
       expect(response.status).to eq(404)
     end
 
-    it 'should return 200' do
+    it 'should return 204' do
       delete :destroy, params: params
       expect(response.status).to eq(204)
     end
