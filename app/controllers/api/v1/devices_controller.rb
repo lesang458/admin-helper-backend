@@ -24,6 +24,11 @@ class Api::V1::DevicesController < ApplicationController
     render_collection(devices, DeviceSerializer)
   end
 
+  def assign
+    device = Device.assign_device(params[:id], params[:user_id])
+    render_resource device, :ok, DeviceSerializer
+  end
+
   private
 
   def set_paginate

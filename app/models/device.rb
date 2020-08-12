@@ -18,6 +18,18 @@ class Device < ApplicationRecord
     end
   end
 
+  def self.assign_device(device_id, user_id)
+    Device.transaction do
+      device = Device.find(device_id)
+      User.find(user_id)
+      device.update!(user_id: user_id)
+      old_history = device.device_histories.last
+      old_history.update!(to_date: Time.zone.now) if old_history.present?
+      device.device_histories.create! user_id: user_id, from_date: Time.zone.now, status: 'assigned'
+      device
+    end
+  end
+
   def self.search(params)
     devices = Device.all
     devices = devices.joins(:device_histories).where('status = ?', params[:status]) if params[:status].present?

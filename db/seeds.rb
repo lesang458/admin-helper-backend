@@ -102,3 +102,6 @@ end
 DeviceHistory.create! from_date: Time.now, to_date: Time.now + 1.month, status: 'ASSIGNED', device_id: iphone.id, user_id: 102
 DeviceHistory.create! from_date: Time.now, to_date: Time.now + 1.month, status: 'DISCARDED', device_id: ipad.id
 
+DeviceHistory.create! from_date: Time.now, status: 'ASSIGNED', device_id: mac_book.id
+DeviceHistory.create! from_date: Time.now, status: 'ASSIGNED', device_id: dell_monitor.id
+
