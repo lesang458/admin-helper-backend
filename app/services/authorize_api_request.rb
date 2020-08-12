@@ -1,6 +1,6 @@
 class AuthorizeApiRequest
   def initialize(token)
-    @token = token
+    @token = token.split(' ')[1]
   end
 
   def current_user

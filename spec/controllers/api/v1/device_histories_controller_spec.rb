@@ -14,9 +14,9 @@ RSpec.describe Api::V1::DeviceHistoriesController, type: :controller do
   end
   let!(:request_params) { { id: @admin.id, device_category_id: @phone.id, from_date: '2020-07-10', to_date: '2020-07-20', status: 'IN_INVENTORY' } }
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
-  let!(:valid_headers) { { authorization: valid_token } }
+  let!(:valid_headers) { { authorization: "Bearer #{valid_token}" } }
   let!(:invalid_token) { JwtToken.encode({ user_id: @employee.id }) }
-  let!(:invalid_headers) { { authorization: invalid_token } }
+  let!(:invalid_headers) { { authorization: "Bearer #{invalid_token}" } }
   before(:each) { request.headers.merge! valid_headers }
 
   describe 'Get Device Hisory' do
