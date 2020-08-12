@@ -200,14 +200,8 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
     end
 
     it 'should return 200' do
-      list_categories = []
       delete :destroy, params: params
-      expect(response.status).to eq(200)
-      response_body = JSON.parse(response.body)
-      response_body.each do |response|
-        list_categories.push(response['id'.to_i])
-      end
-      expect(list_categories).not_to include @laptop.id
+      expect(response.status).to eq(204)
     end
   end
 end
