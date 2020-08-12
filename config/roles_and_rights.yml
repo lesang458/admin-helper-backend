@@ -18,11 +18,8 @@ admin:
   device_categories:
     - index
     - show
-<<<<<<< HEAD
     - create
-=======
     - update
->>>>>>> develop
   device_histories:
     - index
     - show
