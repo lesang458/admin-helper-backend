@@ -25,7 +25,8 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def assign
-    device = Device.assign_device(params[:id], params[:user_id])
+    device = Device.find(params[:id])
+    device.assign_device(params[:user_id])
     render_resource device, :ok, DeviceSerializer
   end
 

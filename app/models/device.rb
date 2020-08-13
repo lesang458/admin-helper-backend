@@ -18,15 +18,13 @@ class Device < ApplicationRecord
     end
   end
 
-  def self.assign_device(device_id, user_id)
+  def assign_device(user_id)
     Device.transaction do
-      device = Device.find(device_id)
       User.find(user_id)
-      device.update!(user_id: user_id)
-      old_history = device.device_histories.last
+      self.update!(user_id: user_id)
+      old_history = self.device_histories.last
       old_history.update!(to_date: Time.zone.now)
-      device.device_histories.create! user_id: user_id, from_date: Time.zone.now, status: 'assigned'
-      device
+      self.device_histories.create! user_id: user_id, from_date: Time.zone.now, status: 'assigned'
     end
   end
 
