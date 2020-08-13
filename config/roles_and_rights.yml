@@ -31,4 +31,5 @@ admin:
     - destroy
     - update
     - discard
+    - move_to_inventory
 super_admin:

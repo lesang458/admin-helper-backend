@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       resources :device_histories, only: %i[index show]
       resources :devices, only: %i[create show index destroy update] do
         put '/discard', to: 'devices#discard'
+        put '/move_to_inventory', to: 'devices#move_to_inventory'
       end
     end
   end
