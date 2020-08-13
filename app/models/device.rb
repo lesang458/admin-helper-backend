@@ -1,5 +1,5 @@
 class Device < ApplicationRecord
-  has_many :device_histories, dependent: :destroy
+  has_many :device_histories, dependent: :delete_all
   belongs_to :user, optional: true
   belongs_to :device_category
   validates :name, presence: true, length: { in: 2..40 }
@@ -13,8 +13,7 @@ class Device < ApplicationRecord
     Device.transaction do
       device = Device.find device_id
       device.update! user_id: nil
-      old_history = device.device_histories.last
-      old_history.update!(to_date: Time.zone.now) if old_history.present?
+      device.device_histories.last.update!(to_date: Time.zone.now)
       device.device_histories.create! from_date: Time.now, status: status
       device
     end
