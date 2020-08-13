@@ -18,9 +18,9 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
   describe 'PUT# day-off-info' do
     let!(:update_params) { { id: @info_vacation.id, day_off_category_id: @category_vacation.id, hours: 160 } }
     let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
-    let!(:valid_headers) { { authorization: valid_token } }
+    let!(:valid_headers) { { authorization: "Bearer #{valid_token}" } }
     let!(:invalid_token) { SecureRandom.hex(64) }
-    let!(:invalid_headers) { { authorization: invalid_token } }
+    let!(:invalid_headers) { { authorization: "Bearer #{invalid_token}" } }
     before(:each) { request.headers.merge! valid_headers }
 
     it 'return status 401 status code with invalid token' do
@@ -31,7 +31,7 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
 
     it 'should return 403 with employee' do
       valid_token = JwtToken.encode({ user_id: @employee.id })
-      valid_headers = { authorization: valid_token }
+      valid_headers = { authorization: "Bearer #{valid_token}" }
       request.headers.merge! valid_headers
       put :update, params: update_params
       expect(response.status).to eq(403)

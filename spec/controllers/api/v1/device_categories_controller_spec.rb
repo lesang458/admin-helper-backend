@@ -12,9 +12,9 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
   end
 
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
-  let!(:valid_headers) { { authorization: valid_token } }
+  let!(:valid_headers) { { authorization: "Bearer #{valid_token}" } }
   let!(:invalid_token) { JwtToken.encode({ user_id: @employee.id }) }
-  let!(:invalid_headers) { { authorization: invalid_token } }
+  let!(:invalid_headers) { { authorization: "Bearer #{invalid_token}" } }
   before(:each) { request.headers.merge! valid_headers }
 
   describe 'PUT# device category' do
