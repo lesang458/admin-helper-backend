@@ -16,9 +16,9 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
   let!(:invalid_token) { JwtToken.encode({ user_id: @employee.id }) }
   let!(:invalid_headers) { { authorization: "Bearer #{invalid_token}" } }
   before(:each) { request.headers.merge! valid_headers }
+  let!(:unexist_id) { 999_999_999_999 }
 
   describe 'PUT# device category' do
-    let!(:unexist_id) { 999_999_999_999 }
     let!(:put_params) {
       {
         id: @phone.id,
@@ -125,7 +125,7 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
 
     it 'should return 404 with ID does not exist' do
       request.headers.merge! valid_headers
-      get :show, params: { id: '404notfound' }
+      get :show, params: { id: unexist_id }
       expect(response.status).to eq(404)
     end
 
