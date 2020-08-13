@@ -15,9 +15,9 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
   let!(:params) { { day_off_category_id: @day_off_category.id, from_date: '2020-07-14', to_date: '2020-07-20', id: @employee.id } }
   let!(:request_params) { { from_date: Time.now, to_date: Time.now, hours_per_day: 4, notes: 'ok', id: @admin.id, day_off_info_id: @day_off_info.id } }
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
-  let!(:valid_headers) { { authorization: valid_token } }
+  let!(:valid_headers) { { authorization: "Bearer #{valid_token}" } }
   let!(:invalid_token) { JwtToken.encode({ user_id: @employee.id }) }
-  let!(:invalid_headers) { { authorization: invalid_token } }
+  let!(:invalid_headers) { { authorization: "Bearer #{invalid_token}" } }
   before(:each) { request.headers.merge! valid_headers }
 
   describe 'Get Hisory' do
