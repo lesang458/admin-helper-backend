@@ -31,4 +31,5 @@ admin:
     - destroy
     - update
     - assign
+    - discard
 super_admin:

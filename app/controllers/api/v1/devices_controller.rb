@@ -1,6 +1,6 @@
 class Api::V1::DevicesController < ApplicationController
   before_action :set_current_user
-
+  before_action :set_device, only: %i[assign discard]
   def update
     device = Device.find(params[:id])
     device.update!(device_params)
@@ -25,9 +25,13 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def assign
-    device = Device.find(params[:id])
-    device.assign_device(params[:user_id])
-    render_resource device, :ok, DeviceSerializer
+    @device.assign(params[:user_id])
+    render_resource @device, :ok, DeviceSerializer
+  end
+
+  def discard
+    @device.discard
+    render_resource @device, :ok, DeviceSerializer
   end
 
   def destroy
@@ -49,5 +53,9 @@ class Api::V1::DevicesController < ApplicationController
 
   def history_params
     params.permit(:from_date, :status)
+  end
+
+  def set_device
+    @device = Device.find(params[:device_id])
   end
 end

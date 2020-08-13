@@ -343,11 +343,53 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
   end
 
+  describe 'PUT#discarded device' do
+    let!(:unexist_id) { 999_999_999_999 }
+    let!(:put_params) {
+      {
+        device_id: @iphone.id
+      }
+    }
+
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      put :discard, params: put_params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      valid_token = JwtToken.encode({ user_id: @employee.id })
+      valid_headers = { authorization: "Bearer #{valid_token}" }
+      request.headers.merge! valid_headers
+      put :discard, params: put_params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404 with unexist device_id' do
+      params = put_params.dup
+      params[:device_id] = unexist_id
+      put :discard, params: params
+      expect(response.status).to eq(404)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include "Couldn't find Device with 'id'"
+    end
+
+    it 'should return 200' do
+      put :discard, params: put_params
+      @iphone.reload
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(nil)
+      history = @iphone.device_histories.last
+      expect(history.status).to eq('discarded')
+      expect(history.user_id).to eq(nil)
+    end
+  end
+
   describe 'PUT#assign device' do
     let!(:unexist_id) { 999_999_999_999 }
     let!(:put_params) {
       {
-        id: @iphone.id,
+        device_id: @iphone.id,
         user_id: @employee.id
       }
     }
@@ -368,7 +410,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 404 with unexist device_id' do
       params = put_params.dup
-      params[:id] = unexist_id
+      params[:device_id] = unexist_id
       put :assign, params: params
       expect(response.status).to eq(404)
       message = JSON.parse(response.body)['message']

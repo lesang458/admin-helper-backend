@@ -9,6 +9,19 @@ class Device < ApplicationRecord
     device_category.name
   end
 
+  def discard
+    update_status(nil, 'discarded')
+  end
+
+  def update_status(user_id, status)
+    Device.transaction do
+      User.find(user_id) if user_id.present?
+      update! user_id: user_id
+      device_histories.last.update!(to_date: Time.zone.now)
+      device_histories.create! from_date: Time.now, status: status, user_id: user_id
+    end
+  end
+
   def self.create_device(device_params, history_params)
     Device.transaction do
       User.find(device_params[:user_id]) if device_params[:user_id]
@@ -18,13 +31,8 @@ class Device < ApplicationRecord
     end
   end
 
-  def assign_device(user_id)
-    Device.transaction do
-      User.find(user_id)
-      update!(user_id: user_id)
-      device_histories.last.update!(to_date: Time.zone.now)
-      device_histories.create! user_id: user_id, from_date: Time.zone.now, status: 'assigned'
-    end
+  def assign(user_id)
+    update_status(user_id, 'assigned')
   end
 
   def self.search(params)
