@@ -26,7 +26,7 @@ class Api::V1::DevicesController < ApplicationController
 
   def discard
     device = Device.find params[:id]
-    device.discard_device(nil, 'discarded')
+    device.discard
     render_resource device, :ok, DeviceSerializer
   end
 

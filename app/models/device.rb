@@ -9,8 +9,8 @@ class Device < ApplicationRecord
     device_category.name
   end
 
-  def discard_device(user_id, status)
-    update_status(user_id, status)
+  def discard
+    update_status(nil, 'discarded')
   end
 
   def update_status(user_id, status)
