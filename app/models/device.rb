@@ -9,6 +9,10 @@ class Device < ApplicationRecord
     device_category.name
   end
 
+  def discard_device(user_id, status)
+    update_status(user_id, status)
+  end
+
   def update_status(user_id, status)
     Device.transaction do
       update! user_id: user_id
