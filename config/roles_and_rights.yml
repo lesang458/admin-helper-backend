@@ -30,4 +30,5 @@ admin:
     - index
     - destroy
     - update
+    - discard
 super_admin:

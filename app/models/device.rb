@@ -9,6 +9,18 @@ class Device < ApplicationRecord
     device_category.name
   end
 
+  def discard
+    update_status(nil, 'discarded')
+  end
+
+  def update_status(user_id, status)
+    Device.transaction do
+      update! user_id: user_id
+      device_histories.last.update!(to_date: Time.zone.now)
+      device_histories.create! from_date: Time.now, status: status
+    end
+  end
+
   def self.create_device(device_params, history_params)
     Device.transaction do
       User.find(device_params[:user_id]) if device_params[:user_id]
