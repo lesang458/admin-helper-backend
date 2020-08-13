@@ -31,7 +31,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 403 with employee' do
       valid_token = JwtToken.encode({ user_id: @employee.id })
-      valid_headers = { authorization: valid_token }
+      valid_headers = { authorization: "Bearer #{valid_token}" }
       request.headers.merge! valid_headers
       delete :destroy, params: { id: @iphone.id }
       expect(response.status).to eq(403)
@@ -359,7 +359,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 403 with employee' do
       valid_token = JwtToken.encode({ user_id: @employee.id })
-      valid_headers = { authorization: valid_token }
+      valid_headers = { authorization: "Bearer #{valid_token}" }
       request.headers.merge! valid_headers
       put :discard, params: put_params
       expect(response.status).to eq(403)
