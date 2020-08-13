@@ -24,7 +24,7 @@ class Device < ApplicationRecord
       User.find(user_id)
       device.update!(user_id: user_id)
       old_history = device.device_histories.last
-      old_history.update!(to_date: Time.zone.now) if old_history.present?
+      old_history.update!(to_date: Time.zone.now)
       device.device_histories.create! user_id: user_id, from_date: Time.zone.now, status: 'assigned'
       device
     end
