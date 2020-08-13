@@ -1,5 +1,5 @@
 class Device < ApplicationRecord
-  has_many :device_histories, dependent: :destroy
+  has_many :device_histories, dependent: :delete_all
   belongs_to :user, optional: true
   belongs_to :device_category
   validates :name, presence: true, length: { in: 2..40 }
@@ -21,10 +21,9 @@ class Device < ApplicationRecord
   def assign_device(user_id)
     Device.transaction do
       User.find(user_id)
-      self.update!(user_id: user_id)
-      old_history = self.device_histories.last
-      old_history.update!(to_date: Time.zone.now)
-      self.device_histories.create! user_id: user_id, from_date: Time.zone.now, status: 'assigned'
+      update!(user_id: user_id)
+      device_histories.last.update!(to_date: Time.zone.now)
+      device_histories.create! user_id: user_id, from_date: Time.zone.now, status: 'assigned'
     end
   end
 
