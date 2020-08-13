@@ -24,6 +24,12 @@ class Api::V1::DevicesController < ApplicationController
     render_collection(devices, DeviceSerializer)
   end
 
+  def destroy
+    device = Device.find(params[:id])
+    device.destroy
+    head :no_content
+  end
+
   private
 
   def set_paginate

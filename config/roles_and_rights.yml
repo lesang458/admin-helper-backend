@@ -28,5 +28,6 @@ admin:
     - create
     - show
     - index
+    - destroy
     - update
 super_admin:

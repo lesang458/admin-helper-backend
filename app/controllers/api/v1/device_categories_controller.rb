@@ -12,7 +12,7 @@ class Api::V1::DeviceCategoriesController < ApplicationController
   end
 
   def create
-    device_category = DeviceCategory.create! device_category_params
+    device_category = DeviceCategory.create! category_params
     render_resource(device_category, :created, DeviceCategorySerializer)
   end
 
@@ -23,7 +23,7 @@ class Api::V1::DeviceCategoriesController < ApplicationController
 
   def update
     category = DeviceCategory.find(params[:id])
-    category.update!(device_category_params)
+    category.update!(category_params)
     render_resource category, :ok, DeviceCategorySerializer
   end
 
@@ -34,7 +34,7 @@ class Api::V1::DeviceCategoriesController < ApplicationController
     @page = params[:page] || 1
   end
 
-  def device_category_params
+  def category_params
     params.permit(:name, :description)
   end
 end

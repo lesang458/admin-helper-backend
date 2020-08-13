@@ -20,6 +20,39 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let!(:invalid_headers) { { authorization: invalid_token } }
   let!(:invalid_price) { -999_999_999_999 }
   before(:each) { request.headers.merge! valid_headers }
+  let!(:invalid_user_id) { 999_999_999_999 }
+
+  describe 'DELETE# device' do
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      delete :destroy, params: { id: @iphone.id }
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      valid_token = JwtToken.encode({ user_id: @employee.id })
+      valid_headers = { authorization: valid_token }
+      request.headers.merge! valid_headers
+      delete :destroy, params: { id: @iphone.id }
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404 with invalid user_id' do
+      delete :destroy, params: { id: invalid_user_id }
+      expect(response.status).to eq(404)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include "Couldn't find Device"
+    end
+
+    it 'should return 204' do
+      delete :destroy, params: { id: @iphone.id }
+      device = Device.find_by id: @iphone.id
+      device_history = DeviceHistory.find_by device_id: @iphone.id
+      expect(response.status).to eq(204)
+      expect(device).to be_nil
+      expect(device_history).to be_nil
+    end
+  end
 
   describe 'PUT# device' do
     let!(:unexist_id) { 999_999_999_999 }

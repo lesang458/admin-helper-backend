@@ -1,5 +1,5 @@
 class Device < ApplicationRecord
-  has_many :device_histories, dependent: :destroy
+  has_many :device_histories, dependent: :delete_all
   belongs_to :user, optional: true
   belongs_to :device_category
   validates :name, presence: true, length: { in: 2..40 }
