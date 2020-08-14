@@ -26,7 +26,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     let!(:unexist_id) { 999_999_999_999 }
     let!(:put_params) {
       {
-        device_id: @iphone.id
+        id: @iphone.id
       }
     }
 
@@ -46,7 +46,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 404 with unexist device_id' do
       params = put_params.dup
-      params[:device_id] = unexist_id
+      params[:id] = unexist_id
       put :move_to_inventory, params: params
       expect(response.status).to eq(404)
       message = JSON.parse(response.body)['message']
@@ -389,7 +389,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     let!(:unexist_id) { 999_999_999_999 }
     let!(:put_params) {
       {
-        device_id: @iphone.id
+        id: @iphone.id
       }
     }
 
@@ -409,7 +409,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 404 with unexist device_id' do
       params = put_params.dup
-      params[:device_id] = unexist_id
+      params[:id] = unexist_id
       put :discard, params: params
       expect(response.status).to eq(404)
       message = JSON.parse(response.body)['message']
