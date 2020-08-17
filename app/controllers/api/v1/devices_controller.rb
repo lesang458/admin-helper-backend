@@ -1,10 +1,9 @@
 class Api::V1::DevicesController < ApplicationController
   before_action :set_current_user
-  before_action :set_device, only: %i[assign discard destroy]
+  before_action :set_device, only: %i[assign discard destroy update show]
   def update
-    device = Device.find(params[:id])
-    device.update!(device_params)
-    render_resource device, :ok, DeviceSerializer
+    @device.update!(device_params)
+    render_resource @device, :ok, DeviceSerializer
   end
 
   def create
@@ -13,8 +12,7 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def show
-    device = Device.find(params[:id])
-    render_resource(device, :ok, DeviceSerializer)
+    render_resource(@device, :ok, DeviceSerializer)
   end
 
   def index
