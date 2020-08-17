@@ -1,10 +1,9 @@
 class Api::V1::DevicesController < ApplicationController
   before_action :set_current_user
-
+  before_action :set_device, only: %i[assign discard destroy update show]
   def update
-    device = Device.find(params[:id])
-    device.update!(device_params)
-    render_resource device, :ok, DeviceSerializer
+    @device.update!(device_params)
+    render_resource @device, :ok, DeviceSerializer
   end
 
   def create
@@ -13,8 +12,7 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def show
-    device = Device.find(params[:id])
-    render_resource(device, :ok, DeviceSerializer)
+    render_resource(@device, :ok, DeviceSerializer)
   end
 
   def index
@@ -24,10 +22,14 @@ class Api::V1::DevicesController < ApplicationController
     render_collection(devices, DeviceSerializer)
   end
 
+  def assign
+    @device.assign(params[:user_id])
+    render_resource @device, :ok, DeviceSerializer
+  end
+
   def discard
-    device = Device.find params[:id]
-    device.discard
-    render_resource device, :ok, DeviceSerializer
+    @device.discard
+    render_resource @device, :ok, DeviceSerializer
   end
 
   def move_to_inventory
@@ -37,8 +39,7 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def destroy
-    device = Device.find(params[:id])
-    device.destroy
+    @device.destroy
     head :no_content
   end
 
@@ -55,5 +56,9 @@ class Api::V1::DevicesController < ApplicationController
 
   def history_params
     params.permit(:from_date, :status)
+  end
+
+  def set_device
+    @device = Device.find(params[:id])
   end
 end

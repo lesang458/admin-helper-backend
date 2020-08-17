@@ -19,9 +19,10 @@ class Device < ApplicationRecord
 
   def update_status(user_id, status)
     Device.transaction do
+      User.find(user_id) if user_id.present?
       update! user_id: user_id
       device_histories.last.update!(to_date: Time.zone.now)
-      device_histories.create! from_date: Time.now, status: status
+      device_histories.create! from_date: Time.now, status: status, user_id: user_id
     end
   end
 
@@ -32,6 +33,10 @@ class Device < ApplicationRecord
       device.device_histories.create! from_date: history_params[:from_date] || Time.zone.now, status: history_params[:status] || 'IN_INVENTORY'
       device
     end
+  end
+
+  def assign(user_id)
+    update_status(user_id, 'assigned')
   end
 
   def self.search(params)

@@ -30,6 +30,7 @@ admin:
     - index
     - destroy
     - update
+    - assign
     - discard
     - move_to_inventory
 super_admin:

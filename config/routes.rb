@@ -14,10 +14,11 @@ Rails.application.routes.draw do
       resources :device_categories
       post 'google_login', to: 'sessions#google_login'
       resources :device_histories, only: %i[index show]
-      resources :devices, only: %i[create show index destroy update], shallow: true do
+      resources :devices, only: %i[create show index destroy update] do
         member do
           put '/discard', to: 'devices#discard'
           put 'move_to_inventory', to: 'devices#move_to_inventory'
+          put '/assign', to: 'devices#assign'
         end
       end
     end
