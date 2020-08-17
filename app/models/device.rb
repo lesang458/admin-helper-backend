@@ -9,6 +9,10 @@ class Device < ApplicationRecord
     device_category.name
   end
 
+  def move_to_inventory
+    update_status(nil, 'in_inventory')
+  end
+
   def discard
     update_status(nil, 'discarded')
   end

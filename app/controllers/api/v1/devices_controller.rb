@@ -34,6 +34,12 @@ class Api::V1::DevicesController < ApplicationController
     render_resource @device, :ok, DeviceSerializer
   end
 
+  def move_to_inventory
+    device = Device.find params[:id]
+    device.move_to_inventory
+    render_resource device, :ok, DeviceSerializer
+  end
+
   def destroy
     @device.destroy
     head :no_content

@@ -22,6 +22,48 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   before(:each) { request.headers.merge! valid_headers }
   let!(:invalid_user_id) { 999_999_999_999 }
 
+  describe 'PUT#move to inventory device' do
+    let!(:unexist_id) { 999_999_999_999 }
+    let!(:put_params) {
+      {
+        id: @iphone.id
+      }
+    }
+
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      put :move_to_inventory, params: put_params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      valid_token = JwtToken.encode({ user_id: @employee.id })
+      valid_headers = { authorization: "Bearer #{valid_token}" }
+      request.headers.merge! valid_headers
+      put :move_to_inventory, params: put_params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404 with unexist device_id' do
+      params = put_params.dup
+      params[:id] = unexist_id
+      put :move_to_inventory, params: params
+      expect(response.status).to eq(404)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include "Couldn't find Device with 'id'"
+    end
+
+    it 'should return 200' do
+      put :move_to_inventory, params: put_params
+      @iphone.reload
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(nil)
+      history = @iphone.device_histories.last
+      expect(history.status).to eq('in_inventory')
+      expect(history.user_id).to eq(nil)
+    end
+  end
+
   describe 'DELETE# device' do
     it 'return status 401 status code with invalid token' do
       request.headers.merge! invalid_headers
