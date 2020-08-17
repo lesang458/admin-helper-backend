@@ -1,6 +1,6 @@
 class Api::V1::DevicesController < ApplicationController
   before_action :set_current_user
-  before_action :set_device, only: %i[assign discard]
+  before_action :set_device, only: %i[assign discard destroy]
   def update
     device = Device.find(params[:id])
     device.update!(device_params)
@@ -35,8 +35,7 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def destroy
-    device = Device.find(params[:id])
-    device.destroy
+    @device.destroy
     head :no_content
   end
 
@@ -56,6 +55,6 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def set_device
-    @device = Device.find(params[:device_id])
+    @device = Device.find(params[:id])
   end
 end
