@@ -25,8 +25,14 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def discard
-    device = Device.find params[:device_id]
+    device = Device.find params[:id]
     device.discard
+    render_resource device, :ok, DeviceSerializer
+  end
+
+  def move_to_inventory
+    device = Device.find params[:id]
+    device.move_to_inventory
     render_resource device, :ok, DeviceSerializer
   end
 
