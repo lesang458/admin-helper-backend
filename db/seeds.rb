@@ -58,6 +58,9 @@ User.create!(
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
 )
 
+day_off_category_vacation = DayOffCategory.create! name: 'VACATION'
+day_off_category_illness = DayOffCategory.create! name: 'ILLNESS'
+
 100.times do |i|
   user = User.create!(
     email: FFaker::Internet.email,
@@ -70,10 +73,8 @@ User.create!(
     phone_number: "0123456789",
     roles: %w[EMPLOYEE]
   )
+  user.day_off_infos.create! day_off_category_id: day_off_category_vacation.id, hours: 160
 end
-
-day_off_category_vacation = DayOffCategory.create! name: 'VACATION'
-day_off_category_illness = DayOffCategory.create! name: 'ILLNESS'
 
 admin.day_off_infos.create! day_off_category_id: day_off_category_vacation.id, hours: 160
 admin.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
