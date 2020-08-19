@@ -21,21 +21,21 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
   before(:each) { request.headers.merge! valid_headers }
 
   describe 'Get Hisory' do
-    # it 'should return 403' do
-    #   request.headers.merge! invalid_headers
-    #   get :index, params: params
-    #   expect(response.status).to eq(403)
-    # end
+    it 'should return 403' do
+      request.headers.merge! invalid_headers
+      get :index, params: params
+      expect(response.status).to eq(403)
+    end
 
-    # it 'should return 200' do
-    #   get :index, params: params
-    #   expect(response.status).to eq(200)
-    #   json_response = JSON.parse(response.body)['pagination']
-    #   expect(json_response['current_page']).to eq(1)
-    #   expect(json_response['page_size']).to eq(10)
-    #   expect(json_response['total_pages']).to eq(1)
-    #   expect(json_response['total_count']).to eq(10)
-    # end
+    it 'should return 200' do
+      get :index, params: params
+      expect(response.status).to eq(200)
+      json_response = JSON.parse(response.body)['pagination']
+      expect(json_response['current_page']).to eq(1)
+      expect(json_response['page_size']).to eq(10)
+      expect(json_response['total_pages']).to eq(1)
+      expect(json_response['total_count']).to eq(10)
+    end
   end
 
   describe 'POST# Day Off Request' do
