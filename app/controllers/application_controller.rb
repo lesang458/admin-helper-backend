@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  include ActionController::HttpAuthentication::Basic::ControllerMethods
   include JsonResponseHandler
   include ExceptionHandler
   include JwtToken
