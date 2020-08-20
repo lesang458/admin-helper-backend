@@ -25,20 +25,20 @@ class DayOffRequest < ApplicationRecord
   def self.create_requests(params, user_id)
     employee = User.find(user_id)
     @day_off_request = employee.day_off_requests.new(params)
-    DayOffRequest.next_request(params[:from_date]) if DayOffRequest.check_input(params[:from_date], params[:to_date])
+    DayOffRequest.next_year_request(params[:from_date]) if DayOffRequest.different_year_request?(params[:from_date], params[:to_date])
     @day_off_request.save!
-    DayOffRequest.check_input(params[:from_date], params[:to_date]) ? [@day_off_request, @next_request] : @day_off_request
+    DayOffRequest.different_year_request?(params[:from_date], params[:to_date]) ? [@day_off_request, @next_year_request] : @day_off_request
   end
 
-  def self.check_input(from_date, to_date)
+  def self.different_year_request?(from_date, to_date)
     to_date.to_datetime.year > from_date.to_datetime.year if from_date.present? && to_date.present?
   end
 
-  def self.next_request(from_date)
-    @next_request = @day_off_request.dup
+  def self.next_year_request(from_date)
+    @next_year_request = @day_off_request.dup
     @day_off_request.to_date = from_date.to_datetime.end_of_year
-    @next_request.from_date = from_date.to_datetime.end_of_year + 1
-    @next_request.save!
+    @next_year_request.from_date = from_date.to_datetime.end_of_year + 1
+    @next_year_request.save!
   end
 
   private
