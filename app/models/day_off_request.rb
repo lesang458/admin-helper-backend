@@ -26,11 +26,11 @@ class DayOffRequest < ApplicationRecord
     employee = User.find(user_id)
     day_off_request = employee.day_off_requests.new(params)
     day_off_request.save!
-    self.different_year_request?(params[:from_date], params[:to_date]) ? [day_off_request, day_off_request.next_year_request] : [day_off_request]
+    day_off_request.different_year_request? ? [day_off_request, day_off_request.next_year_request] : [day_off_request]
   end
 
-  def self.different_year_request?(from_date, to_date)
-    to_date.to_datetime.year > from_date.to_datetime.year if from_date.present? && to_date.present?
+  def different_year_request?
+    self.to_date.to_datetime.year > self.from_date.to_datetime.year if self.from_date.present? && self.to_date.present?
   end
 
   def next_year_request
