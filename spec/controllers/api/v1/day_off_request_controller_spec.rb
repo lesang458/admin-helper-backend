@@ -76,7 +76,11 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
 
     it 'should return 201' do
       post :create, params: post_params
+      request = JSON.parse(response.body)['day_off_requests']
       expect(response.status).to eq(201)
+      expect(request.count).to eq(1)
+      expect(request.first['from_date'].to_date.to_s).to eq('2020-02-02')
+      expect(request.first['to_date'].to_date.to_s).to eq('2020-07-07')
     end
 
     it 'should return 201 with request in 2 years' do
@@ -86,6 +90,10 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       requests = JSON.parse(response.body)['day_off_requests']
       expect(response.status).to eq(201)
       expect(requests.count).to eq(2)
+      expect(requests.first['from_date'].to_date.to_s).to eq('2020-02-02')
+      expect(requests.first['to_date'].to_date.to_s).to eq('2020-12-31')
+      expect(requests.second['from_date'].to_date.to_s).to eq('2021-01-01')
+      expect(requests.second['to_date'].to_date.to_s).to eq('2021-07-07')
     end
 
     it 'should return 422 with from date or to date empty' do
