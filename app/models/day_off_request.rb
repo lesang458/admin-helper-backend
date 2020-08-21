@@ -22,6 +22,25 @@ class DayOffRequest < ApplicationRecord
     day_off_request.to_date(params[:to_date]).from_date(params[:from_date])
   end
 
+  def self.create_requests(params, user_id)
+    employee = User.find(user_id)
+    day_off_request = employee.day_off_requests.new(params)
+    day_off_request.save!
+    day_off_request.different_year_request? ? [day_off_request, day_off_request.next_year_request] : [day_off_request]
+  end
+
+  def different_year_request?
+    to_date.to_datetime.year > from_date.to_datetime.year if from_date.present? && to_date.present?
+  end
+
+  def next_year_request
+    next_year_request = self.dup
+    update! to_date: from_date.to_datetime.end_of_year
+    next_year_request.from_date = from_date.to_datetime.end_of_year + 1
+    next_year_request.save!
+    next_year_request
+  end
+
   private
 
   def validate_date_range

@@ -38,16 +38,66 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     end
   end
 
-  describe 'Create day off request success' do
-    it 'should return 201 ' do
-      post :create, params: request_params
-      expect(response.status).to eq(201)
-    end
-  end
+  describe 'POST# Day Off Request' do
+    let!(:unexist_id) { 999_999_999_999 }
+    let!(:post_params) {
+      {
+        from_date: '2020-02-02',
+        to_date: '2020-07-07',
+        hours_per_day: 4,
+        notes: 'ok',
+        id: @admin.id,
+        day_off_info_id: @day_off_info.id
+      }
+    }
 
-  describe 'Create day off with request failed' do
+    it 'return status 401 status code with invalid token' do
+      invalid_token = JwtToken.encode({ user_id: 'token false' })
+      invalid_headers = { authorization: invalid_token }
+      request.headers.merge! invalid_headers
+      post :create, params: post_params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      request.headers.merge! invalid_headers
+      post :create, params: post_params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404 with unexist id' do
+      params = post_params.dup
+      params[:id] = unexist_id
+      post :create, params: params
+      expect(response.status).to eq(404)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include "Couldn't find User with 'id'"
+    end
+
+    it 'should return 201' do
+      post :create, params: post_params
+      request = JSON.parse(response.body)['day_off_requests']
+      expect(response.status).to eq(201)
+      expect(request.count).to eq(1)
+      expect(request.first['from_date'].to_date.to_s).to eq('2020-02-02')
+      expect(request.first['to_date'].to_date.to_s).to eq('2020-07-07')
+    end
+
+    it 'should return 201 with request in 2 years' do
+      params = post_params.dup
+      params[:to_date] = '2021-07-07'
+      post :create, params: params
+      requests = JSON.parse(response.body)['day_off_requests']
+      expect(response.status).to eq(201)
+      expect(requests.count).to eq(2)
+      expect(requests.first['from_date'].to_date.to_s).to eq('2020-02-02')
+      expect(requests.first['to_date'].to_date.to_s).to eq('2020-12-31')
+      expect(requests.second['from_date'].to_date.to_s).to eq('2021-01-01')
+      expect(requests.second['to_date'].to_date.to_s).to eq('2021-07-07')
+    end
+
     it 'should return 422 with from date or to date empty' do
-      params = request_params.dup
+      params = post_params.dup
       params[:from_date] = ''
       params[:to_date] = ''
       post :create, params: params
@@ -55,23 +105,17 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     end
 
     it 'should return 422 with hours per day < 0' do
-      params = request_params.dup
+      params = post_params.dup
       params[:hours_per_day] = -1
       post :create, params: params
       expect(response.status).to eq(422)
     end
 
-    it 'should return 422' do
-      params = request_params.dup
+    it 'should return 422 without day_off_info_id' do
+      params = post_params.dup
       params.delete(:day_off_info_id)
       post :create, params: params
       expect(response.status).to eq(422)
-    end
-
-    it 'should return 403' do
-      request.headers.merge! invalid_headers
-      post :create, params: request_params
-      expect(response.status).to eq(403)
     end
   end
 end
