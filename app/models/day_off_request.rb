@@ -30,13 +30,13 @@ class DayOffRequest < ApplicationRecord
   end
 
   def different_year_request?
-    self.to_date.to_datetime.year > self.from_date.to_datetime.year if self.from_date.present? && self.to_date.present?
+    to_date.to_datetime.year > from_date.to_datetime.year if from_date.present? && to_date.present?
   end
 
   def next_year_request
     next_year_request = self.dup
-    update! to_date: self.from_date.to_datetime.end_of_year
-    next_year_request.from_date = self.from_date.to_datetime.end_of_year + 1
+    update! to_date: from_date.to_datetime.end_of_year
+    next_year_request.from_date = from_date.to_datetime.end_of_year + 1
     next_year_request.save!
     next_year_request
   end
