@@ -1,19 +1,97 @@
 swagger: "2.0"
 info:
-  title: Sample API
-  description: API description in Markdown.
-  version: 1.0.0
-host: api.example.com
-basePath: /v1
+  version: "1.0.0"
+  title: "Admin Helper"
+host: localhost:3000
+basePath: /api/v1
+tags:
+- name: "employee"
+  description: "Operations about user"
+securityDefinitions:
+  Bearer:
+    type: "apiKey"  
+    name: "Authorization"
+    in: "header"
+security:
+    - Bearer: []
 schemes:
-  - https
+- "https"
+- "http"
 paths:
-  /users:
-    get:
-      summary: Returns a list of users.
-      description: Optional extended description in Markdown.
-      produces:
-        - application/json
+  /login:
+    post:
+      parameters:
+      - name: "email"
+        in: "query"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        required: true
+        type: "string"
       responses:
-        200:
-          description: OK
+        '200':
+          description: 'Will send `Authenticated`'
+        '400':
+          description: "Invalid username/password supplied"
+  /employees/{id}:
+    get:
+      tags:
+      - "employee"
+      summary: "Find user by ID"
+      description: "Returns a single pet"
+      operationId: "getUserById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of user to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+        "403":
+          description: "You do not have permission"
+        "404":
+          description: "User not found"
+
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      email:
+        type: "string"
+      encrypted_password:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      birthdate:
+        type: "string"
+        format: "date"
+      join_date:
+        type: "string"
+        format: "date"
+      status:
+        type: "string"
+      phone_number:
+        type: "string"
+      roles:
+        type: "string"
+      reset_password_token:
+        type: "string"
+      reset_password_sent_at:
+        type: "string"
+        format: "datetime"
+    xml:
+      name: "User"
+  
