@@ -5,8 +5,7 @@ info:
 servers:
 - url: https://admin-helper-backend.herokuapp.com/api/v1
 - url: http://localhost:3000/api/v1/
-security:
-- Bearer: []
+
 tags:
 - name: Login
 - name: Employees
@@ -93,7 +92,9 @@ components:
       xml:
         name: User
   securitySchemes:
-    Bearer:
-      type: apiKey
-      name: Authorization
-      in: header
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    
+security:
+  - bearerAuth: []
