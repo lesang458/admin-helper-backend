@@ -1,3 +1,6 @@
+day_off_category_vacation = DayOffCategory.create! name: 'VACATION'
+day_off_category_illness = DayOffCategory.create! name: 'ILLNESS'
+
 employee = User.create!(
   email: "employee@gmail.com",
   encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
@@ -9,6 +12,7 @@ employee = User.create!(
   phone_number: "0935270046",
   roles: %w[EMPLOYEE]
 )
+employee.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
 
 admin = User.create!(
   email: "admin@gmail.com",
@@ -33,8 +37,9 @@ super_admin = User.create!(
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
 )
+super_admin.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
 
-User.create!(
+hanh = User.create!(
   email: "hanhle@novahub.vn",
   encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "dang",
@@ -45,8 +50,9 @@ User.create!(
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
 )
+hanh.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
 
-User.create!(
+huy = User.create!(
   email: "huytran@novahub.vn",
   encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "huy",
@@ -57,9 +63,7 @@ User.create!(
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
 )
-
-day_off_category_vacation = DayOffCategory.create! name: 'VACATION'
-day_off_category_illness = DayOffCategory.create! name: 'ILLNESS'
+huy.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
 
 100.times do |i|
   user = User.create!(
@@ -105,4 +109,3 @@ DeviceHistory.create! from_date: Time.now, to_date: Time.now + 1.month, status: 
 
 DeviceHistory.create! from_date: Time.now, status: 'ASSIGNED', device_id: mac_book.id, user_id: employee.id
 DeviceHistory.create! from_date: Time.now, status: 'ASSIGNED', device_id: dell_monitor.id, user_id: employee.id
-

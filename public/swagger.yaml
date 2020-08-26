@@ -5,36 +5,11 @@ info:
 servers:
 - url: https://admin-helper-backend.herokuapp.com/api/v1
 - url: http://localhost:3000/api/v1/
-
 tags:
 - name: Login
 - name: Employees
+- name: Day Off
 paths:
-  /employees/{id}:
-    get:
-      tags:
-      - Employees
-      summary: Find user by ID
-      description: Returns a single pet
-      operationId: getUserById
-      parameters:
-      - name: id
-        in: path
-        description: ID of user to return
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        200:
-          description: successful operation
-          content: {}
-        403:
-          description: You do not have permission
-          content: {}
-        404:
-          description: User not found
-          content: {}
   /login:
     post:
       tags:
@@ -56,45 +31,100 @@ paths:
           content: {}
         400:
           description: Invalid username/password supplied    
-components:
-  schemas:
-    User:
-      type: object
-      properties:
-        id:
+  /employees/{id}:
+    get:
+      tags:
+      - Employees
+      security:
+        - bearerAuth: []
+      summary: Find user by ID
+      description: Returns a single pet
+      operationId: getUserById
+      parameters:
+      - name: id
+        in: path
+        description: ID of user to return
+        required: true
+        schema:
           type: integer
           format: int64
-        email:
-          type: string
-        encrypted_password:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        birthdate:
-          type: string
-          format: date
-        join_date:
-          type: string
-          format: date
-        status:
-          type: string
-        phone_number:
-          type: string
-        roles:
-          type: string
-        reset_password_token:
-          type: string
-        reset_password_sent_at:
-          type: string
-          format: datetime
-      xml:
-        name: User
+          example: 1
+      responses:
+        200:
+          description: successful operation
+          content: {}
+        403:
+          description: You do not have permission
+          content: {}
+        404:
+          description: User not found
+          content: {}
+  /employees/{id}/day-off-requests/:
+    post:
+      tags:
+      - Day Off
+      parameters:
+        - name: id
+          in: path
+          description: Employee ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        - name: from_date
+          in: query
+          required: true
+          schema:
+            type: string
+            example: '2020-02-02'
+        - name: to_date
+          in: query
+          required: true
+          schema:
+            type: string
+            example: '2020-02-10'
+        - name: hours_per_day
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 4
+        - name: notes
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 'hahaaa'
+        - name: day_off_info_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        201:
+          description: created day-off-request
+          content: {}
+        401:
+          description: User authentication failed
+          content: {}
+        403:
+          description: You do not have permission
+          content: {}
+        404:
+          description: User not found
+          content: {}
+        422:
+          description: Invalid Params
+          content: {}
+
+components:
   securitySchemes:
-    bearerAuth:
+    bearerAuth:           
       type: http
       scheme: bearer
-      bearerFormat: JWT    
+      bearerFormat: JWT 
+
 security:
-  - bearerAuth: []
+- bearerAuth: []
