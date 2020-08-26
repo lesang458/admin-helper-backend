@@ -1,45 +1,45 @@
-day_off_category_vacation = DayOffCategory.create! name: 'VACATION'
-day_off_category_illness = DayOffCategory.create! name: 'ILLNESS'
+day_off_category_vacation = DayOffCategory.find_or_create_by name: 'VACATION'
+day_off_category_illness = DayOffCategory.find_or_create_by name: 'ILLNESS'
 
-employee = User.create!(
+employee = User.find_or_create_by(
   email: "employee@gmail.com",
   encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
-  first_name: FFaker::Name.first_name,
-  last_name: FFaker::Name.last_name,
-  birthdate: FFaker::IdentificationESCO.expedition_date,
-  join_date: FFaker::IdentificationESCO.expedition_date,
+  first_name: "employee",
+  last_name: "user",
+  birthdate: "2000-02-02",
+  join_date: "2020-02-02",
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE]
 )
 employee.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
 
-admin = User.create!(
+admin = User.find_or_create_by(
   email: "admin@gmail.com",
   encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
-  first_name: FFaker::Name.first_name,
-  last_name: FFaker::Name.last_name,
-  birthdate: FFaker::IdentificationESCO.expedition_date,
-  join_date: FFaker::IdentificationESCO.expedition_date,
+  first_name: "admin",
+  last_name: "user",
+  birthdate: "2000-02-02",
+  join_date: "2020-02-02",
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN]
 )
 
-super_admin = User.create!(
+super_admin = User.find_or_create_by(
   email: "super_admin@gmail.com",
   encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
-  first_name: FFaker::Name.first_name,
-  last_name: FFaker::Name.last_name,
-  birthdate: FFaker::IdentificationESCO.expedition_date,
-  join_date: FFaker::IdentificationESCO.expedition_date,
+  first_name: "super_admin",
+  last_name: "user",
+  birthdate: "2000-02-02",
+  join_date: "2020-02-02",
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
 )
 super_admin.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
 
-hanh = User.create!(
+hanh = User.find_or_create_by(
   email: "hanhle@novahub.vn",
   encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "dang",
@@ -52,7 +52,7 @@ hanh = User.create!(
 )
 hanh.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
 
-huy = User.create!(
+huy = User.find_or_create_by(
   email: "huytran@novahub.vn",
   encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "huy",
@@ -66,13 +66,13 @@ huy = User.create!(
 huy.day_off_infos.create! day_off_category_id: day_off_category_illness.id, hours: 160
 
 100.times do |i|
-  user = User.create!(
-    email: FFaker::Internet.email,
+  user = User.find_or_create_by(
+    email: "user_#{i}@gmail.com",
     encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
-    first_name: FFaker::Name.first_name,
-    last_name: FFaker::Name.last_name,
-    birthdate: FFaker::IdentificationESCO.expedition_date,
-    join_date: FFaker::IdentificationESCO.expedition_date,
+    first_name: "fake",
+    last_name: "user",
+    birthdate: "2000-02-02",
+    join_date: "2020-02-02",
     status: "ACTIVE",
     phone_number: "0123456789",
     roles: %w[EMPLOYEE]
