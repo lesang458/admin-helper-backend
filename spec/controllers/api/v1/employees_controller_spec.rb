@@ -172,7 +172,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
           birthdate: '1999-02-02',
           join_date: '2019-11-23',
           phone_number: '0123456789',
-          day_off_info: [
+          day_off_infos: [
             { day_off_category_id: @category_vacation.id, hours: 160 },
             { day_off_category_id: @category_illness.id, hours: 160 }
           ] }
@@ -200,14 +200,14 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with invalid day_off_category_id' do
         params = employee_params.dup
-        params[:day_off_info].first[:day_off_category_id] = invalid_day_off_category_id
+        params[:day_off_infos].first[:day_off_category_id] = invalid_day_off_category_id
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with invalid hours' do
         params = employee_params.dup
-        params[:day_off_info].first[:hours] = -160
+        params[:day_off_infos].first[:hours] = -160
         post :create, params: params
         expect(response.status).to eq(422)
       end
