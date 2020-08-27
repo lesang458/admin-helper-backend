@@ -10,6 +10,4 @@ class Api::V1::DeviceHistoriesController < ApplicationController
     device_history = DeviceHistory.find(params[:id])
     render_resource(device_history, :ok, DeviceHistorySerializer)
   end
-
-  private
 end
