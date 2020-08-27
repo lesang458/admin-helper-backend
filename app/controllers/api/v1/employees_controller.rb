@@ -17,7 +17,7 @@ class Api::V1::EmployeesController < ApplicationController
     User.transaction do
       user = User.build_employee(user_params)
       user.save!
-      DayOffInfo.create_day_off_info(day_off_params[:day_off_info], user)
+      DayOffInfo.create_day_off_info(day_off_params[:day_off_infos], user)
       render_resource user, :created, UserSerializer
     end
   end
@@ -51,7 +51,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def day_off_params
-    params.permit(day_off_info: %i[day_off_category_id hours])
+    params.permit(day_off_infos: %i[day_off_category_id hours])
   end
 
   def user_status_params
