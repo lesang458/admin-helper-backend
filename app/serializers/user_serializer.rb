@@ -1,8 +1,7 @@
 class UserSerializer < ActiveModel::Serializer
+  has_many :day_off_infos
   attributes :id, :email, :first_name, :last_name, :birthdate, :join_date, :status, :phone_number, :day_off_infos, :roles
-
-  def day_off_infos
-    return unless object.day_off_infos.present?
-    object.day_off_infos.map { |info| { category: info.day_off_category.name, hours: info.hours, available_hours: info.available_hours } }
+  class DayOffInfoSerializer < ActiveModel::Serializer
+    attributes :id, :hours, :day_off_category_id, :category_name, :available_hours
   end
 end
