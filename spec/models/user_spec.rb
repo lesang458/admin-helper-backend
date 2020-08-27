@@ -12,9 +12,10 @@ RSpec.describe User, type: :model do
     FactoryBot.create(:user, first_name: 'Tao', last_name: 'Quyen', birthdate: '1998-05-27', join_date: '2019-09-22')
     FactoryBot.create(:user, first_name: 'Ho', last_name: 'Trieu', birthdate: '1995-12-30', join_date: '2015-12-24', status: 'FORMER')
     @admin = FactoryBot.create(:user, :admin, status: 'FORMER')
-    @day_off_info = FactoryBot.create(:day_off_info, :vacation)
-    FactoryBot.create(:day_off_request, user: @user, day_off_info: @day_off_info)
-    FactoryBot.create(:day_off_request, user: @user, day_off_info: @day_off_info, from_date: '2020-07-20', to_date: '2020-07-30')
+    @day_off_info = FactoryBot.create(:day_off_info, :vacation, user: @admin)
+    @info = FactoryBot.create(:day_off_info, :vacation, user: @user)
+    FactoryBot.create(:day_off_request, user: @user, day_off_info: @info)
+    FactoryBot.create(:day_off_request, user: @user, day_off_info: @info, from_date: '2020-07-20', to_date: '2020-07-30')
     FactoryBot.create(:day_off_request, user: @admin, day_off_info: @day_off_info)
     FactoryBot.create(:day_off_request, user: @admin, day_off_info: @day_off_info, from_date: '2020-07-20', to_date: '2020-07-30')
   end

@@ -12,10 +12,10 @@ RSpec.describe DayOffInfo, type: :model do
     FactoryBot.create(:day_off_category, :vacation)
     FactoryBot.create(:day_off_category, :illness)
 
-    @info_vacation = FactoryBot.create(:day_off_info, :vacation)
+    @info_vacation = FactoryBot.create(:day_off_info, :vacation, user: @user)
     FactoryBot.create(:day_off_request, user: @user, day_off_info: @info_vacation, from_date: '2020-07-07', to_date: '2020-07-20')
     FactoryBot.create(:day_off_request, user: @user, day_off_info: @info_vacation, from_date: '2020-07-21', to_date: '2020-07-24')
-    @info_illness = FactoryBot.create(:day_off_info, :illness)
+    @info_illness = FactoryBot.create(:day_off_info, :illness, user: @user)
     FactoryBot.create(:day_off_request, user: @user, day_off_info: @info_illness, from_date: '2020-07-07', to_date: '2020-07-20')
     FactoryBot.create(:day_off_request, user: @user, day_off_info: @info_illness, from_date: '2020-07-21', to_date: '2020-07-24')
   end

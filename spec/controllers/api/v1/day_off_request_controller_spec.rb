@@ -6,9 +6,9 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     DayOffInfo.delete_all
     DayOffCategory.delete_all
     @day_off_category = FactoryBot.create(:day_off_category, :vacation)
-    @admin = FactoryBot.create(:user, :admin)
     @employee = FactoryBot.create(:user, :employee)
-    @day_off_info = FactoryBot.create(:day_off_info, :vacation)
+    @admin = FactoryBot.create(:user, :admin)
+    @day_off_info = FactoryBot.create(:day_off_info, :vacation, user: @employee)
     FactoryBot.create_list(:day_off_request, 10, user: @employee, day_off_info: @day_off_info)
   end
 
@@ -46,7 +46,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
         to_date: '2020-07-07',
         hours_per_day: 4,
         notes: 'ok',
-        id: @admin.id,
+        id: @employee,
         day_off_info_id: @day_off_info.id
       }
     }
@@ -116,6 +116,14 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params.delete(:day_off_info_id)
       post :create, params: params
       expect(response.status).to eq(422)
+    end
+
+    it 'should return 422 with validate info' do
+      params = post_params.dup
+      params[:id] = @admin.id
+      post :create, params: params
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)['message']).to include 'Day off info user is not the same as requested user'
     end
   end
 end

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :day_off_info do
-    user { User.first }
+    user
     hours { 160 }
     trait :vacation do
       day_off_category_id { (DayOffCategory.find_by name: 'VACATION').id }
