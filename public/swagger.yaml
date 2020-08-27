@@ -72,21 +72,7 @@ paths:
                   user:
                     $ref: '#/components/schemas/Employee'
         '400':
-          description: Invalid username/password supplied
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 400
-                  message:
-                    type: string
-                    example: "Invalid email or password"
-                required:
-                  - code
-                  - message
+          $ref: '#/components/responses/BadRequest'
   /password:
     post:
       tags:
@@ -267,6 +253,22 @@ components:
               message:
                 type: string
                 example: "You do not have permission"
+            required:
+              - code
+              - message
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              message:
+                type: string
+                example: "Bad Request"
             required:
               - code
               - message
