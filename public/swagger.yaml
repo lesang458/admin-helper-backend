@@ -195,36 +195,13 @@ paths:
             type: integer
             format: int64
             example: 1
-        - name: from_date
-          in: query
-          required: true
-          schema:
-            type: string
-            example: '2020-02-02'
-        - name: to_date
-          in: query
-          required: true
-          schema:
-            type: string
-            example: '2020-02-10'
-        - name: hours_per_day
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 4
-        - name: notes
-          in: query
-          required: false
-          schema:
-            type: string
-            example: 'hahaaa'
-        - name: day_off_info_id
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 1
+      summary: Create new DayOffRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DayOffRequest'
       responses:
         '201':
           description: created day-off-request
@@ -349,21 +326,26 @@ components:
         from_date:
           type: string
           format: date
+          example: '2020-02-02'
         to_date:
           type: string
           format: date
+          example: '2020-02-10'
         hours_per_day:
           type: string
           format: int64
+          example: 4
         notes:
           type: string
+          example: "here is notes"
         day_off_info_id:
           type: string
           format: int64
+          example: 1
   securitySchemes:
-    bearerAuth:           
+    bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT 
+      bearerFormat: JWT
 security:
 - bearerAuth: []
