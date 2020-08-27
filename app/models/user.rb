@@ -23,10 +23,6 @@ class User < ApplicationRecord
   scope :admins, -> { where('roles @> ?', '{ADMIN}') }
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
-  def hours
-    day_off_infos.map { |info| { category: info.day_off_category.name, hours: info.hours, available_hours: info.available_hours } }
-  end
-
   def generate_password_token
     self.reset_password_token = SecureRandom.rand(100_000..999_999)
     self.reset_password_sent_at = Time.now
