@@ -16,8 +16,8 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
     @category_vacation = FactoryBot.create(:day_off_category, :vacation)
     @category_illness = FactoryBot.create(:day_off_category, :illness)
-    @info_vacation = FactoryBot.create(:day_off_info, :vacation)
-    @info_illness = FactoryBot.create(:day_off_info, :illness)
+    @info_vacation = FactoryBot.create(:day_off_info, :vacation, user: @user)
+    @info_illness = FactoryBot.create(:day_off_info, :illness, user: @user)
   end
 
   describe 'token' do
