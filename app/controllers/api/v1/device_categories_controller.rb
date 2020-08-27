@@ -29,11 +29,6 @@ class Api::V1::DeviceCategoriesController < ApplicationController
 
   private
 
-  def set_paginate
-    @per_page = params[:per_page] || 20
-    @page = params[:page] || 1
-  end
-
   def category_params
     params.permit(:name, :description)
   end

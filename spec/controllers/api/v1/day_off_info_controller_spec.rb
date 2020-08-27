@@ -25,7 +25,7 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
     before(:each) { request.headers.merge! valid_headers }
 
     describe 'Get Day Off Info' do
-      it 'should return 403' do
+      it 'should return 401' do
         request.headers.merge! invalid_headers
         get :index, params: get_params
         expect(response.status).to eq(401)

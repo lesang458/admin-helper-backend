@@ -12,9 +12,4 @@ class Api::V1::DeviceHistoriesController < ApplicationController
   end
 
   private
-
-  def set_paginate
-    @per_page = params[:per_page] || 20
-    @page = params[:page] || 1
-  end
 end

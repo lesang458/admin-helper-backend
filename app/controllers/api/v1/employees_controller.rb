@@ -36,11 +36,6 @@ class Api::V1::EmployeesController < ApplicationController
 
   private
 
-  def set_paginate
-    @per_page = params[:per_page] || 20
-    @page = params[:page] || 1
-  end
-
   def set_query_sort
     @query = SortParams.new(params[:sort], User).sort_query
   end

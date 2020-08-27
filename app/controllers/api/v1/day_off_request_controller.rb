@@ -16,9 +16,4 @@ class Api::V1::DayOffRequestController < ApplicationController
   def day_off_request_params
     params.permit(:from_date, :to_date, :hours_per_day, :notes, :day_off_info_id)
   end
-
-  def set_paginate
-    @per_page = params[:per_page] || 20
-    @page = params[:page] || 1
-  end
 end

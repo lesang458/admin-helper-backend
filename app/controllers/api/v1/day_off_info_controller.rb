@@ -14,11 +14,6 @@ class Api::V1::DayOffInfoController < ApplicationController
 
   private
 
-  def set_paginate
-    @per_page = params[:per_page] || 20
-    @page = params[:page] || 1
-  end
-
   def info_params
     params.permit(:day_off_category_id, :hours)
   end
