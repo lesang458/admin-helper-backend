@@ -21,7 +21,34 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
     let!(:valid_headers) { { authorization: "Bearer #{valid_token}" } }
     let!(:invalid_token) { SecureRandom.hex(64) }
     let!(:invalid_headers) { { authorization: "Bearer #{invalid_token}" } }
+    let!(:get_params) { { user_id: @admin.id, day_off_category_id: @category_vacation.id } }
     before(:each) { request.headers.merge! valid_headers }
+
+    describe 'Get Day Off Info' do
+      it 'should return 403' do
+        request.headers.merge! invalid_headers
+        get :index, params: get_params
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 403 with employee' do
+        valid_token = JwtToken.encode({ user_id: @employee.id })
+        valid_headers = { authorization: "Bearer #{valid_token}" }
+        request.headers.merge! valid_headers
+        get :index, params: get_params
+        expect(response.status).to eq(403)
+      end
+
+      it 'should return 200' do
+        get :index, params: get_params
+        expect(response.status).to eq(200)
+        json_response = JSON.parse(response.body)['pagination']
+        expect(json_response['current_page']).to eq(1)
+        expect(json_response['page_size']).to eq(1)
+        expect(json_response['total_pages']).to eq(1)
+        expect(json_response['total_count']).to eq(1)
+      end
+    end
 
     it 'return status 401 status code with invalid token' do
       request.headers.merge! invalid_headers
