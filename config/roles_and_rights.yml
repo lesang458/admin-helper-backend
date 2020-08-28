@@ -13,6 +13,7 @@ admin:
     - index
   day_off_info:
     - update
+    - index
   day_off_categories:
     - index
   device_categories:
