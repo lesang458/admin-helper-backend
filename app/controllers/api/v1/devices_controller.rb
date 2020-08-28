@@ -16,7 +16,6 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def index
-    set_paginate
     devices = Device.search(params)
     devices = @page.to_i <= 0 ? devices : devices.page(@page).per(@per_page)
     render_collection(devices, DeviceSerializer)
