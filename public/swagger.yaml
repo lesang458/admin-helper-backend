@@ -7,14 +7,36 @@ servers:
   - url: 'http://localhost:3000/api/v1/'
 tags:
   - name: Login
-  - name: Employees
+  - name: Forget Password
+  - name: Employee
+  - name: Day Off Category
   - name: Day Off Info
   - name: Day Off Request
 paths:
+  '/day-off-categories':
+    get:
+      tags:
+        - Day Off Category
+      summary: Get List DayOffCategories
+      description: Returns List DayOffCategories
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  employee:
+                    $ref: '#/components/schemas/DayOffCategory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
   '/employees/{id}':
     get:
       tags:
-        - Employees
+        - Employee
       summary: Find employee by id
       description: Returns an employee
       operationId: getEmployeeById
@@ -312,6 +334,16 @@ components:
               - code
               - message
   schemas:
+    DayOffCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
     DayOffInfo:
       type: object
       properties:
