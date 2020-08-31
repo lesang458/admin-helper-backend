@@ -5,6 +5,7 @@ class DayOffRequest < ApplicationRecord
   validates :to_date, presence: true
   validates :hours_per_day, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validate :validate_date_range
+  validate :validate_info_user
   delegate :email, :first_name, :last_name, to: :user
   delegate :day_off_category, to: :day_off_info
 
@@ -42,6 +43,11 @@ class DayOffRequest < ApplicationRecord
   end
 
   private
+
+  def validate_info_user
+    return unless day_off_info.present?
+    errors.add(:day_off_info, 'user is not the same as requested user') unless user.day_off_infos.ids.include?(day_off_info.id)
+  end
 
   def validate_date_range
     errors.add(:from_date, "can't be in the to date") if to_date.present? && from_date.present? && to_date < from_date

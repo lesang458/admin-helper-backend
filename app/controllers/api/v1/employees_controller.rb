@@ -1,7 +1,6 @@
 class Api::V1::EmployeesController < ApplicationController
   before_action :set_current_user
   def index
-    set_paginate
     set_query_sort if params[:sort].present?
     users = User.search(params).order(@query)
     users = @page.to_i <= 0 ? users : users.page(@page).per(@per_page)
@@ -17,7 +16,7 @@ class Api::V1::EmployeesController < ApplicationController
     User.transaction do
       user = User.build_employee(user_params)
       user.save!
-      DayOffInfo.create_day_off_info(day_off_params[:day_off_info], user)
+      DayOffInfo.create_day_off_info(day_off_params[:day_off_infos], user)
       render_resource user, :created, UserSerializer
     end
   end
@@ -36,11 +35,6 @@ class Api::V1::EmployeesController < ApplicationController
 
   private
 
-  def set_paginate
-    @per_page = params[:per_page] || 20
-    @page = params[:page] || 1
-  end
-
   def set_query_sort
     @query = SortParams.new(params[:sort], User).sort_query
   end
@@ -51,7 +45,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def day_off_params
-    params.permit(day_off_info: %i[day_off_category_id hours])
+    params.permit(day_off_infos: %i[day_off_category_id hours])
   end
 
   def user_status_params
