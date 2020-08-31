@@ -9,6 +9,7 @@ tags:
   - name: Login
   - name: Employees
   - name: Day Off Info
+  - name: Day Off Request
 paths:
   '/employees/{id}':
     get:
@@ -148,7 +149,7 @@ paths:
   /employees/{id}/day-off-requests/:
     post:
       tags:
-      - Day Off Info
+      - Day Off Request
       parameters:
         - name: id
           in: path
