@@ -31,7 +31,9 @@ class DayOffRequest < ApplicationRecord
   end
 
   def different_year_request?
-    to_date.to_datetime.year > from_date.to_datetime.year if from_date.present? && to_date.present?
+    different_year = to_date.to_datetime.year - from_date.to_datetime.year if from_date.present? && to_date.present?
+    raise(ExceptionHandler::BadRequest, 'Time day off too long') if different_year != 0 && different_year != 1
+    different_year.positive?
   end
 
   def next_year_request

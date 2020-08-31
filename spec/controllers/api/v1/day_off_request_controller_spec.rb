@@ -96,6 +96,14 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(requests.second['to_date'].to_date.to_s).to eq('2021-07-07')
     end
 
+    it 'should return 400 with request in 3 years' do
+      params = post_params.dup
+      params[:to_date] = '2022-07-07'
+      post :create, params: params
+      expect(JSON.parse(response.body)['message']).to include 'Time day off too long'
+      expect(response.status).to eq(400)
+    end
+
     it 'should return 422 with from date or to date empty' do
       params = post_params.dup
       params[:from_date] = ''
