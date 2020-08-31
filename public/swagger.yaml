@@ -8,7 +8,7 @@ servers:
 tags:
   - name: Login
   - name: Employees
-  - name: Day Off
+  - name: Day Off Info
 paths:
   '/employees/{id}':
     get:
@@ -148,7 +148,7 @@ paths:
   /employees/{id}/day-off-requests/:
     post:
       tags:
-      - Day Off
+      - Day Off Info
       parameters:
         - name: id
           in: path
@@ -184,7 +184,7 @@ paths:
   '/day-off-infos/{id}':
     patch:
       tags:
-      - Day Off
+      - Day Off Info
       parameters:
         - name: id
           in: path
