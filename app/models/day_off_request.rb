@@ -52,6 +52,6 @@ class DayOffRequest < ApplicationRecord
   end
 
   def validate_date_range
-    errors.add(:from_date, "can't be after to_date") if to_date.present? && from_date.present? && to_date < from_date
+    errors.add(:from_date, "can't be after To date") if to_date.present? && from_date.present? && to_date < from_date
   end
 end
