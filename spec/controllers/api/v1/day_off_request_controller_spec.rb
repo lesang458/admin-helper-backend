@@ -96,6 +96,23 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(requests.second['to_date'].to_date.to_s).to eq('2021-07-07')
     end
 
+    it 'should return 422 with request in 3 years' do
+      params = post_params.dup
+      params[:to_date] = '2022-07-07'
+      post :create, params: params
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)['message']).to include 'Request is too long'
+    end
+
+    it 'should return 422 with from date after to date' do
+      params = post_params.dup
+      params[:from_date] = '2020-07-05'
+      params[:to_date] = '2020-07-02'
+      post :create, params: params
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)['message']).to include "From date can't be after To date"
+    end
+
     it 'should return 422 with from date or to date empty' do
       params = post_params.dup
       params[:from_date] = ''
