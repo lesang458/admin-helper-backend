@@ -32,7 +32,7 @@ class DayOffRequest < ApplicationRecord
 
   def different_year_request?
     different_year = to_date.to_datetime.year - from_date.to_datetime.year if from_date.present? && to_date.present?
-    raise(ExceptionHandler::BadRequest, 'Request is too long') if different_year > 1
+    raise(ArgumentError, 'Request is too long') if different_year > 1
     different_year.positive?
   end
 
