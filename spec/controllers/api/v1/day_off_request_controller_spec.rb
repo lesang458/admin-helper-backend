@@ -100,7 +100,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params = post_params.dup
       params[:to_date] = '2022-07-07'
       post :create, params: params
-      expect(JSON.parse(response.body)['message']).to include 'Time day off too long'
+      expect(JSON.parse(response.body)['message']).to include 'Request is too long'
       expect(response.status).to eq(400)
     end
 
