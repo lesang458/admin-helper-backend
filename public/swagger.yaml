@@ -550,9 +550,9 @@ components:
       properties:
         email:
           type: string
-        firstName:
+        first_name:
           type: string
-        lastName:
+        last_name:
           type: string
         birthdate:
           type: string
@@ -564,7 +564,8 @@ components:
           type: string
           enum: [ACTIVE, FORMER]
         phone_number:
-          type: string
+          type: integer
+          example: 123456789
         roles:
           type: array
           items:
@@ -581,6 +582,12 @@ components:
               hours: 
                 type: integer
                 example: 160
+      required:
+        - email
+        - last_name
+        - first_name
+        - status
+        - phone_number
     Pagination:
       type: object
       properties:
