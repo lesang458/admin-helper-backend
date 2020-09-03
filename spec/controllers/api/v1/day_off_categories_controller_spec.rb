@@ -40,7 +40,9 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       vacation = day_off_categories.first
       illness = day_off_categories.second
       expect(vacation['name']).to eq(@category_vacation.name)
+      expect(vacation['total_hours_default']).to eq(@category_vacation.total_hours_default)
       expect(illness['name']).to eq(@category_illness.name)
+      expect(illness['total_hours_default']).to eq(@category_illness.total_hours_default)
       expect(response.status).to eq(200)
     end
   end
