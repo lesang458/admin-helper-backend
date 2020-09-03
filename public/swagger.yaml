@@ -8,7 +8,7 @@ servers:
 tags:
   - name: Login
   - name: Forget Password
-  - name: Employee
+  - name: Employees
   - name: Day Off Category
   - name: Day Off Info
   - name: Day Off Request
@@ -27,8 +27,8 @@ paths:
               schema:
                 type: object
                 properties: 
-                  day_off_category:
-                    $ref: '#/components/schemas/DayOffCategory'
+                  day_off_categories:
+                    $ref: '#/components/schemas/DayOffCategoryResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -226,7 +226,15 @@ paths:
               $ref: '#/components/schemas/DayOffInfo'
       responses:
         '200':
-          $ref: '#/components/responses/RequestSuccess'
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  day_off_info:
+                    $ref: '#/components/schemas/DayOffInfoResponse'
+          
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -620,6 +628,59 @@ components:
               description:
                 type: string
                 description: "description"
+    DayOffCategoryResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: in64
+            example: 1
+          name:
+            type: string
+            example: "VACATION"
+          description:
+            type: string
+            example:
+    DayOffInfoResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: in64
+          example: 1
+        hours:
+          type: integer
+          format: in64
+          example: 160
+        day_off_category_id:
+          type: integer
+          format: in64
+          example: 1
+        category_name:
+          type: string
+          example: "VACATION"
+        description:
+          type: string
+          example:
+        user_id:
+          type: integer
+          format: in64
+          example: 1
+        hours_per_day:
+          type: string
+          format: int64
+          example: 4
+        email:
+          type: string
+          example: "employee@gmail.com"
+        first_name:
+          type: string
+          example: "user"
+        last_name:
+          type: string
+          example: "employee"
   securitySchemes:
     bearerAuth:
       type: http
