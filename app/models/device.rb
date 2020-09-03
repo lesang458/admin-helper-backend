@@ -39,11 +39,15 @@ class Device < ApplicationRecord
     update_status(user_id, 'assigned')
   end
 
+  # rubocop:disable Metrics/AbcSize
   def self.search(params)
     devices = Device.all
     devices = devices.joins(:device_histories).where('status = ?', params[:status]) if params[:status].present?
+    result = devices.select { |device| device.device_histories.last.status == params[:status].downcase }
+    devices = devices.where(id: result.map(&:id)) if result.present?
     devices = devices.where('devices.user_id = ?', params[:user_id]) if params[:user_id].present?
     devices = devices.where('device_category_id = ?', params[:device_category_id]) if params[:device_category_id].present?
     devices
   end
+  # rubocop:enable Metrics/AbcSize
 end
