@@ -65,6 +65,49 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+        - Employees
+      summary: Update employee by id
+      description: Returns an employee
+      parameters:
+        - name: id
+          in: path
+          description: ID of employee to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                encrypted_password:
+                  type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  employee:
+                    $ref: '#/components/schemas/Employee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /login:
     post:
       tags:
@@ -341,6 +384,30 @@ paths:
             $ref: '#/components/responses/Unauthorized'
           '403':
             $ref: '#/components/responses/Permission'
+    post: 
+      tags:
+        - Employees
+      summary: Create employee
+      description: Returns list employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamCreateEmployee'
+      responses:
+          '200':
+            description: successful
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Employee'
+          '401':
+            $ref: '#/components/responses/Unauthorized'
+          '403':
+            $ref: '#/components/responses/Permission'
+          '422':
+            $ref: '#/components/responses/InvalidParams'
   '/employees/{id}/status':
     patch:
       tags:
@@ -478,6 +545,49 @@ components:
               - code
               - message
   schemas:
+    RequestParamCreateEmployee:
+      type: object
+      properties:
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        birthdate:
+          type: string
+          format: date
+        join_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [ACTIVE, FORMER]
+        phone_number:
+          type: integer
+          example: 123456789
+        roles:
+          type: array
+          items:
+            type: string
+            example: EMPLOYEE
+        day_off_infos:
+          type: array
+          items:
+            type: object
+            properties:
+              day_off_category_id: 
+                type: integer
+                example: 1
+              hours: 
+                type: integer
+                example: 160
+      required:
+        - email
+        - last_name
+        - first_name
+        - status
+        - phone_number
     Pagination:
       type: object
       properties:
