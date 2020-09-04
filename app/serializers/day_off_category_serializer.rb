@@ -1,3 +1,3 @@
 class DayOffCategorySerializer < ActiveModel::Serializer
-  attributes :id, :name, :description
+  attributes :id, :name, :total_hours_default, :description
 end
