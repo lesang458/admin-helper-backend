@@ -5,8 +5,14 @@ class Device < ApplicationRecord
   validates :name, presence: true, length: { in: 2..40 }
   validates :price, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :description, allow_nil: true, length: { minimum: 5 }
+
+  scope :with_status, ->(status) { where('status = ? AND from_date < ? AND (to_date is null OR to_date > ?)', status, Date.today, Date.today) }
   def category_name
     device_category.name
+  end
+
+  def status_device
+    device_histories.where('from_date <= ? AND (to_date is null OR to_date > ?)', Date.today, Date.today)[0].status.upcase
   end
 
   def move_to_inventory
@@ -39,15 +45,11 @@ class Device < ApplicationRecord
     update_status(user_id, 'assigned')
   end
 
-  # rubocop:disable Metrics/AbcSize
   def self.search(params)
     devices = Device.all
-    devices = devices.joins(:device_histories).where('status = ?', params[:status]) if params[:status].present?
-    result = devices.select { |device| device.device_histories.last.status == params[:status].downcase }
-    devices = devices.where(id: result.map(&:id)) if result.present?
+    devices = devices.joins(:device_histories).with_status(params[:status]) if params[:status].present?
     devices = devices.where('devices.user_id = ?', params[:user_id]) if params[:user_id].present?
     devices = devices.where('device_category_id = ?', params[:device_category_id]) if params[:device_category_id].present?
     devices
   end
-  # rubocop:enable Metrics/AbcSize
 end
