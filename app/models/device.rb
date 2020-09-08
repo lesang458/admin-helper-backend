@@ -11,7 +11,7 @@ class Device < ApplicationRecord
     device_category.name
   end
 
-  def status_device
+  def status
     device_histories.where('from_date <= ? AND (to_date is null OR to_date > ?)', Date.today, Date.today)[0].status.upcase
   end
 
