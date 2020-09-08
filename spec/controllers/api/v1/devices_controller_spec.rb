@@ -53,6 +53,24 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(message).to include "Couldn't find Device with 'id'"
     end
 
+    it 'should return 400 with discarded device' do
+      put :discard, params: { id: put_params[:id] }
+      @iphone.reload
+      put :move_to_inventory, params: put_params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Cannot move to inventory a device which discarded'
+    end
+
+    it 'should return 400 with device in inventory' do
+      put :move_to_inventory, params: put_params
+      @iphone.reload
+      put :move_to_inventory, params: put_params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Cannot move to inventory a device which in inventory'
+    end
+
     it 'should return 200' do
       put :move_to_inventory, params: put_params
       @iphone.reload
@@ -416,6 +434,15 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(message).to include "Couldn't find Device with 'id'"
     end
 
+    it 'should return 400 with discarded device' do
+      put :discard, params: put_params
+      @iphone.reload
+      put :discard, params: put_params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Cannot discard a device which discarded'
+    end
+
     it 'should return 200' do
       put :discard, params: put_params
       @iphone.reload
@@ -466,6 +493,16 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(404)
       message = JSON.parse(response.body)['message']
       expect(message).to include "Couldn't find User with 'id'"
+    end
+
+    it 'should return 400 with discarded device' do
+      put :discard, params: { id: put_params[:id] }
+      params = put_params.dup
+      params[:user_id] = unexist_id
+      put :assign, params: params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Cannot assign a device which discarded'
     end
 
     it 'should return 200' do

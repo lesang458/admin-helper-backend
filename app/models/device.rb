@@ -10,10 +10,13 @@ class Device < ApplicationRecord
   end
 
   def move_to_inventory
+    raise(ExceptionHandler::BadRequest, 'Cannot move to inventory a device which discarded') if device_histories.last.status == 'discarded'
+    raise(ExceptionHandler::BadRequest, 'Cannot move to inventory a device which in inventory') if device_histories.last.status == 'in_inventory'
     update_status(nil, 'in_inventory')
   end
 
   def discard
+    raise(ExceptionHandler::BadRequest, 'Cannot discard a device which discarded') if device_histories.last.status == 'discarded'
     update_status(nil, 'discarded')
   end
 
@@ -36,6 +39,7 @@ class Device < ApplicationRecord
   end
 
   def assign(user_id)
+    raise(ExceptionHandler::BadRequest, 'Cannot assign a device which discarded') if device_histories.last.status == 'discarded'
     update_status(user_id, 'assigned')
   end
 
