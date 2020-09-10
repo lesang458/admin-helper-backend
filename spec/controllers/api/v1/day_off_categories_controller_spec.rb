@@ -63,7 +63,7 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(response.status).to eq(403)
     end
 
-    it 'should return 422 with name' do
+    it 'should return 422 with name already in use' do
       params = patch_params.dup
       params[:name] = 'ILLNESS'
       patch :update, params: params
@@ -72,7 +72,7 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(message).to include 'Name has already been taken'
     end
 
-    it 'should return 422 with description' do
+    it 'should return 422 with too short description' do
       params = patch_params.dup
       params[:description] = 'ok'
       patch :update, params: params
@@ -81,7 +81,7 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(message).to include 'Description is too short'
     end
 
-    it 'should return 422 with total_hours_default' do
+    it 'should return 422 with negative total_hours_default' do
       params = patch_params.dup
       params[:total_hours_default] = -1
       patch :update, params: params
@@ -93,6 +93,10 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
     it 'should return 200' do
       DayOffCategory.destroy @category_illness.id
       patch :update, params: patch_params
+      @category_vacation.reload
+      expect(@category_vacation.name).to eq patch_params[:name]
+      expect(@category_vacation.description).to eq patch_params[:description]
+      expect(@category_vacation.total_hours_default).to eq patch_params[:total_hours_default]
       expect(response.status).to eq(200)
     end
   end

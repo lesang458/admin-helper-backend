@@ -42,7 +42,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of employee to return
+          description: ID of Day Off Category to return
           required: true
           schema:
             type: integer
@@ -69,7 +69,7 @@ paths:
         '403':
           $ref: '#/components/responses/Permission'
         '422':
-            $ref: '#/components/responses/InvalidParams'
+          $ref: '#/components/responses/InvalidParams'
   '/employees/{id}':
     get:
       tags:
@@ -593,6 +593,7 @@ components:
           enum: [VACATION, ILLNESS]
         description:
           type: string
+          minLength: 3
         total_hours_default:
           type: integer
     RequestParamCreateEmployee:
