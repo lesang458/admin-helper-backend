@@ -134,7 +134,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  '/password/{id}':
+  '/password/reset':
     patch:
       tags:
         - Forget Password
@@ -155,11 +155,6 @@ paths:
           required: true
           schema:
             type: string
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
       responses:
         '200':
           description: Update success
