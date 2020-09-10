@@ -23,4 +23,11 @@ class DayOffInfo < ApplicationRecord
   def category_name
     day_off_category.name
   end
+
+  def self.search(params)
+    day_off_infos = DayOffInfo.all
+    day_off_infos = day_off_infos.where('user_id = ?', params[:user_id]) if params[:user_id].present?
+    day_off_infos = day_off_infos.where('day_off_category_id = ?', params[:day_off_category_id]) if params[:day_off_category_id].present?
+    day_off_infos
+  end
 end

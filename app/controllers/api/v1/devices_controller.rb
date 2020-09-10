@@ -16,7 +16,6 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   def index
-    set_paginate
     devices = Device.search(params)
     devices = @page.to_i <= 0 ? devices : devices.page(@page).per(@per_page)
     render_collection(devices, DeviceSerializer)
@@ -44,11 +43,6 @@ class Api::V1::DevicesController < ApplicationController
   end
 
   private
-
-  def set_paginate
-    @per_page = params[:per_page] || 20
-    @page = params[:page] || 1
-  end
 
   def device_params
     params.permit(:name, :price, :description, :device_category_id, :user_id)
