@@ -11,7 +11,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     @category_phone = FactoryBot.create(:device_category, :phone)
     @iphone = FactoryBot.create(:device, user_id: @employee.id, name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: @category_phone.id)
-    @assigned = FactoryBot.create(:device_history, from_date: '2020-02-02', user_id: @employee.id, device_id: @iphone.id, status: 'ASSIGNED')
+    @assigned = FactoryBot.create(:device_history, from_date: '2020-02-02', user_id: @employee.id, device_id: @iphone.id, to_date: nil, status: 'ASSIGNED')
+    FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, to_date: Date.today + 1.day, status: 'ASSIGNED')
   end
 
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
@@ -137,9 +138,9 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(200)
       json_response = JSON.parse(response.body)['pagination']
       expect(json_response['current_page']).to eq(1)
-      expect(json_response['page_size']).to eq(1)
+      expect(json_response['page_size']).to eq(2)
       expect(json_response['total_pages']).to eq(1)
-      expect(json_response['total_count']).to eq(1)
+      expect(json_response['total_count']).to eq(2)
     end
 
     it 'should return 200 with unexist status' do
@@ -193,7 +194,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
         price: 10_000_000,
         description: 'Designed by Apple in California',
         device_category_id: @category_phone.id,
-        from_date: '2020-10-10',
+        from_date: '2020-08-10',
         status: 'ASSIGNED'
       }
     }
@@ -203,6 +204,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
         user_id: '',
         name: 'iphone',
         price: 10_000_000,
+        from_date: '2020-08-10',
         description: 'Designed by Apple in California',
         device_category_id: @category_phone.id
       }
@@ -548,6 +550,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       put :move_to_inventory, params: put_params
       @iphone.reload
       put :move_to_inventory, params: put_params
+      @iphone.reload
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
       expect(message).to include 'Device Not allowed for this action'
