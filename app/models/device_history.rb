@@ -1,4 +1,9 @@
 class DeviceHistory < ApplicationRecord
+  ACTION_RULES = {
+    'assigned' => %w[assigned in_inventory discarded],
+    'discarded' => %w[],
+    'in_inventory' => %w[assigned discarded]
+  }.freeze
   belongs_to :user, optional: true
   belongs_to :device
   validates :from_date, presence: true
@@ -7,7 +12,7 @@ class DeviceHistory < ApplicationRecord
   validates :status, presence: true, inclusion: { in: %w[discarded assigned in_inventory] }
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
-
+  validate :allow_action?, on: :create
   # rubocop:disable Metrics/AbcSize
   def self.search(params)
     device_histories = DeviceHistory.all
@@ -25,5 +30,14 @@ class DeviceHistory < ApplicationRecord
 
   def validate_date_range
     errors.add(:from_date, "can't be in the to date") if to_date.present? && from_date.present? && to_date < from_date
+  end
+
+  def allow_action?
+    errors[:base] << 'Device Not allowed for this action' unless valid_status?
+  end
+
+  def valid_status?
+    return true if device&.device_histories.blank?
+    ACTION_RULES[device.device_histories.last.status].include?(status)
   end
 end
