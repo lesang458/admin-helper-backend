@@ -1,19 +1,13 @@
 class DeviceHistorySerializer < ActiveModel::Serializer
+  belongs_to :user, optional: true
+  belongs_to :device
   attributes :id, :from_date, :to_date, :status, :user, :device
 
-  def user
-    return unless object.user.present?
-    {
-      full_name: object.user.first_name + ' ' + object.user.last_name,
-      email: object.user.email
-    }
+  class UserSerializer < ActiveModel::Serializer
+    attributes :id, :first_name, :last_name
   end
 
-  def device
-    {
-      name: object.device.name,
-      price: object.device.price,
-      description: object.device.description
-    }
+  class DeviceSerializer < ActiveModel::Serializer
+    attributes :id, :name, :price, :description
   end
 end

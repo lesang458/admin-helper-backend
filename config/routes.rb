@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       resources :password, only: %i[create]
       patch 'password/reset', to: 'password#update'
       resources :day_off_info, only: %i[update index]
-      get 'day-off-categories', to: 'day_off_categories#index'
+      resources :day_off_categories, only: %i[index update]
       resources :device_categories
       resources :device_histories, only: %i[index show]
       resources :devices, only: %i[create show index destroy update] do
