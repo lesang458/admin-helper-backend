@@ -12,7 +12,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     @category_phone = FactoryBot.create(:device_category, :phone)
     @iphone = FactoryBot.create(:device, user_id: @employee.id, name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: @category_phone.id)
     @assigned = FactoryBot.create(:device_history, from_date: '2020-02-02', user_id: @employee.id, device_id: @iphone.id, to_date: nil, status: 'ASSIGNED')
-    FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, to_date: Date.today + 1.day, status: 'ASSIGNED')
+    @iphone_history = FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, to_date: Date.today + 1.day, status: 'ASSIGNED')
   end
 
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
@@ -377,7 +377,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
 
     it 'should return 422 with discarded device' do
-      put :discard, params: put_params
+      @iphone_history.update(status: 'DISCARDED')
+      @iphone_history.reload
       @iphone.reload
       put :discard, params: put_params
       expect(response.status).to eq(422)
@@ -396,9 +397,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
 
     it 'should return 200 with assigned device' do
-      params = put_params.dup
-      params[:user_id] = @employee.id
-      put :assign, params: params
+      @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
+      @iphone_history.reload
       @iphone.reload
       put :discard, params: put_params
       @iphone.reload
@@ -410,7 +410,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
 
     it 'should return 200 with device in inventory' do
-      put :move_to_inventory, params: put_params
+      @iphone_history.update(status: 'IN_INVENTORY', user_id: @employee.id)
+      @iphone_history.reload
       @iphone.reload
       put :discard, params: put_params
       @iphone.reload
@@ -464,9 +465,9 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
 
     it 'should return 422 with discarded device' do
-      put :discard, params: { id: put_params[:id] }
-      params = put_params.dup
-      put :assign, params: params
+      @iphone_history.update(status: 'DISCARDED', user_id: @employee.id)
+      @iphone_history.reload
+      put :assign, params: put_params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
       expect(message).to include 'Status is not valid'
@@ -483,7 +484,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
 
     it 'should return 200 with assigned device' do
-      put :assign, params: put_params
+      @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
+      @iphone_history.reload
       @iphone.reload
       put :assign, params: put_params
       expect(response.status).to eq(200)
@@ -494,7 +496,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
 
     it 'should return 200 device in inventory' do
-      put :move_to_inventory, params: { id: put_params[:id] }
+      @iphone_history.update(status: 'IN_INVENTORY', user_id: @employee.id)
+      @iphone_history.reload
       @iphone.reload
       put :assign, params: put_params
       @iphone.reload
@@ -538,7 +541,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
 
     it 'should return 422 with discarded device' do
-      put :discard, params: put_params
+      @iphone_history.update(status: 'DISCARDED', user_id: @employee.id)
+      @iphone_history.reload
       @iphone.reload
       put :move_to_inventory, params: put_params
       expect(response.status).to eq(422)
@@ -547,7 +551,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
 
     it 'should return 422 with device in inventory' do
-      put :move_to_inventory, params: put_params
+      @iphone_history.update(status: 'IN_INVENTORY', user_id: @employee.id)
+      @iphone_history.reload
       @iphone.reload
       put :move_to_inventory, params: put_params
       @iphone.reload
@@ -567,9 +572,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
 
     it 'should return 200 with assigned device' do
-      params = put_params.dup
-      params[:user_id] = @employee.id
-      put :assign, params: params
+      @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
+      @iphone_history.reload
       @iphone.reload
       put :move_to_inventory, params: put_params
       @iphone.reload
