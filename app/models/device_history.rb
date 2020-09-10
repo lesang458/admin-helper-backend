@@ -33,7 +33,7 @@ class DeviceHistory < ApplicationRecord
   end
 
   def allow_action?
-    errors[:base] << 'Device Not allowed for this action' unless valid_status?
+    errors.add(:status, 'is not valid') unless valid_status?
   end
 
   def valid_status?

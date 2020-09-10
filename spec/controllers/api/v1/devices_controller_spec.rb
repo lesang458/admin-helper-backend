@@ -382,7 +382,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       put :discard, params: put_params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Device Not allowed for this action'
+      expect(message).to include 'Status is not valid'
     end
 
     it 'should return 200' do
@@ -469,7 +469,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       put :assign, params: params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Device Not allowed for this action'
+      expect(message).to include 'Status is not valid'
     end
 
     it 'should return 200' do
@@ -543,7 +543,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       put :move_to_inventory, params: put_params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Device Not allowed for this action'
+      expect(message).to include 'Status is not valid'
     end
 
     it 'should return 422 with device in inventory' do
@@ -553,7 +553,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       @iphone.reload
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Device Not allowed for this action'
+      expect(message).to include 'Status is not valid'
     end
 
     it 'should return 200' do
