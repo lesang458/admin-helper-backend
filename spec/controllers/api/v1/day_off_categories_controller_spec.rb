@@ -47,9 +47,8 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
     end
   end
 
-  let!(:patch_params) { { id: @category_vacation.id, name: 'ILLNESS', description: 'Hello', total_hours_default: 16 } }
-
   describe 'PATCH# day-off-category' do
+    let!(:patch_params) { { id: @category_vacation.id, name: 'ILLNESS', description: 'Hello', total_hours_default: 16 } }
     it 'return status 401 status code with invalid token' do
       request.headers.merge! invalid_headers
       patch :update, params: patch_params
@@ -69,6 +68,8 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       params[:name] = 'ILLNESS'
       patch :update, params: params
       expect(response.status).to eq(422)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Name has already been taken'
     end
 
     it 'should return 422 with description' do
@@ -76,6 +77,8 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       params[:description] = 'ok'
       patch :update, params: params
       expect(response.status).to eq(422)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Description is too short'
     end
 
     it 'should return 422 with total_hours_default' do
@@ -83,6 +86,8 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       params[:total_hours_default] = -1
       patch :update, params: params
       expect(response.status).to eq(422)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Total hours default must be greater than 0'
     end
 
     it 'should return 200' do
