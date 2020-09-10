@@ -398,7 +398,7 @@ components:
             properties:
               status:
                 type: integer
-                example: 200
+                example: 422
               message:
                 type: string
                 example: "Request Success"
@@ -486,6 +486,49 @@ components:
               - code
               - message
   schemas:
+    RequestParamCreateEmployee:
+      type: object
+      properties:
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        birthdate:
+          type: string
+          format: date
+        join_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [ACTIVE, FORMER]
+        phone_number:
+          type: integer
+          example: 123456789
+        roles:
+          type: array
+          items:
+            type: string
+            example: EMPLOYEE
+        day_off_infos:
+          type: array
+          items:
+            type: object
+            properties:
+              day_off_category_id: 
+                type: integer
+                example: 1
+              hours: 
+                type: integer
+                example: 160
+      required:
+        - email
+        - last_name
+        - first_name
+        - status
+        - phone_number
     Pagination:
       type: object
       properties:
@@ -589,7 +632,7 @@ components:
         properties:
           id:
             type: integer
-            format: in64
+            format: int64
             example: 1
           email:
             type: string
@@ -620,7 +663,7 @@ components:
             properties:
               id:
                 type: integer
-                format: in64
+                format: int64
                 example: 1
               name:
                 type: string
@@ -635,7 +678,7 @@ components:
         properties:
           id:
             type: integer
-            format: in64
+            format: int64
             example: 1
           name:
             type: string
@@ -648,15 +691,15 @@ components:
       properties:
         id:
           type: integer
-          format: in64
+          format: int64
           example: 1
         hours:
           type: integer
-          format: in64
+          format: int64
           example: 160
         day_off_category_id:
           type: integer
-          format: in64
+          format: int64
           example: 1
         category_name:
           type: string
@@ -666,7 +709,7 @@ components:
           example:
         user_id:
           type: integer
-          format: in64
+          format: int64
           example: 1
         hours_per_day:
           type: string

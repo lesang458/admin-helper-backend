@@ -8,6 +8,7 @@ class DayOffRequest < ApplicationRecord
   validate :validate_info_user
   delegate :email, :first_name, :last_name, to: :user
   delegate :day_off_category, to: :day_off_info
+  validate :request_too_long
 
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
@@ -31,7 +32,8 @@ class DayOffRequest < ApplicationRecord
   end
 
   def different_year_request?
-    to_date.to_datetime.year > from_date.to_datetime.year if from_date.present? && to_date.present?
+    different_year = to_date.to_datetime.year - from_date.to_datetime.year if from_date.present? && to_date.present?
+    different_year.positive?
   end
 
   def next_year_request
@@ -50,6 +52,10 @@ class DayOffRequest < ApplicationRecord
   end
 
   def validate_date_range
-    errors.add(:from_date, "can't be in the to date") if to_date.present? && from_date.present? && to_date < from_date
+    errors.add(:from_date, "can't be after To date") if to_date.present? && from_date.present? && to_date < from_date
+  end
+
+  def request_too_long
+    errors[:base] << 'Request is too long' if to_date.present? && from_date.present? && to_date.to_datetime.year - from_date.to_datetime.year > 1
   end
 end
