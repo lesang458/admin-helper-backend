@@ -11,7 +11,8 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     @category_phone = FactoryBot.create(:device_category, :phone)
     @iphone = FactoryBot.create(:device, user_id: @employee.id, name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: @category_phone.id)
-    @assigned = FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, to_date: nil, status: 'ASSIGNED')
+    @assigned = FactoryBot.create(:device_history, user_id: nil, device_id: @iphone.id, to_date: nil, status: 'IN_INVENTORY')
+    FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, to_date: nil, status: 'ASSIGNED')
     FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, to_date: Date.today + 1.day, status: 'ASSIGNED')
   end
 
@@ -61,6 +62,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
       expect(history.status).to eq('in_inventory')
+      expect(JSON.parse(response.body)['device']['status']).to eq 'in_inventory'.upcase
       expect(history.user_id).to eq(nil)
     end
   end
@@ -425,6 +427,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
       expect(history.status).to eq('discarded')
+      expect(JSON.parse(response.body)['device']['status']).to eq 'discarded'.upcase
       expect(history.user_id).to eq(nil)
     end
   end
@@ -477,6 +480,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(@iphone.user_id).to eq(@employee.id)
       history = @iphone.device_histories.last
       expect(history.status).to eq('assigned')
+      expect(JSON.parse(response.body)['device']['status']).to eq 'assigned'.upcase
       expect(history.user_id).to eq(@employee.id)
     end
   end
