@@ -378,8 +378,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 422 with discarded device' do
       @iphone_history.update(status: 'DISCARDED')
-      @iphone_history.reload
-      @iphone.reload
       put :discard, params: put_params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
@@ -398,10 +396,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 200 with assigned device' do
       @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
-      @iphone_history.reload
-      @iphone.reload
       put :discard, params: put_params
-      @iphone.reload
       expect(response.status).to eq(200)
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
@@ -411,8 +406,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 200 with device in inventory' do
       @iphone_history.update(status: 'IN_INVENTORY', user_id: @employee.id)
-      @iphone_history.reload
-      @iphone.reload
       put :discard, params: put_params
       @iphone.reload
       expect(response.status).to eq(200)
@@ -466,7 +459,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 422 with discarded device' do
       @iphone_history.update(status: 'DISCARDED', user_id: @employee.id)
-      @iphone_history.reload
       put :assign, params: put_params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
@@ -485,8 +477,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 200 with assigned device' do
       @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
-      @iphone_history.reload
-      @iphone.reload
       put :assign, params: put_params
       expect(response.status).to eq(200)
       expect(@iphone.user_id).to eq(@employee.id)
@@ -497,8 +487,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 200 device in inventory' do
       @iphone_history.update(status: 'IN_INVENTORY', user_id: @employee.id)
-      @iphone_history.reload
-      @iphone.reload
       put :assign, params: put_params
       @iphone.reload
       expect(response.status).to eq(200)
@@ -542,8 +530,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 422 with discarded device' do
       @iphone_history.update(status: 'DISCARDED', user_id: @employee.id)
-      @iphone_history.reload
-      @iphone.reload
       put :move_to_inventory, params: put_params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
@@ -552,8 +538,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 422 with device in inventory' do
       @iphone_history.update(status: 'IN_INVENTORY', user_id: @employee.id)
-      @iphone_history.reload
-      @iphone.reload
       put :move_to_inventory, params: put_params
       @iphone.reload
       expect(response.status).to eq(422)
@@ -573,8 +557,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     it 'should return 200 with assigned device' do
       @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
-      @iphone_history.reload
-      @iphone.reload
       put :move_to_inventory, params: put_params
       @iphone.reload
       expect(response.status).to eq(200)
