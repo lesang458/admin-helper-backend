@@ -62,7 +62,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
       expect(history.status).to eq('in_inventory')
-      expect(JSON.parse(response.body)['device']['status']).to eq 'in_inventory'.upcase
+      expect(JSON.parse(response.body)['device']['status']).to eq 'IN_INVENTORY'
       expect(history.user_id).to eq(nil)
     end
   end
@@ -427,7 +427,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
       expect(history.status).to eq('discarded')
-      expect(JSON.parse(response.body)['device']['status']).to eq 'discarded'.upcase
+      expect(JSON.parse(response.body)['device']['status']).to eq 'DISCARDED'
       expect(history.user_id).to eq(nil)
     end
   end
@@ -480,7 +480,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(@iphone.user_id).to eq(@employee.id)
       history = @iphone.device_histories.last
       expect(history.status).to eq('assigned')
-      expect(JSON.parse(response.body)['device']['status']).to eq 'assigned'.upcase
+      expect(JSON.parse(response.body)['device']['status']).to eq 'ASSIGNED'
       expect(history.user_id).to eq(@employee.id)
     end
   end
