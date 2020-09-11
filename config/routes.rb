@@ -9,9 +9,10 @@ Rails.application.routes.draw do
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
       get 'employees/:id/day-off-requests', to: 'day_off_request#index'
       post 'password/validate_token', to: 'password#validate_token'
-      resources :password, only: %i[create update]
+      resources :password, only: %i[create]
+      patch 'password/reset', to: 'password#update'
       resources :day_off_info, only: %i[update index]
-      get 'day-off-categories', to: 'day_off_categories#index'
+      resources :day_off_categories, only: %i[index update]
       resources :device_categories
       resources :device_histories, only: %i[index show]
       resources :devices, only: %i[create show index destroy update] do
