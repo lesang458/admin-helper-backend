@@ -12,7 +12,7 @@ class Device < ApplicationRecord
   end
 
   def status
-    device_histories.where('from_date <= ? AND (to_date is null OR to_date > ?)', Time.now, Time.now).last&.status&.upcase || 'ERROR'
+    device_histories.where('from_date <= ? AND (to_date is null OR to_date > ?)', Time.now, Time.now).last&.status&.upcase
   end
 
   def move_to_inventory
