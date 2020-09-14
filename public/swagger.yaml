@@ -13,7 +13,7 @@ tags:
   - name: Day Off Info
   - name: Day Off Request
 paths:
-    '/day_off_categories':
+  '/day_off_categories':
     get:
       tags:
         - Day Off Category
@@ -496,13 +496,11 @@ paths:
           - name: status
             in: query
             description: Search with status
-            required: false
             schema:
               type: string
           - name: history_to
             in: query
             description: Search with history to
-            required: false
             schema:
               type: string
               format: date
@@ -510,7 +508,6 @@ paths:
           - name: history_from
             in: query
             description: Search with history from
-            required: false
             schema:
               type: string
               format: date
@@ -518,28 +515,24 @@ paths:
           - name: user_id
             description: Search with user id
             in: query
-            required: false
             schema:
               type: integer
               example: 1
           - name: device_category_id
             description: Search with device category id
             in: query
-            required: false
             schema:
               type: integer
               example: 1
           - name: page
             in: query
             description: pagination with the current page
-            required: false
             schema:
               type: integer
               example: 1
           - name: per_page
             in: query
             description: pagination with the number of elements per page
-            required: false
             schema:
               type: integer
               example: 20
