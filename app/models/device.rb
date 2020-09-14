@@ -27,9 +27,9 @@ class Device < ApplicationRecord
     Device.transaction do
       User.find(user_id) if user_id.present?
       update! user_id: user_id
-      time = Time.now
-      device_histories.create! from_date: time, status: status, user_id: user_id
-      device_histories.second_to_last.update!(to_date: time)
+      now = Time.zone.now
+      device_histories.create! from_date: now, status: status, user_id: user_id
+      device_histories.second_to_last.update!(to_date: now)
     end
   end
 
