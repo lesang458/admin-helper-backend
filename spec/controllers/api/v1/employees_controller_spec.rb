@@ -98,7 +98,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
                               first_name: 'dang',
                               last_name: 'hanh',
                               email: 'danghanh@mail.com',
-                              encrypted_password: '123456',
+                              password: '123456',
                               birthdate: '1999-02-02',
                               join_date: '2019-11-23',
                               phone_number: '0123456789'

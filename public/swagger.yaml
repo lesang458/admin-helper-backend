@@ -127,7 +127,7 @@ paths:
                   type: string
                 last_name:
                   type: string
-                encrypted_password:
+                password:
                   type: string
       responses:
         '200':
