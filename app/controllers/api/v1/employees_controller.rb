@@ -40,7 +40,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def user_params
-    params[:encrypted_password] = User.generate_encrypted_password(params[:encrypted_password])
+    params[:encrypted_password] = User.generate_encrypted_password(params[:password]) if params[:password]
     params.permit(:email, :encrypted_password, :first_name, :last_name, :birthdate, :join_date, :phone_number)
   end
 
