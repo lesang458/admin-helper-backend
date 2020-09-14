@@ -11,9 +11,10 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     @category_phone = FactoryBot.create(:device_category, :phone)
     @iphone = FactoryBot.create(:device, user_id: @employee.id, name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: @category_phone.id)
-    @assigned = FactoryBot.create(:device_history, user_id: nil, device_id: @iphone.id, from_date: '2020-07-01', to_date: '2020-07-30', status: 'IN_INVENTORY')
-    FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, to_date: Time.now, status: 'ASSIGNED')
-    FactoryBot.create(:device_history, user_id: @admin.id, device_id: @iphone.id, from_date: Time.now, to_date: nil, status: 'ASSIGNED')
+
+    @assigned = FactoryBot.create(:device_history, user_id: nil, device_id: @iphone.id, from_date: '2020-07-01', to_date: nil, status: 'IN_INVENTORY')
+    @iphone_history = FactoryBot.create(:device_history, user_id: @admin.id, device_id: @iphone.id, from_date: '2020-07-30', to_date: nil, status: 'ASSIGNED')
+    @assigned.update(to_date: '2020-07-30')
   end
 
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
@@ -23,49 +24,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let!(:invalid_price) { -999_999_999_999 }
   before(:each) { request.headers.merge! valid_headers }
   let!(:invalid_user_id) { 999_999_999_999 }
-
-  describe 'PUT#move to inventory device' do
-    let!(:unexist_id) { 999_999_999_999 }
-    let!(:put_params) {
-      {
-        id: @iphone.id
-      }
-    }
-
-    it 'return status 401 status code with invalid token' do
-      request.headers.merge! invalid_headers
-      put :move_to_inventory, params: put_params
-      expect(response.status).to eq(401)
-    end
-
-    it 'should return 403 with employee' do
-      valid_token = JwtToken.encode({ user_id: @employee.id })
-      valid_headers = { authorization: "Bearer #{valid_token}" }
-      request.headers.merge! valid_headers
-      put :move_to_inventory, params: put_params
-      expect(response.status).to eq(403)
-    end
-
-    it 'should return 404 with unexist device_id' do
-      params = put_params.dup
-      params[:id] = unexist_id
-      put :move_to_inventory, params: params
-      expect(response.status).to eq(404)
-      message = JSON.parse(response.body)['message']
-      expect(message).to include "Couldn't find Device with 'id'"
-    end
-
-    it 'should return 200' do
-      put :move_to_inventory, params: put_params
-      @iphone.reload
-      expect(response.status).to eq(200)
-      expect(@iphone.user_id).to eq(nil)
-      history = @iphone.device_histories.last
-      expect(history.status).to eq('in_inventory')
-      expect(JSON.parse(response.body)['device']['status']).to eq 'IN_INVENTORY'
-      expect(history.user_id).to eq(nil)
-    end
-  end
 
   describe 'DELETE# device' do
     it 'return status 401 status code with invalid token' do
@@ -420,6 +378,14 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(message).to include "Couldn't find Device with 'id'"
     end
 
+    it 'should return 422 with discarded device' do
+      @iphone_history.update(status: 'DISCARDED')
+      put :discard, params: put_params
+      expect(response.status).to eq(422)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Status is not valid'
+    end
+
     it 'should return 200' do
       put :discard, params: put_params
       @iphone.reload
@@ -428,6 +394,27 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       history = @iphone.device_histories.last
       expect(history.status).to eq('discarded')
       expect(JSON.parse(response.body)['device']['status']).to eq 'DISCARDED'
+      expect(history.user_id).to eq(nil)
+    end
+
+    it 'should return 200 with assigned device' do
+      @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
+      put :discard, params: put_params
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(nil)
+      history = @iphone.device_histories.last
+      expect(@iphone.status).to eq('DISCARDED')
+      expect(history.user_id).to eq(nil)
+    end
+
+    it 'should return 200 with device in inventory' do
+      @iphone_history.update(status: 'IN_INVENTORY', user_id: @employee.id)
+      put :discard, params: put_params
+      @iphone.reload
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(nil)
+      history = @iphone.device_histories.last
+      expect(@iphone.status).to eq('DISCARDED')
       expect(history.user_id).to eq(nil)
     end
   end
@@ -473,6 +460,14 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(message).to include "Couldn't find User with 'id'"
     end
 
+    it 'should return 422 with discarded device' do
+      @iphone_history.update(status: 'DISCARDED', user_id: @employee.id)
+      put :assign, params: put_params
+      expect(response.status).to eq(422)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Status is not valid'
+    end
+
     it 'should return 200' do
       put :assign, params: put_params
       @iphone.reload
@@ -482,6 +477,97 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(history.status).to eq('assigned')
       expect(JSON.parse(response.body)['device']['status']).to eq 'ASSIGNED'
       expect(history.user_id).to eq(@employee.id)
+    end
+
+    it 'should return 200 with assigned device' do
+      @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
+      put :assign, params: put_params
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(@employee.id)
+      history = @iphone.device_histories.last
+      expect(@iphone.status).to eq('ASSIGNED')
+      expect(history.user_id).to eq(@employee.id)
+    end
+
+    it 'should return 200 device in inventory' do
+      @iphone_history.update(status: 'IN_INVENTORY', user_id: @employee.id)
+      put :assign, params: put_params
+      @iphone.reload
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(@employee.id)
+      history = @iphone.device_histories.last
+      expect(@iphone.status).to eq('ASSIGNED')
+      expect(history.user_id).to eq(@employee.id)
+    end
+  end
+
+  describe 'PUT#move device to inventory' do
+    let!(:unexist_id) { 999_999_999_999 }
+    let!(:put_params) {
+      {
+        id: @iphone.id
+      }
+    }
+
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      put :move_to_inventory, params: put_params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      valid_token = JwtToken.encode({ user_id: @employee.id })
+      valid_headers = { authorization: "Bearer #{valid_token}" }
+      request.headers.merge! valid_headers
+      put :move_to_inventory, params: put_params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404 with unexist device_id' do
+      params = put_params.dup
+      params[:id] = unexist_id
+      put :move_to_inventory, params: params
+      expect(response.status).to eq(404)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include "Couldn't find Device with 'id'"
+    end
+
+    it 'should return 422 with discarded device' do
+      @iphone_history.update(status: 'DISCARDED', user_id: @employee.id)
+      put :move_to_inventory, params: put_params
+      expect(response.status).to eq(422)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Status is not valid'
+    end
+
+    it 'should return 422 with device in inventory' do
+      @iphone_history.update(status: 'IN_INVENTORY', user_id: @employee.id)
+      put :move_to_inventory, params: put_params
+      @iphone.reload
+      expect(response.status).to eq(422)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Status is not valid'
+    end
+
+    it 'should return 200' do
+      put :move_to_inventory, params: put_params
+      @iphone.reload
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(nil)
+      history = @iphone.device_histories.last
+      expect(@iphone.status).to eq('IN_INVENTORY')
+      expect(history.user_id).to eq(nil)
+    end
+
+    it 'should return 200 with assigned device' do
+      @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
+      put :move_to_inventory, params: put_params
+      @iphone.reload
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(nil)
+      history = @iphone.device_histories.last
+      expect(@iphone.status).to eq('IN_INVENTORY')
+      expect(history.user_id).to eq(nil)
     end
   end
 end
