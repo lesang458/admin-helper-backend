@@ -13,7 +13,7 @@ tags:
   - name: Day Off Info
   - name: Day Off Request
 paths:
-  '/day-off-categories':
+  '/day_off_categories':
     get:
       tags:
         - Day Off Category
@@ -486,6 +486,75 @@ paths:
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/InvalidParams'
+  /device_histories:
+    get:
+        tags:
+          - Device Histories
+        summary: Get list Device Histories
+        description: Returns list Device History
+        parameters:
+          - name: status
+            in: query
+            description: Search with status
+            schema:
+              type: string
+          - name: history_to
+            in: query
+            description: Search with history to
+            schema:
+              type: string
+              format: date
+              example: '2015-11-23'
+          - name: history_from
+            in: query
+            description: Search with history from
+            schema:
+              type: string
+              format: date
+              example: '2015-11-23'
+          - name: user_id
+            description: Search with user id
+            in: query
+            schema:
+              type: integer
+              example: 1
+          - name: device_category_id
+            description: Search with device category id
+            in: query
+            schema:
+              type: integer
+              example: 1
+          - name: page
+            in: query
+            description: pagination with the current page
+            schema:
+              type: integer
+              example: 1
+          - name: per_page
+            in: query
+            description: pagination with the number of elements per page
+            schema:
+              type: integer
+              example: 20
+        responses:
+          '200':
+            description: successful
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: 
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        $ref: '#/components/schemas/Employee'
+                    pagination:
+                      $ref: '#/components/schemas/Pagination'
+          '401':
+            $ref: '#/components/responses/Unauthorized'
+          '403':
+            $ref: '#/components/responses/Permission'
 components:
   responses:
     RequestSuccess:
