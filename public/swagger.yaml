@@ -13,6 +13,38 @@ tags:
   - name: Day Off Info
   - name: Day Off Request
 paths:
+  '/device_histories/{id}':
+   get:
+        tags:
+          - Device Histories
+        summary: Find Device History by id
+        description: Returns an Device History
+        operationId: getDeviceHistoryById
+        parameters:
+          - name: id
+            in: path
+            description: ID of device history to return
+            required: true
+            schema:
+              type: integer
+              format: int64
+              example: 1
+        responses:
+          '200':
+            description: successful
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: 
+                    device_history:
+                      $ref: '#/components/schemas/DeviceHistory'
+          '401':
+            $ref: '#/components/responses/Unauthorized'
+          '403':
+            $ref: '#/components/responses/Permission'
+          '404':
+            $ref: '#/components/responses/NotFound'
   '/day_off_categories':
     get:
       tags:
@@ -127,7 +159,7 @@ paths:
                   type: string
                 last_name:
                   type: string
-                password:
+                encrypted_password:
                   type: string
       responses:
         '200':
@@ -548,7 +580,7 @@ paths:
                       type: array
                       items:
                         type: object
-                        $ref: '#/components/schemas/Employee'
+                        $ref: '#/components/schemas/DeviceHistory'
                     pagination:
                       $ref: '#/components/schemas/Pagination'
           '401':
@@ -654,6 +686,37 @@ components:
               - code
               - message
   schemas:
+    DeviceHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        from_date:
+          type: string
+          format: date
+        to_date:
+          type: integer
+          format: date
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            first_name:
+              type: string
+            last_name:
+              type: string
+        device:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            price:
+              type: string
+            description:
+              type: string
     RequestParamUpdateDayOffCategory:
       type: object
       properties:
