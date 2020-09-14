@@ -11,8 +11,9 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
 
     @category_phone = FactoryBot.create(:device_category, :phone)
     @iphone = FactoryBot.create(:device, user_id: @employee.id, name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: @category_phone.id)
-    @assigned = FactoryBot.create(:device_history, from_date: '2020-02-02', user_id: @employee.id, device_id: @iphone.id, to_date: nil, status: 'ASSIGNED')
-    @iphone_history = FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, to_date: Date.today + 1.day, status: 'ASSIGNED')
+    @assigned = FactoryBot.create(:device_history, user_id: nil, device_id: @iphone.id, from_date: '2020-07-01', to_date: '2020-07-30', status: 'IN_INVENTORY')
+    FactoryBot.create(:device_history, user_id: @employee.id, device_id: @iphone.id, to_date: Time.now, status: 'ASSIGNED')
+    @iphone_history = FactoryBot.create(:device_history, user_id: @admin.id, device_id: @iphone.id, from_date: Time.now, to_date: nil, status: 'ASSIGNED')
   end
 
   let!(:valid_token) { JwtToken.encode({ user_id: @admin.id }) }
@@ -22,38 +23,6 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let!(:invalid_price) { -999_999_999_999 }
   before(:each) { request.headers.merge! valid_headers }
   let!(:invalid_user_id) { 999_999_999_999 }
-
-  describe 'DELETE# device' do
-    it 'return status 401 status code with invalid token' do
-      request.headers.merge! invalid_headers
-      delete :destroy, params: { id: @iphone.id }
-      expect(response.status).to eq(401)
-    end
-
-    it 'should return 403 with employee' do
-      valid_token = JwtToken.encode({ user_id: @employee.id })
-      valid_headers = { authorization: "Bearer #{valid_token}" }
-      request.headers.merge! valid_headers
-      delete :destroy, params: { id: @iphone.id }
-      expect(response.status).to eq(403)
-    end
-
-    it 'should return 404 with invalid user_id' do
-      delete :destroy, params: { id: invalid_user_id }
-      expect(response.status).to eq(404)
-      message = JSON.parse(response.body)['message']
-      expect(message).to include "Couldn't find Device"
-    end
-
-    it 'should return 204' do
-      delete :destroy, params: { id: @iphone.id }
-      device = Device.find_by id: @iphone.id
-      device_history = DeviceHistory.find_by device_id: @iphone.id
-      expect(response.status).to eq(204)
-      expect(device).to be_nil
-      expect(device_history).to be_nil
-    end
-  end
 
   describe 'PUT# device' do
     let!(:unexist_id) { 999_999_999_999 }
@@ -138,9 +107,9 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(200)
       json_response = JSON.parse(response.body)['pagination']
       expect(json_response['current_page']).to eq(1)
-      expect(json_response['page_size']).to eq(2)
+      expect(json_response['page_size']).to eq(1)
       expect(json_response['total_pages']).to eq(1)
-      expect(json_response['total_count']).to eq(2)
+      expect(json_response['total_count']).to eq(1)
     end
 
     it 'should return 200 with unexist status' do
@@ -391,6 +360,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
       expect(history.status).to eq('discarded')
+      expect(JSON.parse(response.body)['device']['status']).to eq 'DISCARDED'
       expect(history.user_id).to eq(nil)
     end
 
@@ -400,7 +370,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(200)
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
-      expect(history.status).to eq('discarded')
+      expect(@iphone.status).to eq('DISCARDED')
       expect(history.user_id).to eq(nil)
     end
 
@@ -411,7 +381,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(200)
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
-      expect(history.status).to eq('discarded')
+      expect(@iphone.status).to eq('DISCARDED')
       expect(history.user_id).to eq(nil)
     end
   end
@@ -472,6 +442,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(@iphone.user_id).to eq(@employee.id)
       history = @iphone.device_histories.last
       expect(history.status).to eq('assigned')
+      expect(JSON.parse(response.body)['device']['status']).to eq 'ASSIGNED'
       expect(history.user_id).to eq(@employee.id)
     end
 
@@ -481,7 +452,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(200)
       expect(@iphone.user_id).to eq(@employee.id)
       history = @iphone.device_histories.last
-      expect(history.status).to eq('assigned')
+      expect(@iphone.status).to eq('ASSIGNED')
       expect(history.user_id).to eq(@employee.id)
     end
 
@@ -492,7 +463,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(200)
       expect(@iphone.user_id).to eq(@employee.id)
       history = @iphone.device_histories.last
-      expect(history.status).to eq('assigned')
+      expect(@iphone.status).to eq('ASSIGNED')
       expect(history.user_id).to eq(@employee.id)
     end
   end
@@ -551,7 +522,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(200)
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
-      expect(history.status).to eq('in_inventory')
+      expect(@iphone.status).to eq('IN_INVENTORY')
       expect(history.user_id).to eq(nil)
     end
 
@@ -562,7 +533,7 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(response.status).to eq(200)
       expect(@iphone.user_id).to eq(nil)
       history = @iphone.device_histories.last
-      expect(history.status).to eq('in_inventory')
+      expect(@iphone.status).to eq('IN_INVENTORY')
       expect(history.user_id).to eq(nil)
     end
   end

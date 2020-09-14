@@ -6,13 +6,13 @@ class Device < ApplicationRecord
   validates :price, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :description, allow_nil: true, length: { minimum: 5 }
 
-  scope :with_status, ->(status) { joins(:device_histories).where('status = ? AND from_date < ? AND (to_date is null OR to_date > ?)', status, Date.today, Date.today) }
+  scope :with_status, ->(status) { joins(:device_histories).where('status = ? AND from_date < ? AND (to_date is null OR to_date > ?)', status, Time.now, Time.now) }
   def category_name
     device_category.name
   end
 
   def status
-    device_histories.find_by('from_date <= ? AND (to_date is null OR to_date > ?)', Time.now, Time.now).status.upcase
+    device_histories.where('from_date <= ? AND (to_date is null OR to_date > ?)', Time.now, Time.now).last&.status&.upcase
   end
 
   def move_to_inventory
