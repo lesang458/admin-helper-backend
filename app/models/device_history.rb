@@ -38,6 +38,6 @@ class DeviceHistory < ApplicationRecord
 
   def valid_status?
     return true if device&.device_histories.blank?
-    ACTION_RULES[device.device_histories.last.status].include?(status)
+    ACTION_RULES[device.status.downcase].include?(status)
   end
 end
