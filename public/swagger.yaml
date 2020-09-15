@@ -15,36 +15,36 @@ tags:
 paths:
   '/device_histories/{id}':
     get:
-          tags:
-            - Device Histories
-          summary: Find Device History by id
-          description: Returns an Device History
-          operationId: getDeviceHistoryById
-          parameters:
-            - name: id
-              in: path
-              description: ID of device history to return
-              required: true
+      tags:
+        - Device Histories
+      summary: Find Device History by id
+      description: Returns an Device History
+      operationId: getDeviceHistoryById
+      parameters:
+        - name: id
+          in: path
+          description: ID of device history to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
               schema:
-                type: integer
-                format: int64
-                example: 1
-          responses:
-            '200':
-              description: successful
-              content:
-                application/json:
-                  schema:
-                    type: object
-                    properties: 
-                      device_history:
-                        $ref: '#/components/schemas/DeviceHistory'
-            '401':
-              $ref: '#/components/responses/Unauthorized'
-            '403':
-              $ref: '#/components/responses/Permission'
-            '404':
-              $ref: '#/components/responses/NotFound'
+                type: object
+                properties: 
+                  device_history:
+                    $ref: '#/components/schemas/DeviceHistory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
   '/day_off_categories':
     get:
       tags:
