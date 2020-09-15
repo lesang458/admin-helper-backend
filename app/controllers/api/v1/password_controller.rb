@@ -5,7 +5,7 @@ class Api::V1::PasswordController < ApplicationController
   def create
     @user.generate_password_token
     @user.send_password_reset_email
-    render json: 'ok', status: :ok
+    render json: { message: 'ok' }, status: :ok
   end
 
   def validate_token
