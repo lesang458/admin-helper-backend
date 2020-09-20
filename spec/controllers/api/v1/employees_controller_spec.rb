@@ -16,8 +16,8 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
     @category_vacation = FactoryBot.create(:day_off_category, :vacation)
     @category_illness = FactoryBot.create(:day_off_category, :illness)
-    @info_vacation = FactoryBot.create(:day_off_info, :vacation, user: @user)
-    @info_illness = FactoryBot.create(:day_off_info, :illness, user: @user)
+    @info_vacation = FactoryBot.create(:day_off_info, :vacation, user_id: @user.id)
+    @info_illness = FactoryBot.create(:day_off_info, :illness, user_id: @user.id)
   end
 
   describe 'token' do
@@ -28,7 +28,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     let!(:invalid_headers) { { authorization: "Bearer #{invalid_token}" } }
     before(:each) { request.headers.merge! valid_headers }
 
-    describe 'PATCH# employee' do
+    describe 'PATCH# update status employee' do
       it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
         patch :update_status, params: { id: @user.id }
@@ -84,106 +84,149 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       end
     end
 
-    describe 'PUT# employee' do
+    describe 'PATCH# update employee' do
+      let!(:patch_params) {
+        {
+          id: @user.id,
+          user:
+          {
+            first_name: 'dang',
+            last_name: 'hanh',
+            email: 'danghanh@mail.com',
+            birthdate: '1999-02-02',
+            join_date: '2019-11-23',
+            phone_number: '0123456789'
+          },
+          day_off_infos:
+          [
+            {
+              day_off_info_id: @info_vacation.id,
+              day_off_category_id: @category_vacation.id,
+              hours: 222
+            },
+            {
+              day_off_info_id: @info_illness.id,
+              day_off_category_id: @category_illness.id,
+              hours: 160
+            }
+          ]
+        }
+      }
       it 'return status 401 status code with invalid token' do
         request.headers.merge! invalid_headers
-        put :update, params: { id: @user.id }
+        patch :update, params: { id: @user.id }
         expect(response.status).to eq(401)
       end
 
+      it 'should return 403 with employee' do
+        valid_token = JwtToken.encode({ user_id: @employee.id })
+        valid_headers = { authorization: "Bearer #{valid_token}" }
+        request.headers.merge! valid_headers
+        patch :update, params: patch_params
+        expect(response.status).to eq(403)
+      end
+
       it 'should return 200' do
-        put :update, params:
-                            {
-                              id: @user.id,
-                              first_name: 'dang',
-                              last_name: 'hanh',
-                              email: 'danghanh@mail.com',
-                              password: '123456',
-                              birthdate: '1999-02-02',
-                              join_date: '2019-11-23',
-                              phone_number: '0123456789'
-                            }
+        patch :update, params: patch_params
         @user.reload
+        @info_vacation.reload
+        @info_illness.reload
         expect(response.status).to eq(200)
         expect(@user.first_name).to eq('dang')
         expect(@user.last_name).to eq('hanh')
         expect(@user.email).to eq('danghanh@mail.com')
-        expect(@user.encrypted_password).to eq(User.generate_encrypted_password('123456', @user.encrypted_password.first(29)))
         expect(@user.birthdate.to_s).to eq('1999-02-02')
         expect(@user.join_date.to_s).to eq('2019-11-23')
         expect(@user.phone_number).to eq('0123456789')
+        expect(@info_vacation.hours).to eq(222)
+        expect(@info_illness.hours).to eq(160)
       end
 
       it 'should return 422 with empty email' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: '', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = patch_params.dup
+        params[:user][:email] = ''
+        patch :update, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include("Email can't be blank")
       end
 
       it 'should return 422 with invalid email' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = patch_params.dup
+        params[:user][:email] = 'danghanh@'
+        patch :update, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include('Email is invalid')
       end
 
       it 'should return 422 with invalid email' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = patch_params.dup
+        params[:user][:email] = 'danghanh@gmail'
+        patch :update, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include('Email is invalid')
       end
 
       it 'should return 422 with empty first_name' do
-        post :create, params: { first_name: '', last_name: 'hanh', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = patch_params.dup
+        params[:user][:first_name] = ''
+        patch :update, params: params
         expect(response.body).to include("First name can't be blank")
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty last_name' do
-        post :create, params: { first_name: 'dang', last_name: '', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
-        expect(response.body).to include("Last name can't be blank")
-        expect(response.status).to eq(422)
-      end
-
-      it 'should return 422 without first_name' do
-        post :create, params: { last_name: 'hanh', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
-        expect(response.body).to include("First name can't be blank")
-        expect(response.status).to eq(422)
-      end
-
-      it 'should return 422 without last_name' do
-        post :create, params: { first_name: 'dang', email: 'danghanh+1@mail.com', birthdate: '1999-02-02', join_date: '2019-11-23' }
+        params = patch_params.dup
+        params[:user][:last_name] = ''
+        patch :update, params: params
         expect(response.body).to include("Last name can't be blank")
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with birthdate is after today' do
-        post :create, params: { first_name: 'dang', last_name: 'hanh', email: 'danghanh@gmail.com', birthdate: '2999-02-02', join_date: '2019-11-23' }
+        params = patch_params.dup
+        params[:user][:birthdate] = '2999-02-02'
+        patch :update, params: params
         expect(response.body).to include('Birthdate is in future')
         expect(response.status).to eq(422)
       end
+
+      it 'should return 422 with empty email day_off_infos cannot have the same day_off_category_id' do
+        params = patch_params.dup
+        params[:user][:email] = ''
+        patch :update, params: params
+        expect(response.status).to eq(422)
+        expect(response.body).to include("Email can't be blank")
+      end
+
+      it 'should return 422 with empty email' do
+        params = patch_params.dup
+        params[:user][:email] = ''
+        patch :update, params: params
+        expect(response.status).to eq(422)
+        expect(response.body).to include("Email can't be blank")
+      end
     end
 
-    describe 'POST# employee' do
+    describe 'POST# create employee' do
       let!(:employee_params) {
-        { first_name: 'dang',
-          last_name: 'hanh',
-          email: 'danghanh@mail.com',
-          encrypted_password: '123456',
-          birthdate: '1999-02-02',
-          join_date: '2019-11-23',
-          phone_number: '0123456789',
+        {
+          user:
+          {
+            first_name: 'dang',
+            last_name: 'hanh',
+            email: 'danghanh@mail.com',
+            password: '123456',
+            birthdate: '1999-02-02',
+            join_date: '2019-11-23',
+            phone_number: '0123456789'
+          },
           day_off_infos: [
             { day_off_category_id: @category_vacation.id, hours: 160 },
             { day_off_category_id: @category_illness.id, hours: 160 }
-          ] }
+          ]
+        }
       }
-      let!(:invalid_day_off_category_id) { @category_vacation.id + @category_illness.id }
-
-      it 'return status 401 status code with invalid token' do
-        request.headers.merge! invalid_headers
-        get :index
-        expect(response.status).to eq(401)
-      end
+      let!(:unexist_day_off_category_id) { @category_vacation.id + @category_illness.id }
 
       it 'should return 201' do
         params = employee_params.dup
@@ -198,11 +241,25 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(201)
       end
 
-      it 'should return 422 with invalid day_off_category_id' do
+      it 'return status 401 status code with invalid token' do
+        request.headers.merge! invalid_headers
+        post :create, params: employee_params
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 403 with employee' do
+        valid_token = JwtToken.encode({ user_id: @employee.id })
+        valid_headers = { authorization: "Bearer #{valid_token}" }
+        request.headers.merge! valid_headers
+        post :create, params: employee_params
+        expect(response.status).to eq(403)
+      end
+
+      it 'should return 404 with unexist day_off_category_id' do
         params = employee_params.dup
-        params[:day_off_infos].first[:day_off_category_id] = invalid_day_off_category_id
+        params[:day_off_infos].first[:day_off_category_id] = unexist_day_off_category_id
         post :create, params: params
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(404)
       end
 
       it 'should return 422 with invalid hours' do
@@ -214,56 +271,56 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with empty email' do
         params = employee_params.dup
-        params[:email] = ''
+        params[:user][:email] = ''
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with invalid email' do
         params = employee_params.dup
-        params[:email] = 'danghanh@'
+        params[:user][:email] = 'danghanh@'
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with invalid email' do
         params = employee_params.dup
-        params[:email] = 'danghanh@gmail'
+        params[:user][:email] = 'danghanh@gmail'
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty first_name' do
         params = employee_params.dup
-        params[:first_name] = ''
+        params[:user][:first_name] = ''
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty last_name' do
         params = employee_params.dup
-        params[:last_name] = ''
+        params[:user][:last_name] = ''
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 without first_name' do
         params = employee_params.dup
-        params.delete(:first_name)
+        params[:user].delete(:first_name)
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 without last_name' do
         params = employee_params.dup
-        params.delete(:last_name)
+        params[:user].delete(:last_name)
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with birthdate is after today' do
         params = employee_params.dup
-        params[:birthdate] = '2999-02-02'
+        params[:user][:birthdate] = '2999-02-02'
         post :create, params: params
         expect(response.status).to eq(422)
       end

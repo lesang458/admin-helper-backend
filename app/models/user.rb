@@ -41,7 +41,14 @@ class User < ApplicationRecord
     Time.now < (reset_password_sent_at + RESET_TOKEN_LIFESPAN).localtime
   end
 
+  def self.valid_password?(password)
+    raise(ExceptionHandler::BadRequest, 'Invalid password') if password.blank? || password.length < 6
+  end
+
   def self.build_employee(user_params)
+    User.valid_password?(user_params[:password])
+    user_params[:encrypted_password] = User.generate_encrypted_password(user_params[:password])
+    user_params.delete(:password) if user_params[:password] && user_params[:encrypted_password]
     user = User.new(user_params)
     user.roles << 'EMPLOYEE'
     user
