@@ -47,7 +47,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
         hours_per_day: 4,
         notes: 'ok',
         id: @employee,
-        day_off_info_id: @day_off_info.id
+        day_off_category_id: @day_off_category.id
       }
     }
 
@@ -128,9 +128,9 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(response.status).to eq(422)
     end
 
-    it 'should return 422 without day_off_info_id' do
+    it 'should return 422 without day_off_category_id' do
       params = post_params.dup
-      params.delete(:day_off_info_id)
+      params.delete(:day_off_category_id)
       post :create, params: params
       expect(response.status).to eq(422)
     end
@@ -140,7 +140,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params[:id] = @admin.id
       post :create, params: params
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)['message']).to include 'Day off info user is not the same as requested user'
+      expect(JSON.parse(response.body)['message']).to include 'Day off info must exist'
     end
   end
 end
