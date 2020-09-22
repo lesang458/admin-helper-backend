@@ -129,9 +129,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     end
 
     it 'should return 422 without day_off_category_id' do
-      params = post_params.dup
-      params.delete(:day_off_category_id)
-      post :create, params: params
+      post :create, params: post_params.except(:day_off_category_id)
       expect(response.status).to eq(422)
     end
 
