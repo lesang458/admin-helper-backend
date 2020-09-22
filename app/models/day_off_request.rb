@@ -47,7 +47,7 @@ class DayOffRequest < ApplicationRecord
   private
 
   def validate_info_user
-    return if day_off_info.present?
+    return unless day_off_info.present?
     errors.add(:day_off_info, 'user is not the same as requested user') unless user.day_off_infos.ids.include?(day_off_info.id)
   end
 
