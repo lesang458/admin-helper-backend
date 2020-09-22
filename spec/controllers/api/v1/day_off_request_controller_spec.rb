@@ -69,9 +69,9 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params = post_params.dup
       params[:id] = unexist_id
       post :create, params: params
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
-      expect(message).to include "Couldn't find User with 'id'"
+      expect(message).to include 'Invalid Category or user'
     end
 
     it 'should return 201' do
@@ -140,7 +140,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params[:id] = @admin.id
       post :create, params: params
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)['message']).to include 'Day off info must exist'
+      expect(JSON.parse(response.body)['message']).to include 'Invalid Category or user'
     end
   end
 end

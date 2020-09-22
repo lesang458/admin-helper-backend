@@ -6,6 +6,13 @@ class DayOffInfo < ApplicationRecord
   delegate :email, :first_name, :last_name, to: :user
   delegate :category_name, :description, to: :day_off_category
 
+  def self.id_by_user_and_cateogry(user_id, day_off_category_id)
+    info = find_by('day_off_category_id = ? AND user_id = ?', day_off_category_id, user_id)
+    raise(ArgumentError, 'Invalid Category or user') unless info
+
+    info.id
+  end
+
   def available_hours
     hours - total_hours_of_request
   end

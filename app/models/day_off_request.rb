@@ -17,10 +17,6 @@ class DayOffRequest < ApplicationRecord
     (to_date.to_date - from_date.to_date + 1).to_i * hours_per_day
   end
 
-  def self.day_off_info_id(day_off_category_id, user_id)
-    DayOffInfo.find_by('day_off_category_id = ? AND user_id = ?', day_off_category_id, user_id)&.id
-  end
-
   def self.search(params)
     day_off_request = DayOffRequest.all
     day_off_request = DayOffCategory.find(params[:day_off_category_id]).day_off_requests if params[:day_off_category_id]
@@ -29,8 +25,6 @@ class DayOffRequest < ApplicationRecord
   end
 
   def self.create_requests(params, user_id)
-    params[:day_off_info_id] = DayOffRequest.day_off_info_id(params[:day_off_category_id], user_id)
-    params.delete(:day_off_category_id)
     employee = User.find(user_id)
     day_off_request = employee.day_off_requests.new(params)
     day_off_request.save!
@@ -53,7 +47,7 @@ class DayOffRequest < ApplicationRecord
   private
 
   def validate_info_user
-    return unless day_off_info.present?
+    return if day_off_info.present?
     errors.add(:day_off_info, 'user is not the same as requested user') unless user.day_off_infos.ids.include?(day_off_info.id)
   end
 

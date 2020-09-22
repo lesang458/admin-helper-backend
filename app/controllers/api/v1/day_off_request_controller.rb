@@ -6,13 +6,14 @@ class Api::V1::DayOffRequestController < ApplicationController
   end
 
   def create
-    day_off_requests = DayOffRequest.create_requests(day_off_request_params, params[:id])
+    info_id = DayOffInfo.id_by_user_and_cateogry(params[:id], params[:day_off_category_id] )
+    day_off_requests = DayOffRequest.create_requests(day_off_request_params.merge({ day_off_info_id: info_id }), params[:id])
     render_resources(day_off_requests, :created, DayOffRequestSerializer)
   end
 
   private
 
   def day_off_request_params
-    params.permit(:from_date, :to_date, :hours_per_day, :notes, :day_off_category_id)
+    params.permit(:from_date, :to_date, :hours_per_day, :notes)
   end
 end
