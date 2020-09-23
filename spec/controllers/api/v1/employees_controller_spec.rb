@@ -95,21 +95,21 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
             email: 'danghanh@mail.com',
             birthdate: '1999-02-02',
             join_date: '2019-11-23',
-            phone_number: '0123456789'
-          },
-          day_off_infos:
+            phone_number: '0123456789',
+            day_off_infos_attributes:
           [
             {
-              day_off_info_id: @info_vacation.id,
+              id: @info_vacation.id,
               day_off_category_id: @category_vacation.id,
               hours: 222
             },
             {
-              day_off_info_id: @info_illness.id,
+              id: @info_illness.id,
               day_off_category_id: @category_illness.id,
               hours: 160
             }
           ]
+          }
         }
       }
       it 'return status 401 status code with invalid token' do
@@ -218,12 +218,12 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
             password: '123456',
             birthdate: '1999-02-02',
             join_date: '2019-11-23',
-            phone_number: '0123456789'
-          },
-          day_off_infos: [
-            { day_off_category_id: @category_vacation.id, hours: 160 },
-            { day_off_category_id: @category_illness.id, hours: 160 }
-          ]
+            phone_number: '0123456789',
+            day_off_infos_attributes: [
+              { day_off_category_id: @category_vacation.id, hours: 160 },
+              { day_off_category_id: @category_illness.id, hours: 160 }
+            ]
+          }
         }
       }
       let!(:unexist_day_off_category_id) { @category_vacation.id + @category_illness.id }
@@ -255,18 +255,20 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(403)
       end
 
-      it 'should return 404 with unexist day_off_category_id' do
+      it 'should return 422 with unexist day_off_category_id' do
         params = employee_params.dup
-        params[:day_off_infos].first[:day_off_category_id] = unexist_day_off_category_id
+        params[:user][:day_off_infos_attributes].first[:day_off_category_id] = unexist_day_off_category_id
         post :create, params: params
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(422)
+        expect(response.body).to include('Day off infos day off category must exist')
       end
 
       it 'should return 422 with invalid hours' do
         params = employee_params.dup
-        params[:day_off_infos].first[:hours] = -160
+        params[:user][:day_off_infos_attributes].first[:hours] = -160
         post :create, params: params
         expect(response.status).to eq(422)
+        expect(response.body).to include('Day off infos hours must be greater than 0')
       end
 
       it 'should return 422 with empty email' do

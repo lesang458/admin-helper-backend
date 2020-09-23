@@ -599,16 +599,21 @@ components:
           properties:
             email:
               type: string
+              example: "new_employee@gmail.com"
             first_name:
               type: string
+              example: "employee"
             last_name:
               type: string
+              example: "user"
             birthdate:
               type: string
               format: date
+              example: "2020-02-02"
             join_date:
               type: string
               format: date
+              example: "2019-11-09"
             status:
               type: string
               enum: [ACTIVE, FORMER]
@@ -623,17 +628,22 @@ components:
               items:
                 type: string
                 example: EMPLOYEE
-        day_off_infos:
-          type: array
-          items:
-            type: object
-            properties:
-              day_off_category_id: 
-                type: integer
-                example: 1
-              hours: 
-                type: integer
-                example: 160
+            day_off_infos_attributes:
+              type: array
+              items:
+                type: object
+                properties:
+                  day_off_category_id: 
+                    type: integer
+                    example: 1
+                  hours: 
+                    type: integer
+                    example: 160
+              example:
+                - day_off_category_id: 1
+                  hours: 160
+                - day_off_category_id: 2
+                  hours: 160
       required:
         - email
         - last_name
@@ -724,6 +734,15 @@ components:
               available_hours:
                 type: integer
                 format: int64
+          example:
+                - id: 1
+                  hours: 160
+                  category_name: 'VACATION'
+                  available_hours: 220
+                - id: 2
+                  hours: 160
+                  category_name: 'ILLNESS'
+                  available_hours: 220
     DayOffRequest:
       type: object
       properties:
@@ -877,20 +896,20 @@ components:
             phone_number:
               type: string
               example: "123456789"
-        day_off_infos:
-          type: array
-          items:
-            type: object
-            properties:
-              day_off_info_id: 
-                type: integer
-                example: 1
-              day_off_category_id: 
-                type: integer
-                example: 1
-              hours: 
-                type: integer
-                example: 200
+            day_off_infos_attributes:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 1
+                  day_off_category_id: 
+                    type: integer
+                    example: 1
+                  hours: 
+                    type: integer
+                    example: 200
   securitySchemes:
     bearerAuth:
       type: http
