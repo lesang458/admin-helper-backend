@@ -739,6 +739,62 @@ paths:
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/InvalidParams' 
+    get:
+      tags:
+        - Device
+      summary: Get list  Device
+      description: Returns list Device
+      parameters:
+          - name: status
+            in: query
+            description: Search with status
+            schema:
+              type: string
+          - name: user_id
+            in: query
+            description: Search with user id
+            schema:
+              type: integer
+              example: 1
+          - name: device_category_id
+            in: query
+            description: Search with device category id
+            schema:
+              type: integer
+              example: 1
+          - name: page
+            in: query
+            description: pagination with the current page
+            required: false
+            schema:
+              type: integer
+              example: 1
+          - name: per_page
+            in: query
+            description: pagination with the number of elements per page
+            required: false
+            schema:
+              type: integer
+              example: 20
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      $ref: '#/components/schemas/Device'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
 components:
   responses:
     RequestSuccess:
