@@ -710,6 +710,35 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+  /devices:
+    post:
+      tags:
+      - Device
+      summary: Create Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsDevice'
+      responses:
+        '201':
+          description: created device
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams' 
 components:
   responses:
     RequestSuccess:
@@ -809,6 +838,42 @@ components:
               - code
               - message
   schemas:
+    RequestParamsDevice:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+        description:
+          type: string
+        device_category_id:
+          type: integer
+        from_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [DISCARDED, ASSIGNED, IN_INVENTORY]
+    Device:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: integer
+        description:
+          type: string
+        device_category_id:
+          type: integer
+        category_name:
+          type: string
+        user:
+          type: object
+        status:
+          type: string
     RequestParamsDeviceCategory:
       type: object
       properties:
