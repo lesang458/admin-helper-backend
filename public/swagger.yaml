@@ -12,6 +12,7 @@ tags:
   - name: Day Off Category
   - name: Day Off Info
   - name: Day Off Request
+  - name: Device Category
 paths:
   '/device_histories/{id}':
     get:
@@ -587,6 +588,128 @@ paths:
             $ref: '#/components/responses/Unauthorized'
           '403':
             $ref: '#/components/responses/Permission'
+  /device_categories:
+    get:
+      tags:
+        - Device Category
+      summary: Get list  Device Category
+      description: Returns list Device Category
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      $ref: '#/components/schemas/DeviceCategory'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+    post:
+      tags:
+      - Device Category
+      summary: Create Device Category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsDeviceCategory'
+      responses:
+        '201':
+          description: created day-off-request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DeviceCategory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/device_categories/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: ID of device category to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+    get:
+      tags:
+        - Device Category
+      summary: Find Device Category by id
+      description: Returns an Device Category
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DeviceCategory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Device Category
+      summary: Update Device Category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsDeviceCategory'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DeviceCategory'
+          
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Device Category
+      summary: Delete Device Category by id
+      responses:
+        '204':
+          description: Delete successful
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
 components:
   responses:
     RequestSuccess:
@@ -686,6 +809,22 @@ components:
               - code
               - message
   schemas:
+    RequestParamsDeviceCategory:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    DeviceCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
     DeviceHistory:
       type: object
       properties:
