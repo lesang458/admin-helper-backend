@@ -826,6 +826,32 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Device
+      summary: Update Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsUpdateDevice'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
 components:
   responses:
     RequestSuccess:
@@ -925,6 +951,17 @@ components:
               - code
               - message
   schemas:
+    RequestParamsUpdateDevice:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+        description:
+          type: string
+        device_category_id:
+          type: integer
     RequestParamsDevice:
       type: object
       properties:
