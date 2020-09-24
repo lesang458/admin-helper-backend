@@ -613,6 +613,32 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Permission'
+    post:
+      tags:
+      - Device Category
+      summary: Create Device Category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsDeviceCategory'
+      responses:
+        '201':
+          description: created day-off-request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DeviceCategory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
   '/device_categories/{id}':
     get:
       tags:
