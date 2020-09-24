@@ -71,7 +71,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       post :create, params: params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Invalid Category or user'
+      expect(message).to include 'Invalid category or user'
     end
 
     it 'should return 201' do
@@ -138,7 +138,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params[:id] = @admin.id
       post :create, params: params
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)['message']).to include 'Invalid Category or user'
+      expect(JSON.parse(response.body)['message']).to include 'Invalid category or user'
     end
   end
 end
