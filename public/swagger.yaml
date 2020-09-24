@@ -12,6 +12,7 @@ tags:
   - name: Day Off Category
   - name: Day Off Info
   - name: Day Off Request
+  - name: Device Category
 paths:
   '/device_histories/{id}':
     get:
@@ -587,6 +588,31 @@ paths:
             $ref: '#/components/responses/Unauthorized'
           '403':
             $ref: '#/components/responses/Permission'
+  /device_categories:
+    get:
+      tags:
+        - Device Category
+      summary: Get list  Device Category
+      description: Returns list Device Category
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      $ref: '#/components/schemas/DeviceCategory'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
 components:
   responses:
     RequestSuccess:
@@ -686,6 +712,22 @@ components:
               - code
               - message
   schemas:
+    RequestParamsDeviceCategory:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    DeviceCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
     DeviceHistory:
       type: object
       properties:
