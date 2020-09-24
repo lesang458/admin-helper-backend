@@ -13,7 +13,39 @@ tags:
   - name: Day Off Info
   - name: Day Off Request
 paths:
-  '/day-off-categories':
+  '/device_histories/{id}':
+    get:
+      tags:
+        - Device Histories
+      summary: Find Device History by id
+      description: Returns an Device History
+      operationId: getDeviceHistoryById
+      parameters:
+        - name: id
+          in: path
+          description: ID of device history to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_history:
+                    $ref: '#/components/schemas/DeviceHistory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/day_off_categories':
     get:
       tags:
         - Day Off Category
@@ -481,6 +513,75 @@ paths:
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/InvalidParams'
+  /device_histories:
+    get:
+        tags:
+          - Device Histories
+        summary: Get list Device Histories
+        description: Returns list Device History
+        parameters:
+          - name: status
+            in: query
+            description: Search with status
+            schema:
+              type: string
+          - name: history_to
+            in: query
+            description: Search with history to
+            schema:
+              type: string
+              format: date
+              example: '2015-11-23'
+          - name: history_from
+            in: query
+            description: Search with history from
+            schema:
+              type: string
+              format: date
+              example: '2015-11-23'
+          - name: user_id
+            description: Search with user id
+            in: query
+            schema:
+              type: integer
+              example: 1
+          - name: device_category_id
+            description: Search with device category id
+            in: query
+            schema:
+              type: integer
+              example: 1
+          - name: page
+            in: query
+            description: pagination with the current page
+            schema:
+              type: integer
+              example: 1
+          - name: per_page
+            in: query
+            description: pagination with the number of elements per page
+            schema:
+              type: integer
+              example: 20
+        responses:
+          '200':
+            description: successful
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: 
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        $ref: '#/components/schemas/DeviceHistory'
+                    pagination:
+                      $ref: '#/components/schemas/Pagination'
+          '401':
+            $ref: '#/components/responses/Unauthorized'
+          '403':
+            $ref: '#/components/responses/Permission'
 components:
   responses:
     RequestSuccess:
@@ -580,6 +681,37 @@ components:
               - code
               - message
   schemas:
+    DeviceHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        from_date:
+          type: string
+          format: date
+        to_date:
+          type: integer
+          format: date
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            first_name:
+              type: string
+            last_name:
+              type: string
+        device:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            price:
+              type: string
+            description:
+              type: string
     RequestParamUpdateDayOffCategory:
       type: object
       properties:
