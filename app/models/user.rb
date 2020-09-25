@@ -27,7 +27,7 @@ class User < ApplicationRecord
   attr_accessor :password
 
   validates :password, presence: true, length: { minimum: 6 }, on: :create
-  before_create :encrypted_password
+  before_create :encrypt_password
 
   def handle_many_overlapping_category(day_off_infos_params)
     day_off_infos_params.each do |day_off_info|
@@ -37,7 +37,7 @@ class User < ApplicationRecord
     end
   end
 
-  def encrypted_password
+  def encrypt_password
     self.encrypted_password = User.generate_encrypted_password(password)
   end
 

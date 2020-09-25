@@ -4,7 +4,6 @@ day_off_category_illness = DayOffCategory.find_or_create_by name: 'ILLNESS', tot
 employee = User.create_with(
   email: "employee@gmail.com",
   password: "123456",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "employee",
   last_name: "user",
   birthdate: "2000-02-02",
@@ -19,7 +18,6 @@ employee.day_off_infos.find_or_create_by day_off_category_id: day_off_category_i
 admin = User.create_with(
   email: "admin@gmail.com",
   password: "123456",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "admin",
   last_name: "user",
   birthdate: "2000-02-02",
@@ -34,7 +32,6 @@ admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illn
 super_admin = User.create_with(
   email: "super_admin@gmail.com",
   password: "123456",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "super_admin",
   last_name: "user",
   birthdate: "2000-02-02",
@@ -49,7 +46,6 @@ super_admin.day_off_infos.find_or_create_by day_off_category_id: day_off_categor
 hanh = User.create_with(
   email: "hanhle@novahub.vn",
   password: "123456",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "dang",
   last_name: "hanh",
   birthdate: "1999-02-02",
@@ -64,7 +60,6 @@ hanh.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illne
 huy = User.create_with(
   email: "huytran@novahub.vn",
   password: "123456",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "huy",
   last_name: "tran",
   birthdate: "1999-01-01",
@@ -79,7 +74,6 @@ huy.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illnes
 aulu = User.create_with(
   email: "aulu@novahub.vn",
   password: "123456",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
   first_name: "Lu Tuyet",
   last_name: "Au",
   birthdate: "1999-01-01",
@@ -95,7 +89,6 @@ aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illne
   user = User.create_with(
     email: "user_#{i}@gmail.com",
     password: "123456",
-    encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
     first_name: "fake",
     last_name: "user",
     birthdate: "2000-02-02",
