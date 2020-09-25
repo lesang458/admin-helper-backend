@@ -19,6 +19,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def update
+    @user.handle_many_overlapping_category(params[:user][:day_off_infos_attributes])
     @user.update!(update_params)
     render_resource @user, :ok, UserSerializer
   end

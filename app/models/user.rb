@@ -27,16 +27,17 @@ class User < ApplicationRecord
   attr_accessor :password
 
   validates :password, presence: true, length: { minimum: 6 }, on: :create
-  before_create :set_encrypted_password
+  before_create :encrypted_password
 
-  after_update :handle_many_overlapping_category
-
-  def handle_many_overlapping_category
-    category_ids = self.day_off_infos.select('day_off_category_id').to_a.collect(&:day_off_category_id)
-    raise(ExceptionHandler::BadRequest, 'User has many overlapping day_off_category') if category_ids.size > 1 && (category_ids.size - category_ids.uniq.size >= 1)
+  def handle_many_overlapping_category(day_off_infos_params)
+    day_off_infos_params.each do |day_off_info|
+      remaining_infos = self.day_off_infos.reject { |day_off| day_off[:id] == day_off_info[:id] }
+      category_ids = remaining_infos.pluck(:day_off_category_id)
+      raise(ExceptionHandler::BadRequest, 'User has many overlapping day_off_category') if category_ids.include?(day_off_info[:day_off_category_id])
+    end
   end
 
-  def set_encrypted_password
+  def encrypted_password
     self.encrypted_password = User.generate_encrypted_password(password)
   end
 
