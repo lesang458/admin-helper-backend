@@ -852,6 +852,102 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+  '/devices/{id}/assign':
+    put:
+      tags:
+      - Device
+      summary: Assign Device
+      parameters:
+      - name: id
+        in: path
+        description: Update status of device
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsUpdateStatusDevice'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/devices/{id}/move_to_inventory':
+    put:
+      tags:
+      - Device
+      summary: Move to inventory Device
+      parameters:
+      - name: id
+        in: path
+        description: Update status of device
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/devices/{id}/discard':
+    put:
+      tags:
+      - Device
+      summary: Discard Device
+      parameters:
+      - name: id
+        in: path
+        description: Update status of device
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
 components:
   responses:
     RequestSuccess:
@@ -951,6 +1047,11 @@ components:
               - code
               - message
   schemas:
+    RequestParamsUpdateStatusDevice:
+      type: object
+      properties:
+        user_id:
+          type: integer
     RequestParamsUpdateDevice:
       type: object
       properties:
