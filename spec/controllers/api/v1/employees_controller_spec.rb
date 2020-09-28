@@ -88,15 +88,13 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
       let!(:patch_params) {
         {
           id: @user.id,
-          user:
-          {
-            first_name: 'dang',
-            last_name: 'hanh',
-            email: 'danghanh@mail.com',
-            birthdate: '1999-02-02',
-            join_date: '2019-11-23',
-            phone_number: '0123456789',
-            day_off_infos_attributes:
+          first_name: 'dang',
+          last_name: 'hanh',
+          email: 'danghanh@mail.com',
+          birthdate: '1999-02-02',
+          join_date: '2019-11-23',
+          phone_number: '0123456789',
+          day_off_infos_attributes:
           [
             {
               id: @info_vacation.id,
@@ -109,7 +107,6 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
               hours: 160
             }
           ]
-          }
         }
       }
       it 'return status 401 status code with invalid token' do
@@ -144,7 +141,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with empty email' do
         params = patch_params.dup
-        params[:user][:email] = ''
+        params[:email] = ''
         patch :update, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include("Email can't be blank")
@@ -152,7 +149,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with invalid email' do
         params = patch_params.dup
-        params[:user][:email] = 'danghanh@'
+        params[:email] = 'danghanh@'
         patch :update, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include('Email is invalid')
@@ -160,7 +157,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with invalid email' do
         params = patch_params.dup
-        params[:user][:email] = 'danghanh@gmail'
+        params[:email] = 'danghanh@gmail'
         patch :update, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include('Email is invalid')
@@ -168,7 +165,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with empty first_name' do
         params = patch_params.dup
-        params[:user][:first_name] = ''
+        params[:first_name] = ''
         patch :update, params: params
         expect(response.body).to include("First name can't be blank")
         expect(response.status).to eq(422)
@@ -176,7 +173,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with empty last_name' do
         params = patch_params.dup
-        params[:user][:last_name] = ''
+        params[:last_name] = ''
         patch :update, params: params
         expect(response.body).to include("Last name can't be blank")
         expect(response.status).to eq(422)
@@ -184,7 +181,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with birthdate is after today' do
         params = patch_params.dup
-        params[:user][:birthdate] = '2999-02-02'
+        params[:birthdate] = '2999-02-02'
         patch :update, params: params
         expect(response.body).to include('Birthdate is in future')
         expect(response.status).to eq(422)
@@ -192,7 +189,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with empty email day_off_infos cannot have the same day_off_category_id' do
         params = patch_params.dup
-        params[:user][:email] = ''
+        params[:email] = ''
         patch :update, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include("Email can't be blank")
@@ -200,7 +197,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with empty email' do
         params = patch_params.dup
-        params[:user][:email] = ''
+        params[:email] = ''
         patch :update, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include("Email can't be blank")

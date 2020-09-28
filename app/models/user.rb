@@ -30,6 +30,7 @@ class User < ApplicationRecord
   before_create :encrypt_password
 
   def handle_many_overlapping_category(day_off_infos_params)
+    return unless day_off_infos_params.pluck(:id).all? { |id| self.day_off_infos.pluck(:id).include?(id) }
     day_off_infos_params.each do |day_off_info|
       remaining_infos = self.day_off_infos.reject { |day_off| day_off[:id] == day_off_info[:id] }
       category_ids = remaining_infos.pluck(:day_off_category_id)

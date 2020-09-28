@@ -19,7 +19,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def update
-    @user.handle_many_overlapping_category(params[:user][:day_off_infos_attributes])
+    @user.handle_many_overlapping_category(params[:day_off_infos_attributes])
     @user.update!(update_params)
     render_resource @user, :ok, UserSerializer
   end
@@ -41,7 +41,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def update_params
-    params.require(:user).permit(:email, :first_name, :last_name, :birthdate, :join_date, :phone_number, day_off_infos_attributes:
+    params.permit(:email, :first_name, :last_name, :birthdate, :join_date, :phone_number, day_off_infos_attributes:
       %i[id day_off_category_id hours])
   end
 

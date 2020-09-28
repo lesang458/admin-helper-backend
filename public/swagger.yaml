@@ -1004,44 +1004,41 @@ components:
     UpdateEmployee:
       type: object
       properties:
-        user:
-          type: object
-          properties:
-            email:
-              type: string
-              example: "newemployee@gmail.com"
-            first_name:
-              type: string
-              example: "dang"
-            last_name:
-              type: string
-              example: "hanh"
-            birthdate:
-              type: string
-              format: date
-            join_date:
-              type: string
-              format: date
-            status:
-              type: string
-              enum: [ACTIVE, FORMER]
-            phone_number:
-              type: string
-              example: "123456789"
-            day_off_infos_attributes:
-              type: array
-              items:
-                type: object
-                properties:
-                  id: 
-                    type: integer
-                    example: 1
-                  day_off_category_id: 
-                    type: integer
-                    example: 1
-                  hours: 
-                    type: integer
-                    example: 200
+        email:
+          type: string
+          example: "newemployee@gmail.com"
+        first_name:
+          type: string
+          example: "dang"
+        last_name:
+          type: string
+          example: "hanh"
+        birthdate:
+          type: string
+          format: date
+        join_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [ACTIVE, FORMER]
+        phone_number:
+          type: string
+          example: "123456789"
+        day_off_infos_attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              id: 
+                type: integer
+                example: 1
+              day_off_category_id: 
+                type: integer
+                example: 1
+              hours: 
+                type: integer
+                example: 200
   securitySchemes:
     bearerAuth:
       type: http
