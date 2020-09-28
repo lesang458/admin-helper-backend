@@ -20,6 +20,8 @@ class Api::V1::EmployeesController < ApplicationController
 
   def update
     User.transaction do
+      infos_params = params[:day_off_infos_attributes] if params[:day_off_infos_attributes]
+      params.delete(:day_off_infos_attributes) if params[:day_off_infos_attributes]
       @user.update!(update_params)
       @user.update_infos(infos_params) if infos_params.present?
       render_resource @user, :ok, UserSerializer
@@ -43,11 +45,8 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def update_params
-    params.permit(:email, :first_name, :last_name, :birthdate, :join_date, :phone_number)
-  end
-
-  def infos_params
-    params.permit(day_off_infos: %i[day_off_category_id hours])
+    params.permit(:email, :first_name, :last_name, :birthdate, :join_date, :phone_number, day_off_infos_attributes:
+      %i[day_off_category_id hours])
   end
 
   def user_status_params

@@ -58,8 +58,7 @@ class User < ApplicationRecord
   end
 
   def update_infos(infos_params)
-    infos = infos_params.to_h[:day_off_infos]
-    infos.each do |day_off_info|
+    infos_params.each do |day_off_info|
       day_off = day_off_infos.find_by day_off_category_id: day_off_info[:day_off_category_id]
       raise(ActiveRecord::RecordNotFound, "Couldn't find DayOffInfo with day_off_category_id = #{day_off_info[:day_off_category_id]}") unless day_off
       day_off.update!(hours: day_off_info[:hours])
