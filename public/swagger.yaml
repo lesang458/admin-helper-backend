@@ -726,56 +726,53 @@ components:
     RequestParamCreateEmployee:
       type: object
       properties:
-        user:
-          type: object
-          properties:
-            email:
-              type: string
-              example: "new_employee@gmail.com"
-            first_name:
-              type: string
-              example: "employee"
-            last_name:
-              type: string
-              example: "user"
-            birthdate:
-              type: string
-              format: date
-              example: "2020-02-02"
-            join_date:
-              type: string
-              format: date
-              example: "2019-11-09"
-            status:
-              type: string
-              enum: [ACTIVE, FORMER]
-            phone_number:
-              type: string
-              example: "123456789"
-            password:
-              type: string
-              example: "123456"
-            roles:
-              type: array
-              items:
-                type: string
-                example: EMPLOYEE
-            day_off_infos_attributes:
-              type: array
-              items:
-                type: object
-                properties:
-                  day_off_category_id: 
-                    type: integer
-                    example: 1
-                  hours: 
-                    type: integer
-                    example: 160
-              example:
-                - day_off_category_id: 1
-                  hours: 160
-                - day_off_category_id: 2
-                  hours: 160
+        email:
+          type: string
+          example: "new_employee@gmail.com"
+        first_name:
+          type: string
+          example: "employee"
+        last_name:
+          type: string
+          example: "user"
+        birthdate:
+          type: string
+          format: date
+          example: "2020-02-02"
+        join_date:
+          type: string
+          format: date
+          example: "2019-11-09"
+        status:
+          type: string
+          enum: [ACTIVE, FORMER]
+        phone_number:
+          type: string
+          example: "123456789"
+        password:
+          type: string
+          example: "123456"
+        roles:
+          type: array
+          items:
+            type: string
+            example: EMPLOYEE
+        day_off_infos_attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              day_off_category_id:
+                type: integer
+                example: 1
+              hours:
+                type: integer
+                example: 160
+          example:
+            - day_off_category_id: 1
+              hours: 160
+            - day_off_category_id: 2
+              hours: 160
       required:
         - email
         - last_name

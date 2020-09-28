@@ -36,7 +36,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def create_params
-    params.require(:user).permit(:email, :password, :first_name, :last_name, :birthdate, :join_date, :phone_number, day_off_infos_attributes:
+    params.permit(:email, :password, :first_name, :last_name, :birthdate, :join_date, :phone_number, day_off_infos_attributes:
     %i[day_off_category_id hours])
   end
 

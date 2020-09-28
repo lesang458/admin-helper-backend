@@ -207,20 +207,17 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     describe 'POST# create employee' do
       let!(:employee_params) {
         {
-          user:
-          {
-            first_name: 'dang',
-            last_name: 'hanh',
-            email: 'danghanh@mail.com',
-            password: '123456',
-            birthdate: '1999-02-02',
-            join_date: '2019-11-23',
-            phone_number: '0123456789',
-            day_off_infos_attributes: [
-              { day_off_category_id: @category_vacation.id, hours: 160 },
-              { day_off_category_id: @category_illness.id, hours: 160 }
-            ]
-          }
+          first_name: 'dang',
+          last_name: 'hanh',
+          email: 'danghanh@mail.com',
+          password: '123456',
+          birthdate: '1999-02-02',
+          join_date: '2019-11-23',
+          phone_number: '0123456789',
+          day_off_infos_attributes: [
+            { day_off_category_id: @category_vacation.id, hours: 160 },
+            { day_off_category_id: @category_illness.id, hours: 160 }
+          ]
         }
       }
       let!(:unexist_day_off_category_id) { @category_vacation.id + @category_illness.id }
@@ -254,7 +251,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with unexist day_off_category_id' do
         params = employee_params.dup
-        params[:user][:day_off_infos_attributes].first[:day_off_category_id] = unexist_day_off_category_id
+        params[:day_off_infos_attributes].first[:day_off_category_id] = unexist_day_off_category_id
         post :create, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include('Day off infos day off category must exist')
@@ -262,7 +259,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with invalid hours' do
         params = employee_params.dup
-        params[:user][:day_off_infos_attributes].first[:hours] = -160
+        params[:day_off_infos_attributes].first[:hours] = -160
         post :create, params: params
         expect(response.status).to eq(422)
         expect(response.body).to include('Day off infos hours must be greater than 0')
@@ -270,56 +267,56 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
       it 'should return 422 with empty email' do
         params = employee_params.dup
-        params[:user][:email] = ''
+        params[:email] = ''
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with invalid email' do
         params = employee_params.dup
-        params[:user][:email] = 'danghanh@'
+        params[:email] = 'danghanh@'
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with invalid email' do
         params = employee_params.dup
-        params[:user][:email] = 'danghanh@gmail'
+        params[:email] = 'danghanh@gmail'
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty first_name' do
         params = employee_params.dup
-        params[:user][:first_name] = ''
+        params[:first_name] = ''
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with empty last_name' do
         params = employee_params.dup
-        params[:user][:last_name] = ''
+        params[:last_name] = ''
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 without first_name' do
         params = employee_params.dup
-        params[:user].delete(:first_name)
+        params.delete(:first_name)
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 without last_name' do
         params = employee_params.dup
-        params[:user].delete(:last_name)
+        params.delete(:last_name)
         post :create, params: params
         expect(response.status).to eq(422)
       end
 
       it 'should return 422 with birthdate is after today' do
         params = employee_params.dup
-        params[:user][:birthdate] = '2999-02-02'
+        params[:birthdate] = '2999-02-02'
         post :create, params: params
         expect(response.status).to eq(422)
       end
