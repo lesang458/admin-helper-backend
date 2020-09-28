@@ -94,15 +94,13 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
           birthdate: '1999-02-02',
           join_date: '2019-11-23',
           phone_number: '0123456789',
-          day_off_infos_attributes:
+          day_off_infos:
           [
             {
-              id: @info_vacation.id,
               day_off_category_id: @category_vacation.id,
               hours: 222
             },
             {
-              id: @info_illness.id,
               day_off_category_id: @category_illness.id,
               hours: 160
             }

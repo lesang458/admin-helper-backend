@@ -29,15 +29,6 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }, on: :create
   before_create :encrypt_password
 
-  def handle_many_overlapping_category(day_off_infos_params)
-    return unless day_off_infos_params.pluck(:id).all? { |id| self.day_off_infos.pluck(:id).include?(id) }
-    day_off_infos_params.each do |day_off_info|
-      remaining_infos = self.day_off_infos.reject { |day_off| day_off[:id] == day_off_info[:id] }
-      category_ids = remaining_infos.pluck(:day_off_category_id)
-      raise(ExceptionHandler::BadRequest, 'User has many overlapping day_off_category') if category_ids.include?(day_off_info[:day_off_category_id])
-    end
-  end
-
   def encrypt_password
     self.encrypted_password = User.generate_encrypted_password(password)
   end
@@ -64,6 +55,15 @@ class User < ApplicationRecord
     user = User.new(create_params)
     user.roles << 'EMPLOYEE'
     user
+  end
+
+  def update_infos(infos_params)
+    infos = infos_params.to_h[:day_off_infos]
+    infos.each do |day_off_info|
+      day_off = day_off_infos.find_by day_off_category_id: day_off_info[:day_off_category_id]
+      raise(ActiveRecord::RecordNotFound, "Couldn't find DayOffInfo with day_off_category_id = #{day_off_info[:day_off_category_id]}") unless day_off
+      day_off.update!(hours: day_off_info[:hours])
+    end
   end
 
   def validate_roles_inclusion

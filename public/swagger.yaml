@@ -1022,14 +1022,11 @@ components:
         phone_number:
           type: string
           example: "123456789"
-        day_off_infos_attributes:
+        day_off_infos:
           type: array
           items:
             type: object
             properties:
-              id: 
-                type: integer
-                example: 1
               day_off_category_id: 
                 type: integer
                 example: 1
