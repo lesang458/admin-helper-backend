@@ -279,6 +279,22 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          description: Request Invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 422
+                  message:
+                    type: string
+                    example: "Invalid category or user"
+                required:
+                  - code
+                  - message
   '/day_off_info/{id}':
     patch:
       tags:
@@ -810,7 +826,7 @@ components:
         notes:
           type: string
           example: "here is notes"
-        day_off_info_id:
+        day_off_category_id:
           type: string
           format: int64
           example: 1
