@@ -1,7 +1,7 @@
 day_off_category_vacation = DayOffCategory.find_or_create_by name: 'VACATION', total_hours_default: 120
 day_off_category_illness = DayOffCategory.find_or_create_by name: 'ILLNESS', total_hours_default: 16
 
-employee = User.find_or_create_by(
+employee = User.create_with(
   email: "employee@gmail.com",
   password: "123456",
   first_name: "employee",
@@ -11,12 +11,11 @@ employee = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE]
-)
-byebug
+).find_or_create_by(email: 'employee@gmail.com')
 employee.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 employee.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-admin = User.find_or_create_by(
+admin = User.create_with(
   email: "admin@gmail.com",
   password: "123456",
   first_name: "admin",
@@ -26,11 +25,11 @@ admin = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN]
-)
+).find_or_create_by(email: 'admin@gmail.com')
 admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-super_admin = User.find_or_create_by(
+super_admin = User.create_with(
   email: "super_admin@gmail.com",
   password: "123456",
   first_name: "super_admin",
@@ -40,11 +39,11 @@ super_admin = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
-)
+).find_or_create_by(email: 'super_admin@gmail.com')
 super_admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 super_admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-hanh = User.find_or_create_by(
+hanh = User.create_with(
   email: "hanhle@novahub.vn",
   password: "123456",
   first_name: "dang",
@@ -54,11 +53,11 @@ hanh = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
-)
+).find_or_create_by(email: 'hanhle@novahub.vn')
 hanh.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 hanh.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-huy = User.find_or_create_by(
+huy = User.create_with(
   email: "huytran@novahub.vn",
   password: "123456",
   first_name: "huy",
@@ -68,11 +67,11 @@ huy = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
-)
+).find_or_create_by(email: 'huytran@novahub.vn')
 huy.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 huy.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-aulu = User.find_or_create_by(
+aulu = User.create_with(
   email: "aulu@novahub.vn",
   password: "123456",
   first_name: "Lu Tuyet",
@@ -82,12 +81,12 @@ aulu = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
-)
+).find_or_create_by(email: 'aulu@novahub.vn')
 aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
 100.times do |i|
-  user = User.find_or_create_by(
+  user = User.create_with(
     email: "user_#{i}@gmail.com",
     password: "123456",
     first_name: "fake",
@@ -97,7 +96,7 @@ aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illne
     status: "ACTIVE",
     phone_number: "0123456789",
     roles: %w[EMPLOYEE]
-  )
+  ).find_or_create_by(email: "user_#{i}@gmail.com")
   user.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
   user.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 end
