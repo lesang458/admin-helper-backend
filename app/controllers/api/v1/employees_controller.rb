@@ -1,5 +1,6 @@
 class Api::V1::EmployeesController < ApplicationController
   before_action :set_current_user
+  before_action :find_user, only: %i[update update_status show]
   def index
     set_query_sort if params[:sort].present?
     users = User.search(params).order(@query)
@@ -8,29 +9,27 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def show
-    user = User.find(params[:id])
-    render_resource user, :ok, UserSerializer
+    render_resource @user, :ok, UserSerializer
   end
 
   def create
-    User.transaction do
-      user = User.build_employee(user_params)
-      user.save!
-      DayOffInfo.create_day_off_info(day_off_params[:day_off_infos], user)
-      render_resource user, :created, UserSerializer
-    end
+    user = User.build_employee(create_params)
+    user.save!
+    render_resource user, :created, UserSerializer
   end
 
   def update
-    user = User.find(params[:id])
-    user.update!(user_params)
-    render_resource user, :ok, UserSerializer
+    User.transaction do
+      infos_params = update_params.delete(:day_off_infos_attributes)
+      @user.update!(update_params.except(:day_off_infos_attributes))
+      @user.update_infos(infos_params) if infos_params.present?
+      render_resource @user, :ok, UserSerializer
+    end
   end
 
   def update_status
-    user = User.find(params[:id])
-    user.update!(user_status_params)
-    render_resource user, :ok, UserSerializer
+    @user.update!(user_status_params)
+    render_resource @user, :ok, UserSerializer
   end
 
   private
@@ -39,16 +38,21 @@ class Api::V1::EmployeesController < ApplicationController
     @query = SortParams.new(params[:sort], User).sort_query
   end
 
-  def user_params
-    params[:encrypted_password] = User.generate_encrypted_password(params[:password]) if params[:password]
-    params.permit(:email, :encrypted_password, :first_name, :last_name, :birthdate, :join_date, :phone_number)
+  def create_params
+    params.permit(:email, :password, :first_name, :last_name, :birthdate, :join_date, :phone_number, day_off_infos_attributes:
+    %i[day_off_category_id hours])
   end
 
-  def day_off_params
-    params.permit(day_off_infos: %i[day_off_category_id hours])
+  def update_params
+    params.permit(:email, :first_name, :last_name, :birthdate, :join_date, :phone_number, day_off_infos_attributes:
+      %i[day_off_category_id hours])
   end
 
   def user_status_params
     params.permit(:status)
+  end
+
+  def find_user
+    @user = User.find(params[:id])
   end
 end

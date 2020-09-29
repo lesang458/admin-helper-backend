@@ -1,9 +1,9 @@
 day_off_category_vacation = DayOffCategory.find_or_create_by name: 'VACATION', total_hours_default: 120
 day_off_category_illness = DayOffCategory.find_or_create_by name: 'ILLNESS', total_hours_default: 16
 
-employee = User.find_or_create_by(
+employee = User.create_with(
   email: "employee@gmail.com",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
+  password: "123456",
   first_name: "employee",
   last_name: "user",
   birthdate: "2000-02-02",
@@ -11,13 +11,13 @@ employee = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE]
-)
+).find_or_create_by(email: 'employee@gmail.com')
 employee.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 employee.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-admin = User.find_or_create_by(
+admin = User.create_with(
   email: "admin@gmail.com",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
+  password: "123456",
   first_name: "admin",
   last_name: "user",
   birthdate: "2000-02-02",
@@ -25,13 +25,13 @@ admin = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN]
-)
+).find_or_create_by(email: 'admin@gmail.com')
 admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-super_admin = User.find_or_create_by(
+super_admin = User.create_with(
   email: "super_admin@gmail.com",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
+  password: "123456",
   first_name: "super_admin",
   last_name: "user",
   birthdate: "2000-02-02",
@@ -39,13 +39,13 @@ super_admin = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
-)
+).find_or_create_by(email: 'super_admin@gmail.com')
 super_admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 super_admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-hanh = User.find_or_create_by(
+hanh = User.create_with(
   email: "hanhle@novahub.vn",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
+  password: "123456",
   first_name: "dang",
   last_name: "hanh",
   birthdate: "1999-02-02",
@@ -53,13 +53,13 @@ hanh = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
-)
+).find_or_create_by(email: 'hanhle@novahub.vn')
 hanh.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 hanh.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-huy = User.find_or_create_by(
+huy = User.create_with(
   email: "huytran@novahub.vn",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
+  password: "123456",
   first_name: "huy",
   last_name: "tran",
   birthdate: "1999-01-01",
@@ -67,13 +67,13 @@ huy = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
-)
+).find_or_create_by(email: 'huytran@novahub.vn')
 huy.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 huy.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
-aulu = User.find_or_create_by(
+aulu = User.create_with(
   email: "aulu@novahub.vn",
-  encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
+  password: "123456",
   first_name: "Lu Tuyet",
   last_name: "Au",
   birthdate: "1999-01-01",
@@ -81,14 +81,14 @@ aulu = User.find_or_create_by(
   status: "ACTIVE",
   phone_number: "0935270046",
   roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
-)
+).find_or_create_by(email: 'aulu@novahub.vn')
 aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
 100.times do |i|
-  user = User.find_or_create_by(
+  user = User.create_with(
     email: "user_#{i}@gmail.com",
-    encrypted_password: "$2a$12$SOZBwu5y98li6GOqTOlKn.Twxft0wCwgwNQuzeFe62rYJcfQTsM8a",
+    password: "123456",
     first_name: "fake",
     last_name: "user",
     birthdate: "2000-02-02",
@@ -96,7 +96,7 @@ aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illne
     status: "ACTIVE",
     phone_number: "0123456789",
     roles: %w[EMPLOYEE]
-  )
+  ).find_or_create_by(email: "user_#{i}@gmail.com")
   user.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
   user.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 end
