@@ -52,6 +52,14 @@ paths:
         - Day Off Category
       summary: Get List DayOffCategories
       description: Returns List DayOffCategories
+      parameters:
+        - name: status
+          in: query
+          description: Status Of Day Off Category
+          required: true
+          schema:
+            type: string
+            enum: ['ACTIVE', 'INACTIVE']
       responses:
         '200':
           description: successful
@@ -60,8 +68,10 @@ paths:
               schema:
                 type: object
                 properties: 
-                  day_off_categories:
+                  data:
                     $ref: '#/components/schemas/DayOffCategoryResponse'
+                  pagination:
+                      $ref: '#/components/schemas/Pagination'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -839,7 +849,7 @@ paths:
               schema:
                 type: object
                 properties: 
-                  device_category:
+                  device:
                     $ref: '#/components/schemas/Device'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -875,7 +885,7 @@ paths:
               schema:
                 type: object
                 properties: 
-                  device_category:
+                  device:
                     $ref: '#/components/schemas/Device'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -905,7 +915,7 @@ paths:
               schema:
                 type: object
                 properties: 
-                  device_category:
+                  device:
                     $ref: '#/components/schemas/Device'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -935,7 +945,7 @@ paths:
               schema:
                 type: object
                 properties: 
-                  device_category:
+                  device:
                     $ref: '#/components/schemas/Device'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -943,6 +953,38 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+  '/day_off_categories/{id}/deactivate':
+    patch:
+      tags:
+      - Day Off Category
+      summary: Deactivate
+      parameters:
+      - name: id
+        in: path
+        description: Update status of Day Off Category
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DayOffCategoryResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams'
 components:
   responses:
     RequestSuccess:
@@ -973,7 +1015,7 @@ components:
                 example: 404
               message:
                 type: string
-                example: "Couldn't find User"
+                example: "Couldn't find with 'id'="
             required:
               - code
               - message
@@ -1389,6 +1431,12 @@ components:
           description:
             type: string
             example:
+          total_hours_default:
+            type: integer
+            example: 15
+          status:
+            type: string
+            example: 'INACTIVE'
     DayOffInfoResponse:
       type: object
       properties:

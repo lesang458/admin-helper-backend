@@ -12,7 +12,7 @@ class Api::V1::DayOffCategoriesController < ApplicationController
   end
 
   def deactivate
-    @day_off_category.update!(status: params[:status])
+    @day_off_category.update!(status: 'INACTIVE')
     render_resource(@day_off_category, :ok, DayOffCategorySerializer)
   end
 
