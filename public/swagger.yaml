@@ -710,6 +710,244 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+  /devices:
+    post:
+      tags:
+      - Device
+      summary: Create Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsDevice'
+      responses:
+        '201':
+          description: created device
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams' 
+    get:
+      tags:
+        - Device
+      summary: Get list  Device
+      description: Returns list Device
+      parameters:
+          - name: status
+            in: query
+            description: Search with status
+            schema:
+              type: string
+          - name: user_id
+            in: query
+            description: Search with user id
+            schema:
+              type: integer
+              example: 1
+          - name: device_category_id
+            in: query
+            description: Search with device category id
+            schema:
+              type: integer
+              example: 1
+          - name: page
+            in: query
+            description: pagination with the current page
+            required: false
+            schema:
+              type: integer
+              example: 1
+          - name: per_page
+            in: query
+            description: pagination with the number of elements per page
+            required: false
+            schema:
+              type: integer
+              example: 20
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      $ref: '#/components/schemas/Device'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+  '/devices/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: ID of device category to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+    get:
+      tags:
+        - Device
+      summary: Find Device by id
+      description: Returns an Device
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Device
+      summary: Update Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsUpdateDevice'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/devices/{id}/assign':
+    put:
+      tags:
+      - Device
+      summary: Assign Device
+      parameters:
+      - name: id
+        in: path
+        description: Update status of device
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsUpdateStatusDevice'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/devices/{id}/move_to_inventory':
+    put:
+      tags:
+      - Device
+      summary: Move to inventory Device
+      parameters:
+      - name: id
+        in: path
+        description: Update status of device
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/devices/{id}/discard':
+    put:
+      tags:
+      - Device
+      summary: Discard Device
+      parameters:
+      - name: id
+        in: path
+        description: Update status of device
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
 components:
   responses:
     RequestSuccess:
@@ -809,6 +1047,58 @@ components:
               - code
               - message
   schemas:
+    RequestParamsUpdateStatusDevice:
+      type: object
+      properties:
+        user_id:
+          type: integer
+    RequestParamsUpdateDevice:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+        description:
+          type: string
+        device_category_id:
+          type: integer
+    RequestParamsDevice:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+        description:
+          type: string
+        device_category_id:
+          type: integer
+        from_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [DISCARDED, ASSIGNED, IN_INVENTORY]
+    Device:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: integer
+        description:
+          type: string
+        device_category_id:
+          type: integer
+        category_name:
+          type: string
+        user:
+          type: object
+        status:
+          type: string
     RequestParamsDeviceCategory:
       type: object
       properties:
