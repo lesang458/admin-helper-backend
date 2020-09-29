@@ -1282,7 +1282,7 @@ components:
           items:
             type: object
             properties:
-              id:
+              day_off_category_id:
                 type: integer
                 format: int64
               hours:
@@ -1295,11 +1295,11 @@ components:
                 type: integer
                 format: int64
           example:
-                - id: 1
+                - day_off_category_id: 1
                   hours: 160
                   category_name: 'VACATION'
                   available_hours: 220
-                - id: 2
+                - day_off_category_id: 2
                   hours: 160
                   category_name: 'ILLNESS'
                   available_hours: 220
