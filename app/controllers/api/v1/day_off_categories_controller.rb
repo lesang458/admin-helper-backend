@@ -1,9 +1,9 @@
 class Api::V1::DayOffCategoriesController < ApplicationController
-  skip_before_action :set_paginate
   before_action :find_day_off_category, only: %i[update deactivate]
   def index
-    day_off_categories = DayOffCategory.all
-    render_resources(day_off_categories, :ok, DayOffCategorySerializer)
+    day_off_categories = DayOffCategory.search(params[:status])
+    day_off_categories = @page.to_i <= 0 ? day_off_categories : day_off_categories.page(@page).per(@per_page)
+    render_collection(day_off_categories, DayOffCategorySerializer)
   end
 
   def update

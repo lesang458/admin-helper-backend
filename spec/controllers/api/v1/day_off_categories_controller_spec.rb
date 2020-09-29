@@ -72,13 +72,23 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
 
     it 'should return 200' do
       get :index
-      day_off_categories = JSON.parse(response.body)['day_off_categories']
+      day_off_categories = JSON.parse(response.body)['data']
       vacation = day_off_categories.first
       illness = day_off_categories.second
       expect(vacation['name']).to eq(@category_vacation.name)
       expect(vacation['total_hours_default']).to eq(@category_vacation.total_hours_default)
       expect(illness['name']).to eq(@category_illness.name)
       expect(illness['total_hours_default']).to eq(@category_illness.total_hours_default)
+      expect(response.status).to eq(200)
+    end
+
+    it 'should return 200 with status' do
+      get :index, params: { status: 'ACTIVE' }
+      json_response = JSON.parse(response.body)['pagination']
+      expect(json_response['current_page']).to eq(1)
+      expect(json_response['page_size']).to eq(2)
+      expect(json_response['total_pages']).to eq(1)
+      expect(json_response['total_count']).to eq(2)
       expect(response.status).to eq(200)
     end
   end
