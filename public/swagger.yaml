@@ -280,21 +280,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
         '422':
-          description: Request Invalid
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 422
-                  message:
-                    type: string
-                    example: "Invalid category or user"
-                required:
-                  - code
-                  - message
+          $ref: '#/components/responses/InvalidParams'
   '/day_off_info/{id}':
     patch:
       tags:
@@ -834,7 +820,7 @@ components:
         - from_date
         - to_date
         - hours_per_day
-        - day_off_info_id
+        - day_off_category_id
     DayOffRequestResponse:
       type: array
       items:
