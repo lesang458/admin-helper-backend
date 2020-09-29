@@ -307,6 +307,8 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams'
   '/day_off_info/{id}':
     patch:
       tags:
@@ -1319,7 +1321,7 @@ components:
         notes:
           type: string
           example: "here is notes"
-        day_off_info_id:
+        day_off_category_id:
           type: string
           format: int64
           example: 1
@@ -1327,7 +1329,7 @@ components:
         - from_date
         - to_date
         - hours_per_day
-        - day_off_info_id
+        - day_off_category_id
     DayOffRequestResponse:
       type: array
       items:
