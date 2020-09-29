@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 2020_09_29_070640) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "total_hours_default"
-    t.string "status"
+    t.string "status", default: "ACTIVE"
   end
 
   create_table "day_off_infos", force: :cascade do |t|

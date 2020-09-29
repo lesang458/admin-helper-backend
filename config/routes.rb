@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       post  'login', to: 'sessions#create'
       post 'google_login', to: 'sessions#google_login'
       resources :employees, only: %i[index create show update]
+      patch 'day_off_categories/:id/deactivate', to: 'day_off_categories#deactivate'
       patch 'employees/:id/status', :to => 'employees#update_status'
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
       get 'employees/:id/day-off-requests', to: 'day_off_request#index'
