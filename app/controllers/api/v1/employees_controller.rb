@@ -20,9 +20,8 @@ class Api::V1::EmployeesController < ApplicationController
 
   def update
     User.transaction do
-      infos_params = params[:day_off_infos_attributes] if params[:day_off_infos_attributes]
-      params.delete(:day_off_infos_attributes) if params[:day_off_infos_attributes]
-      @user.update!(update_params)
+      infos_params = update_params.delete(:day_off_infos_attributes)
+      @user.update!(update_params.except(:day_off_infos_attributes))
       @user.update_infos(infos_params) if infos_params.present?
       render_resource @user, :ok, UserSerializer
     end
