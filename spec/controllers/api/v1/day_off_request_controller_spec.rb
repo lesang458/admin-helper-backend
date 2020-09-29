@@ -119,6 +119,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params[:to_date] = ''
       post :create, params: params
       expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)['message']).to include "From date can't be blank, To date can't be blank"
     end
 
     it 'should return 422 with hours per day < 0' do
@@ -126,11 +127,13 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params[:hours_per_day] = -1
       post :create, params: params
       expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)['message']).to include 'Hours per day must be greater than 0'
     end
 
     it 'should return 422 without day_off_category_id' do
       post :create, params: post_params.except(:day_off_category_id)
       expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)['message']).to include 'Day off info must exist'
     end
 
     it 'should return 422 with validate info' do

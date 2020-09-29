@@ -12,7 +12,40 @@ tags:
   - name: Day Off Category
   - name: Day Off Info
   - name: Day Off Request
+  - name: Device Category
 paths:
+  '/device_histories/{id}':
+    get:
+      tags:
+        - Device Histories
+      summary: Find Device History by id
+      description: Returns an Device History
+      operationId: getDeviceHistoryById
+      parameters:
+        - name: id
+          in: path
+          description: ID of device history to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_history:
+                    $ref: '#/components/schemas/DeviceHistory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
   '/day_off_categories':
     get:
       tags:
@@ -121,14 +154,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                first_name:
-                  type: string
-                last_name:
-                  type: string
-                password:
-                  type: string
+              $ref: '#/components/schemas/UpdateEmployee'
       responses:
         '200':
           description: successful
@@ -145,6 +171,8 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /login:
     post:
       tags:
@@ -550,13 +578,373 @@ paths:
                       type: array
                       items:
                         type: object
-                        $ref: '#/components/schemas/Employee'
+                        $ref: '#/components/schemas/DeviceHistory'
                     pagination:
                       $ref: '#/components/schemas/Pagination'
           '401':
             $ref: '#/components/responses/Unauthorized'
           '403':
             $ref: '#/components/responses/Permission'
+  /device_categories:
+    get:
+      tags:
+        - Device Category
+      summary: Get list  Device Category
+      description: Returns list Device Category
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      $ref: '#/components/schemas/DeviceCategory'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+    post:
+      tags:
+      - Device Category
+      summary: Create Device Category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsDeviceCategory'
+      responses:
+        '201':
+          description: created day-off-request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DeviceCategory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/device_categories/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: ID of device category to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+    get:
+      tags:
+        - Device Category
+      summary: Find Device Category by id
+      description: Returns an Device Category
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DeviceCategory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Device Category
+      summary: Update Device Category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsDeviceCategory'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DeviceCategory'
+          
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Device Category
+      summary: Delete Device Category by id
+      responses:
+        '204':
+          description: Delete successful
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /devices:
+    post:
+      tags:
+      - Device
+      summary: Create Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsDevice'
+      responses:
+        '201':
+          description: created device
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams' 
+    get:
+      tags:
+        - Device
+      summary: Get list  Device
+      description: Returns list Device
+      parameters:
+          - name: status
+            in: query
+            description: Search with status
+            schema:
+              type: string
+          - name: user_id
+            in: query
+            description: Search with user id
+            schema:
+              type: integer
+              example: 1
+          - name: device_category_id
+            in: query
+            description: Search with device category id
+            schema:
+              type: integer
+              example: 1
+          - name: page
+            in: query
+            description: pagination with the current page
+            required: false
+            schema:
+              type: integer
+              example: 1
+          - name: per_page
+            in: query
+            description: pagination with the number of elements per page
+            required: false
+            schema:
+              type: integer
+              example: 20
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      $ref: '#/components/schemas/Device'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+  '/devices/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: ID of device category to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+    get:
+      tags:
+        - Device
+      summary: Find Device by id
+      description: Returns an Device
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Device
+      summary: Update Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsUpdateDevice'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/devices/{id}/assign':
+    put:
+      tags:
+      - Device
+      summary: Assign Device
+      parameters:
+      - name: id
+        in: path
+        description: Update status of device
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestParamsUpdateStatusDevice'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/devices/{id}/move_to_inventory':
+    put:
+      tags:
+      - Device
+      summary: Move to inventory Device
+      parameters:
+      - name: id
+        in: path
+        description: Update status of device
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/devices/{id}/discard':
+    put:
+      tags:
+      - Device
+      summary: Discard Device
+      parameters:
+      - name: id
+        in: path
+        description: Update status of device
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/Device'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
 components:
   responses:
     RequestSuccess:
@@ -656,6 +1044,105 @@ components:
               - code
               - message
   schemas:
+    RequestParamsUpdateStatusDevice:
+      type: object
+      properties:
+        user_id:
+          type: integer
+    RequestParamsUpdateDevice:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+        description:
+          type: string
+        device_category_id:
+          type: integer
+    RequestParamsDevice:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+        description:
+          type: string
+        device_category_id:
+          type: integer
+        from_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [DISCARDED, ASSIGNED, IN_INVENTORY]
+    Device:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: integer
+        description:
+          type: string
+        device_category_id:
+          type: integer
+        category_name:
+          type: string
+        user:
+          type: object
+        status:
+          type: string
+    RequestParamsDeviceCategory:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    DeviceCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+    DeviceHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        from_date:
+          type: string
+          format: date
+        to_date:
+          type: integer
+          format: date
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            first_name:
+              type: string
+            last_name:
+              type: string
+        device:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            price:
+              type: string
+            description:
+              type: string
     RequestParamUpdateDayOffCategory:
       type: object
       properties:
@@ -672,38 +1159,51 @@ components:
       properties:
         email:
           type: string
+          example: "new_employee@gmail.com"
         first_name:
           type: string
+          example: "employee"
         last_name:
           type: string
+          example: "user"
         birthdate:
           type: string
           format: date
+          example: "2020-02-02"
         join_date:
           type: string
           format: date
+          example: "2019-11-09"
         status:
           type: string
           enum: [ACTIVE, FORMER]
         phone_number:
-          type: integer
-          example: 123456789
+          type: string
+          example: "123456789"
+        password:
+          type: string
+          example: "123456"
         roles:
           type: array
           items:
             type: string
             example: EMPLOYEE
-        day_off_infos:
+        day_off_infos_attributes:
           type: array
           items:
             type: object
             properties:
-              day_off_category_id: 
+              day_off_category_id:
                 type: integer
                 example: 1
-              hours: 
+              hours:
                 type: integer
                 example: 160
+          example:
+            - day_off_category_id: 1
+              hours: 160
+            - day_off_category_id: 2
+              hours: 160
       required:
         - email
         - last_name
@@ -794,6 +1294,15 @@ components:
               available_hours:
                 type: integer
                 format: int64
+          example:
+                - id: 1
+                  hours: 160
+                  category_name: 'VACATION'
+                  available_hours: 220
+                - id: 2
+                  hours: 160
+                  category_name: 'ILLNESS'
+                  available_hours: 220
     DayOffRequest:
       type: object
       properties:
@@ -920,6 +1429,41 @@ components:
         last_name:
           type: string
           example: "employee"
+    UpdateEmployee:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "newemployee@gmail.com"
+        first_name:
+          type: string
+          example: "dang"
+        last_name:
+          type: string
+          example: "hanh"
+        birthdate:
+          type: string
+          format: date
+        join_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [ACTIVE, FORMER]
+        phone_number:
+          type: string
+          example: "123456789"
+        day_off_infos_attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              day_off_category_id: 
+                type: integer
+                example: 1
+              hours: 
+                type: integer
+                example: 200
   securitySchemes:
     bearerAuth:
       type: http

@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :day_off_infos, dependent: :destroy
+  accepts_nested_attributes_for :day_off_infos
   has_many :day_off_requests, dependent: :destroy
   has_many :devices, dependent: :destroy
   has_many :device_histories, dependent: :destroy
@@ -23,6 +24,15 @@ class User < ApplicationRecord
   scope :admins, -> { where('roles @> ?', '{ADMIN}') }
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
+  attr_accessor :password
+
+  validates :password, presence: true, length: { minimum: 6 }, on: :create
+  before_create :encrypt_password
+
+  def encrypt_password
+    self.encrypted_password = User.generate_encrypted_password(password)
+  end
+
   def generate_password_token
     self.reset_password_token = SecureRandom.rand(100_000..999_999)
     self.reset_password_sent_at = Time.now
@@ -41,10 +51,18 @@ class User < ApplicationRecord
     Time.now < (reset_password_sent_at + RESET_TOKEN_LIFESPAN).localtime
   end
 
-  def self.build_employee(user_params)
-    user = User.new(user_params)
+  def self.build_employee(create_params)
+    user = User.new(create_params)
     user.roles << 'EMPLOYEE'
     user
+  end
+
+  def update_infos(infos_params)
+    infos_params.each do |day_off_info|
+      day_off = day_off_infos.find_by day_off_category_id: day_off_info[:day_off_category_id]
+      raise(ActiveRecord::RecordNotFound, "Couldn't find DayOffInfo with day_off_category_id = #{day_off_info[:day_off_category_id]}") unless day_off
+      day_off.update!(hours: day_off_info[:hours])
+    end
   end
 
   def validate_roles_inclusion
