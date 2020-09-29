@@ -5,7 +5,6 @@ Rails.application.routes.draw do
       post  'login', to: 'sessions#create'
       post 'google_login', to: 'sessions#google_login'
       resources :employees, only: %i[index create show update]
-      patch 'day_off_categories/:id/deactivate', to: 'day_off_categories#deactivate'
       patch 'employees/:id/status', :to => 'employees#update_status'
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
       get 'employees/:id/day-off-requests', to: 'day_off_request#index'
@@ -13,7 +12,11 @@ Rails.application.routes.draw do
       resources :password, only: %i[create]
       patch 'password/reset', to: 'password#update'
       resources :day_off_info, only: %i[update index]
-      resources :day_off_categories, only: %i[index update]
+      resources :day_off_categories, only: %i[index update] do
+        member do
+          patch '/deactivate', to: 'day_off_categories#deactivate'
+        end
+      end
       resources :device_categories
       resources :device_histories, only: %i[index show]
       resources :devices, only: %i[create show index destroy update] do

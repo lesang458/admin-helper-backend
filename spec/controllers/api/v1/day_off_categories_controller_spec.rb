@@ -19,7 +19,7 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
   let!(:invalid_headers) { { authorization: "Bearer #{invalid_token}" } }
   before(:each) { request.headers.merge! valid_headers }
 
-  let!(:patch_params_status) { { id: @category_vacation.id, status: 'INACTIVE' } }
+  let!(:patch_params_status) { { id: @category_vacation.id } }
 
   describe 'PATCH# Deactive' do
     it 'return status 401 status code with invalid token' do
@@ -39,14 +39,6 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
     it 'should return 404' do
       patch :deactivate, params: { id: 'NOT FOUND' }
       expect(response.status).to eq(404)
-    end
-
-    it 'should return 422' do
-      params = patch_params_status.dup
-      params[:status] = 'NOT FOUND'
-      patch :deactivate, params: params
-      expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)['message']).to include "'#{params[:status]}' is not a valid status"
     end
 
     it 'should return 200' do
