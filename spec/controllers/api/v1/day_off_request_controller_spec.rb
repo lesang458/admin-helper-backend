@@ -47,7 +47,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
         hours_per_day: 4,
         notes: 'ok',
         id: @employee,
-        day_off_info_id: @day_off_info.id
+        day_off_category_id: @day_off_category.id
       }
     }
 
@@ -69,9 +69,9 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params = post_params.dup
       params[:id] = unexist_id
       post :create, params: params
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
-      expect(message).to include "Couldn't find User with 'id'"
+      expect(message).to include 'Invalid category or user'
     end
 
     it 'should return 201' do
@@ -130,10 +130,8 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(JSON.parse(response.body)['message']).to include 'Hours per day must be greater than 0'
     end
 
-    it 'should return 422 without day_off_info_id' do
-      params = post_params.dup
-      params.delete(:day_off_info_id)
-      post :create, params: params
+    it 'should return 422 without day_off_category_id' do
+      post :create, params: post_params.except(:day_off_category_id)
       expect(response.status).to eq(422)
       expect(JSON.parse(response.body)['message']).to include 'Day off info must exist'
     end
@@ -143,7 +141,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       params[:id] = @admin.id
       post :create, params: params
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)['message']).to include 'Day off info user is not the same as requested user'
+      expect(JSON.parse(response.body)['message']).to include 'Invalid category or user'
     end
   end
 end
