@@ -133,7 +133,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     it 'should return 422 without day_off_category_id' do
       post :create, params: post_params.except(:day_off_category_id)
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)['message']).to include 'Day off info must exist'
+      expect(JSON.parse(response.body)['message']).to include 'Invalid category or user'
     end
 
     it 'should return 422 with validate info' do
