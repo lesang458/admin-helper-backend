@@ -76,10 +76,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties: 
-                  day_off_category:
-                    $ref: '#/components/schemas/RequestCreateDayOffCategory'
+              $ref: '#/components/schemas/RequestCreateDayOffCategory'
       responses:
         '201':
           description: created day-off-category
