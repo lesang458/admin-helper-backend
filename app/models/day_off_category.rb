@@ -8,9 +8,7 @@ class DayOffCategory < ApplicationRecord
   validates :description, allow_nil: true, length: { minimum: 3 }
   validates :total_hours_default, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
-  def self.search(params_status)
-    day_off_categories = DayOffCategory.all
-    day_off_categories.where('status = ?', params_status) if params_status
-    day_off_categories
+  def self.search(status)
+    DayOffCategory.where({ status: status.presence }.compact)
   end
 end
