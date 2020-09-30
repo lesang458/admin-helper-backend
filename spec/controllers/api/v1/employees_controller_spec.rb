@@ -349,20 +349,49 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
     end
 
     describe 'GET# employee' do
-      it 'should pass with real param id' do
-        get :show, params: { id: User.first.id }
-        expect(response.status).to eq(200)
-      end
-
-      it 'return status 404 with fake param id' do
-        get :show, params: { id: 'fake_id' }
-        expect(response.status).to eq(404)
-      end
-
       it 'return status 401 with token false' do
         request.headers.merge! invalid_headers
-        get :show, params: { id: User.first.id }
+        get :show, params: { id: @user.id }
         expect(response.status).to eq(401)
+      end
+
+      it 'should return 403 with employee' do
+        valid_token = JwtToken.encode({ user_id: @employee.id })
+        valid_headers = { authorization: "Bearer #{valid_token}" }
+        request.headers.merge! valid_headers
+        get :show, params: { id: User.first.id }
+        expect(response.status).to eq(403)
+      end
+
+      it 'should return status 404 with fake param id' do
+        get :show, params: { id: 'fake_id' }
+        expect(response.status).to eq(404)
+        expect(response.body).to include("Couldn't find User with 'id'")
+      end
+
+      it 'should return status 200' do
+        get :show, params: { id: @user.id }
+        expect(response.status).to eq(200)
+        @user.reload
+        user = JSON.parse(response.body)['user']
+        expect(user['id']).to eq(@user.id)
+        expect(user['email']).to eq(@user.email)
+        expect(user['first_name']).to eq(@user.first_name)
+        expect(user['last_name']).to eq(@user.last_name)
+        expect(user['birthdate']).to eq(@user.birthdate.to_s)
+        expect(user['join_date']).to eq(@user.join_date.to_s)
+        expect(user['status']).to eq(@user.status)
+        expect(user['phone_number']).to eq(@user.phone_number)
+
+        expect(user['day_off_infos'].first['day_off_category_id']).to eq(@user.day_off_infos.first.day_off_category_id)
+        expect(user['day_off_infos'].first['hours']).to eq(@user.day_off_infos.first.hours)
+        expect(user['day_off_infos'].first['category_name']).to eq(@user.day_off_infos.first.category_name)
+        expect(user['day_off_infos'].first['available_hours']).to eq(@user.day_off_infos.first.available_hours)
+
+        expect(user['day_off_infos'].second['day_off_category_id']).to eq(@user.day_off_infos.second.day_off_category_id)
+        expect(user['day_off_infos'].second['hours']).to eq(@user.day_off_infos.second.hours)
+        expect(user['day_off_infos'].second['category_name']).to eq(@user.day_off_infos.second.category_name)
+        expect(user['day_off_infos'].second['available_hours']).to eq(@user.day_off_infos.second.available_hours)
       end
     end
 

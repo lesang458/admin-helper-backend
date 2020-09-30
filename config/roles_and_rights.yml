@@ -18,6 +18,7 @@ admin:
     - index
     - update
     - deactivate
+    - create
   device_categories:
     - index
     - show

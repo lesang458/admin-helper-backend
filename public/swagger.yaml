@@ -76,6 +76,33 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Permission'
+    post:
+      tags:
+        - Day Off Category
+      summary: Create DayOffCategory
+      description: Create DayOffCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCreateDayOffCategory'
+      responses:
+        '201':
+          description: created day-off-category
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  day_off_category:
+                    $ref: '#/components/schemas/DayOffCategory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '422':
+          $ref: '#/components/responses/InvalidParams'
   '/day_off_categories/{id}':
     patch:
       tags:
@@ -317,6 +344,8 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams'
   '/day_off_info/{id}':
     patch:
       tags:
@@ -1268,14 +1297,21 @@ components:
     DayOffCategory:
       type: object
       properties:
+        id:
+          type: integer
+          example: 1
         name:
           type: string
+          example: "Summer"
         description:
           type: string
+          example: "When don't go to school"
         total_hours_default:
           type: integer
+          example: 16
       required:
       - name
+      - total_hours_default
     DayOffInfo:
       type: object
       properties:
@@ -1322,7 +1358,7 @@ components:
           items:
             type: object
             properties:
-              id:
+              day_off_category_id:
                 type: integer
                 format: int64
               hours:
@@ -1335,11 +1371,11 @@ components:
                 type: integer
                 format: int64
           example:
-                - id: 1
+                - day_off_category_id: 1
                   hours: 160
                   category_name: 'VACATION'
                   available_hours: 220
-                - id: 2
+                - day_off_category_id: 2
                   hours: 160
                   category_name: 'ILLNESS'
                   available_hours: 220
@@ -1361,7 +1397,7 @@ components:
         notes:
           type: string
           example: "here is notes"
-        day_off_info_id:
+        day_off_category_id:
           type: string
           format: int64
           example: 1
@@ -1369,7 +1405,7 @@ components:
         - from_date
         - to_date
         - hours_per_day
-        - day_off_info_id
+        - day_off_category_id
     DayOffRequestResponse:
       type: array
       items:
@@ -1510,6 +1546,21 @@ components:
               hours: 
                 type: integer
                 example: 200
+    RequestCreateDayOffCategory:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Summer"
+        total_hours_default:
+          type: integer
+          example: 16
+        description:
+          type: string
+          example: "When don't go to school"
+      required:
+      - name
+      - total_hours_default
   securitySchemes:
     bearerAuth:
       type: http
