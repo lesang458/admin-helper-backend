@@ -11,6 +11,12 @@ class Api::V1::DayOffCategoriesController < ApplicationController
     render_resource(day_off_category, :ok, DayOffCategorySerializer)
   end
 
+  def create
+    day_off_category = DayOffCategory.new(day_off_category_params)
+    day_off_category.save!
+    render_resource day_off_category, :created, DayOffCategorySerializer
+  end
+
   private
 
   def day_off_category_params

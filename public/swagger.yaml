@@ -66,6 +66,33 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Permission'
+    post:
+      tags:
+        - Day Off Category
+      summary: Create DayOffCategory
+      description: Create DayOffCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCreateDayOffCategory'
+      responses:
+        '201':
+          description: created day-off-category
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  day_off_category:
+                    $ref: '#/components/schemas/DayOffCategory'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '422':
+          $ref: '#/components/responses/InvalidParams'
   '/day_off_categories/{id}':
     patch:
       tags:
@@ -1228,14 +1255,21 @@ components:
     DayOffCategory:
       type: object
       properties:
+        id:
+          type: integer
+          example: 1
         name:
           type: string
+          example: "Summer"
         description:
           type: string
+          example: "When don't go to school"
         total_hours_default:
           type: integer
+          example: 16
       required:
       - name
+      - total_hours_default
     DayOffInfo:
       type: object
       properties:
@@ -1464,6 +1498,21 @@ components:
               hours: 
                 type: integer
                 example: 200
+    RequestCreateDayOffCategory:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Summer"
+        total_hours_default:
+          type: integer
+          example: 16
+        description:
+          type: string
+          example: "When don't go to school"
+      required:
+      - name
+      - total_hours_default
   securitySchemes:
     bearerAuth:
       type: http

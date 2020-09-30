@@ -17,6 +17,7 @@ admin:
   day_off_categories:
     - index
     - update
+    - create
   device_categories:
     - index
     - show
