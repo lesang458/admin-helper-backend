@@ -24,10 +24,16 @@ class User < ApplicationRecord
   scope :admins, -> { where('roles @> ?', '{ADMIN}') }
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
-  attr_accessor :password
+  attributes attr_accessor :password, :old_password, :new_password, :confirm_password
 
   validates :password, presence: true, length: { minimum: 6 }, on: :create
+  validates :old_password, :new_password, :confirm_password, presence: true, length: { minimum: 6 }, on: :update_password
   before_create :encrypt_password
+
+  def update_password(update_password_params)
+    byebug
+    
+  end
 
   def encrypt_password
     self.encrypted_password = User.generate_encrypted_password(password)

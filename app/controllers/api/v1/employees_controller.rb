@@ -32,6 +32,11 @@ class Api::V1::EmployeesController < ApplicationController
     render_resource @user, :ok, UserSerializer
   end
 
+  def update_password
+    @user.update_password(update_password_params)
+    render_resource @user, :ok, UserSerializer
+  end
+
   private
 
   def set_query_sort
@@ -54,5 +59,9 @@ class Api::V1::EmployeesController < ApplicationController
 
   def find_user
     @user = User.find(params[:id])
+  end
+
+  def update_password_params
+    params.permit(:old_password, :new_password, :confirm_password)
   end
 end
