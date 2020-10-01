@@ -56,7 +56,6 @@ paths:
         - name: status
           in: query
           description: Status Of Day Off Category
-          required: true
           schema:
             type: string
             enum: ['ACTIVE', 'INACTIVE']
