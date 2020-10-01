@@ -190,7 +190,7 @@ paths:
               schema:
                 type: object
                 properties: 
-                  employee:
+                  user:
                     $ref: '#/components/schemas/Employee'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -1481,9 +1481,6 @@ components:
         join_date:
           type: string
           format: date
-        status:
-          type: string
-          enum: [ACTIVE, FORMER]
         phone_number:
           type: string
           example: "123456789"
