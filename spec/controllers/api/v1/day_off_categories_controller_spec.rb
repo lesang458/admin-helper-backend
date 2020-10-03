@@ -28,10 +28,10 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(response.status).to eq(401)
     end
 
-    it 'should return 403' do
-      valid_token = JwtToken.encode({ user_id: @employee.id })
-      valid_headers = { authorization: "Bearer #{valid_token}" }
-      request.headers.merge! valid_headers
+    it 'should return 403 with employee' do
+      employee_token = JwtToken.encode({ user_id: @employee.id })
+      headers = { authorization: "Bearer #{employee_token}" }
+      request.headers.merge! headers
       patch :deactivate, params: patch_params_status
       expect(response.status).to eq(403)
     end
@@ -43,7 +43,16 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
 
     it 'should return 200' do
       patch :deactivate, params: patch_params_status
+      @category_vacation.reload
+      expect(@category_vacation.status).to eq 'INACTIVE'
       expect(response.status).to eq(200)
+    end
+
+    it 'should return 400 if day off category was deactivated' do
+      patch :deactivate, params: patch_params_status
+      patch :deactivate, params: patch_params_status
+      expect(response.status).to eq(400)
+      expect(JSON.parse(response.body)['message']).to include 'Day off category was deactivated'
     end
   end
 

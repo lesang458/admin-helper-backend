@@ -12,6 +12,7 @@ class Api::V1::DayOffCategoriesController < ApplicationController
   end
 
   def deactivate
+    raise(ExceptionHandler::BadRequest, 'Day off category was deactivated') if @day_off_category.status.eql?('INACTIVE')
     @day_off_category.update!(status: 'INACTIVE')
     render_resource(@day_off_category, :ok, DayOffCategorySerializer)
   end
