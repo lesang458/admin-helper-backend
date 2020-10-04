@@ -44,7 +44,7 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
     it 'should return 200' do
       patch :deactivate, params: patch_params_status
       @category_vacation.reload
-      expect(@category_vacation.status).to eq 'INACTIVE'
+      expect(@category_vacation.status).to eq 'inactive'
       expect(response.status).to eq(200)
     end
 
