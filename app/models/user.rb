@@ -24,15 +24,18 @@ class User < ApplicationRecord
   scope :admins, -> { where('roles @> ?', '{ADMIN}') }
   scope :super_admins, -> { where('roles @> ?', '{SUPER_ADMIN}') }
 
-  attributes attr_accessor :password, :old_password, :new_password, :confirm_password
+  PASSWORD_FORMAT = /\A(?!.*\s)/x.freeze
+  attr_accessor :password
 
-  validates :password, presence: true, length: { minimum: 6 }, on: :create
-  validates :old_password, :new_password, :confirm_password, presence: true, length: { minimum: 6 }, on: :update_password
+  validates :password, presence: true, length: { in: 6..40 }, format: { with: PASSWORD_FORMAT }, on: %i[create account_setup]
   before_create :encrypt_password
 
-  def update_password(update_password_params)
-    byebug
-    
+  def update_password(password_params)
+    raise(ArgumentError, 'Your password was incorrect.') unless check_valid_password(password_params[:old_password])
+    self.password = password_params[:new_password]
+    raise(ArgumentError, self.errors.messages) unless self.valid?(:account_setup)
+    encrypt_password
+    save!
   end
 
   def encrypt_password

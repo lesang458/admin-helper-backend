@@ -1,6 +1,6 @@
 class Api::V1::EmployeesController < ApplicationController
   before_action :set_current_user
-  before_action :find_user, only: %i[update update_status show]
+  before_action :find_user, only: %i[update update_status show update_password]
   def index
     set_query_sort if params[:sort].present?
     users = User.search(params).order(@query)
@@ -62,6 +62,6 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def update_password_params
-    params.permit(:old_password, :new_password, :confirm_password)
+    params.permit(:old_password, :new_password)
   end
 end
