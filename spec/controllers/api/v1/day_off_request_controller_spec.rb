@@ -65,13 +65,21 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(response.status).to eq(403)
     end
 
-    it 'should return 404 with unexist id' do
+    it 'should return 422 with unexist id' do
       params = post_params.dup
       params[:id] = unexist_id
       post :create, params: params
       expect(response.status).to eq(422)
       message = JSON.parse(response.body)['message']
       expect(message).to include 'Invalid category or user'
+    end
+
+    it 'should return 422 with status of day off cateogry inactived' do
+      @day_off_category.inactive!
+      post :create, params: post_params
+      message = JSON.parse(response.body)['message']
+      expect(response.status).to eq(422)
+      expect(message).to include 'Day off category inactivated'
     end
 
     it 'should return 201' do
