@@ -9,6 +9,7 @@ class DayOffRequest < ApplicationRecord
   delegate :email, :first_name, :last_name, to: :user
   delegate :day_off_category, to: :day_off_info
   validate :request_too_long
+  validate :check_category_status, on: :create
 
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
@@ -45,6 +46,10 @@ class DayOffRequest < ApplicationRecord
   end
 
   private
+
+  def check_category_status
+    errors[:base] << 'Day off category inactivated' if day_off_info.day_off_category.inactive?
+  end
 
   def validate_info_user
     return unless day_off_info.present?

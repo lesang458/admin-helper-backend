@@ -8,7 +8,6 @@ class DayOffInfo < ApplicationRecord
 
   def self.id_by_user_and_cateogry(user_id, day_off_category_id)
     info = find_by('day_off_category_id = ? AND user_id = ?', day_off_category_id, user_id)
-    raise(ArgumentError, 'Day off category inactivated') if info&.day_off_category&.inactive?
     raise(ArgumentError, 'Invalid category or user') unless info
 
     info.id
