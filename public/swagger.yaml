@@ -730,19 +730,6 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
-    delete:
-      tags:
-        - Device Category
-      summary: Delete Device Category by id
-      responses:
-        '204':
-          description: Delete successful
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Permission'
-        '404':
-          $ref: '#/components/responses/NotFound'
   /devices:
     post:
       tags:
