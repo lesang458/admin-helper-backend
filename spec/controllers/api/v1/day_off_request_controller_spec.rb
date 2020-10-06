@@ -74,7 +74,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(message).to include 'Invalid category or user'
     end
 
-    it 'should return 422 with status of day off cateogry is inactive' do
+    it 'should return 422 with status of day off cateogry inactived' do
       @day_off_category.inactive!
       post :create, params: post_params
       message = JSON.parse(response.body)['message']
