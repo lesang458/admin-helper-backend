@@ -48,7 +48,7 @@ class DayOffRequest < ApplicationRecord
   private
 
   def check_category_status
-    errors[:base] << 'Day off category inactivated' if day_off_info.day_off_category.inactive?
+    errors[:base] << 'Day off category inactivated' if day_off_info&.day_off_category&.inactive?
   end
 
   def validate_info_user
