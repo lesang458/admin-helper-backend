@@ -6,6 +6,7 @@ admin:
     - create
     - update
     - update_status
+    - update_password
   sessions:
     - create
   day_off_request:

@@ -4,8 +4,12 @@ Rails.application.routes.draw do
     namespace :v1 do
       post  'login', to: 'sessions#create'
       post 'google_login', to: 'sessions#google_login'
-      resources :employees, only: %i[index create show update]
-      patch 'employees/:id/status', :to => 'employees#update_status'
+      resources :employees, only: %i[index create show update] do
+        member do
+          patch '/status', to: 'employees#update_status'
+          patch '/password', to: 'employees#update_password'
+        end
+      end
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
       get 'employees/:id/day-off-requests', to: 'day_off_request#index'
       post 'password/validate_token', to: 'password#validate_token'
