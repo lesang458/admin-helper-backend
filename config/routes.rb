@@ -16,8 +16,12 @@ Rails.application.routes.draw do
       resources :password, only: %i[create]
       patch 'password/reset', to: 'password#update'
       resources :day_off_info, only: %i[update index]
-      resources :day_off_categories, only: %i[index update create]
-      resources :device_categories
+      resources :day_off_categories, only: %i[index update create] do
+        member do
+          patch '/deactivate', to: 'day_off_categories#deactivate'
+        end
+      end
+      resources :device_categories, except: %i[destroy]
       resources :device_histories, only: %i[index show]
       resources :devices, only: %i[create show index destroy update] do
         member do

@@ -15,11 +15,6 @@ class Api::V1::DeviceCategoriesController < ApplicationController
     render_resource(device_category, :created, DeviceCategorySerializer)
   end
 
-  def destroy
-    DeviceCategory.destroy(params[:id])
-    head :no_content
-  end
-
   def update
     category = DeviceCategory.find(params[:id])
     category.update!(category_params)

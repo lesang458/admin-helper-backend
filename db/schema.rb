@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_03_093219) do
+ActiveRecord::Schema.define(version: 2020_09_29_070640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2020_09_03_093219) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "total_hours_default"
+    t.string "status", default: "ACTIVE"
   end
 
   create_table "day_off_infos", force: :cascade do |t|
