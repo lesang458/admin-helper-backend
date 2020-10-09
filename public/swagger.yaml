@@ -326,7 +326,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DayOffRequest'
+              $ref: '#/components/schemas/RequestDayOffRequest'
       responses:
         '201':
           description: created day-off-request
@@ -1002,6 +1002,110 @@ paths:
           $ref: '#/components/responses/InvalidParams'
         '400':
           $ref: '#/components/responses/BadRequest'
+  '/day_off_categories/{id}/activate':
+    patch:
+      tags:
+      - Day Off Category
+      summary: Activate
+      parameters:
+      - name: id
+        in: path
+        description: Update status of Day Off Category
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DayOffCategoryResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /day_off_requests:
+    get:
+        tags:
+          - Day Off Request
+        summary: Get list Day Off Request
+        description: Returns list Day Off Request
+        parameters:
+          - name: day_off_category_id
+            in: query
+            description: Search with day off category id
+            required: false
+            schema:
+              type: integer
+          - name: user_id
+            in: query
+            description: Search with day off user id
+            required: false
+            schema:
+              type: integer
+          - name: from_date
+            in: query
+            description: Search with from date
+            required: false
+            schema:
+              type: string
+              format: date
+              example: '2015-11-23'
+          - name: to_date
+            in: query
+            description: Search with to date
+            required: false
+            schema:
+              type: string
+              format: date
+              example: '2015-11-23'
+          - name: page
+            in: query
+            description: pagination with the current page
+            required: false
+            schema:
+              type: integer
+              example: 1
+          - name: per_page
+            in: query
+            description: pagination with the number of elements per page
+            required: false
+            schema:
+              type: integer
+              example: 20
+        responses:
+          '200':
+            description: successful
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: 
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        $ref: '#/components/schemas/DayOffRequest'
+                    pagination:
+                      $ref: '#/components/schemas/Pagination'
+          '401':
+            $ref: '#/components/responses/Unauthorized'
+          '403':
+            $ref: '#/components/responses/Permission'
+          '404':
+            $ref: '#/components/responses/NotFound'
 components:
   responses:
     RequestSuccess:
@@ -1367,7 +1471,7 @@ components:
                   hours: 160
                   category_name: 'ILLNESS'
                   available_hours: 220
-    DayOffRequest:
+    RequestDayOffRequest:
       type: object
       properties:
         from_date:
@@ -1394,6 +1498,54 @@ components:
         - to_date
         - hours_per_day
         - day_off_category_id
+    DayOffRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          example: 'employee@gmail.com'
+        first_name:
+          type: string
+          example: 'admin'
+        last_name:
+          type: string
+          example: 'user'
+        from_date:
+          type: string
+          format: date
+          example: '2020-02-02'
+        to_date:
+          type: string
+          format: date
+          example: '2020-02-10'
+        hours_per_day:
+          type: string
+          format: int64
+          example: 4
+        notes:
+          type: string
+          example: "here is notes"
+        day_off_category:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: 'VACATION'
+            description:
+              type: string
+              example: 'description'
+            total_hours_default:
+              type: integer
+              example: 120
+            status:
+              type: string
+              example: 'active'
     DayOffRequestResponse:
       type: array
       items:
@@ -1460,7 +1612,7 @@ components:
             example: 15
           status:
             type: string
-            example: 'INACTIVE'
+            example: 'active'
     DayOffInfoResponse:
       type: object
       properties:
