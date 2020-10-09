@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :day_off_categories, only: %i[index update create] do
         member do
           patch '/deactivate', to: 'day_off_categories#deactivate'
+          patch '/activate', to: 'day_off_categories#activate'
         end
       end
       resources :device_categories, except: %i[destroy]
