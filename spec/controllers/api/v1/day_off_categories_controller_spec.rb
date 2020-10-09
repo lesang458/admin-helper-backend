@@ -153,7 +153,9 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       {
         name: 'Summer',
         total_hours_default: 16,
-        description: "when don't need go to school"
+        description: "when don't need go to school",
+        apply_for_all_employees: true,
+        employee_ids: [@admin.id]
       }
     }
     it 'return status 401 status code with invalid token' do
@@ -204,6 +206,49 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(day_off_category['description']).to eq post_params[:description]
       expect(day_off_category['total_hours_default']).to eq post_params[:total_hours_default]
       expect(response.status).to eq(201)
+      expect(DayOffInfo.where(day_off_category_id: day_off_category['id']).count).to eq(2)
+    end
+
+    it 'should return 201' do
+      params = post_params.merge(
+        {
+          apply_for_all_employees: false
+        }
+      )
+      post :create, params: params, as: :json
+      day_off_category = JSON.parse(response.body)['day_off_category']
+      expect(day_off_category['name']).to eq post_params[:name]
+      expect(day_off_category['description']).to eq post_params[:description]
+      expect(day_off_category['total_hours_default']).to eq post_params[:total_hours_default]
+      expect(response.status).to eq(201)
+      expect(DayOffInfo.where(day_off_category_id: day_off_category['id']).count).to eq(1)
+    end
+
+    it 'should return 201' do
+      params = post_params.merge(
+        {
+          apply_for_all_employees: false,
+          employee_ids: []
+        }
+      )
+      post :create, params: params, as: :json
+      day_off_category = JSON.parse(response.body)['day_off_category']
+      expect(day_off_category['name']).to eq post_params[:name]
+      expect(day_off_category['description']).to eq post_params[:description]
+      expect(day_off_category['total_hours_default']).to eq post_params[:total_hours_default]
+      expect(response.status).to eq(201)
+      expect(DayOffInfo.where(day_off_category_id: day_off_category['id']).count).to eq(0)
+    end
+
+    it 'should return 201' do
+      params = post_params.dup
+      post :create, params: params.except!(:apply_for_all_employees, :employee_ids), as: :json
+      day_off_category = JSON.parse(response.body)['day_off_category']
+      expect(day_off_category['name']).to eq post_params[:name]
+      expect(day_off_category['description']).to eq post_params[:description]
+      expect(day_off_category['total_hours_default']).to eq post_params[:total_hours_default]
+      expect(response.status).to eq(201)
+      expect(DayOffInfo.where(day_off_category_id: day_off_category['id']).count).to eq(0)
     end
   end
 end
