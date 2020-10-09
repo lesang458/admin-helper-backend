@@ -16,6 +16,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
     @category_vacation = FactoryBot.create(:day_off_category, :vacation)
     @category_illness = FactoryBot.create(:day_off_category, :illness)
+    @maternity = FactoryBot.create(:day_off_category, :maternity)
     @info_vacation = FactoryBot.create(:day_off_info, :vacation, user_id: @user.id)
     @info_illness = FactoryBot.create(:day_off_info, :illness, user_id: @user.id)
   end
@@ -200,6 +201,44 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(422)
         expect(response.body).to include("Email can't be blank")
       end
+
+      it 'should return 200 with an info of newly created day off category' do
+        params = patch_params.merge(
+          {
+            day_off_infos_attributes:
+          [
+            {
+              day_off_category_id: @category_vacation.id,
+              hours: 222
+            },
+            {
+              day_off_category_id: @category_illness.id,
+              hours: 160
+            },
+            {
+              day_off_category_id: @maternity.id,
+              hours: 140
+            }
+          ]
+          }
+        )
+        patch :update, params: params
+        @user.reload
+        @info_vacation.reload
+        @info_illness.reload
+        @maternity.reload
+        expect(response.status).to eq(200)
+        expect(@user.first_name).to eq('dang')
+        expect(@user.last_name).to eq('hanh')
+        expect(@user.email).to eq('danghanh@mail.com')
+        expect(@user.birthdate.to_s).to eq('1999-02-02')
+        expect(@user.join_date.to_s).to eq('2019-11-23')
+        expect(@user.phone_number).to eq('0123456789')
+        expect(@info_vacation.hours).to eq(222)
+        expect(@info_illness.hours).to eq(160)
+        info_maternity = @user.day_off_infos.find_by day_off_category: @maternity.id
+        expect(info_maternity.hours).to eq(140)
+      end
     end
 
     describe 'POST# create employee' do
@@ -218,7 +257,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
           ]
         }
       }
-      let!(:unexist_day_off_category_id) { @category_vacation.id + @category_illness.id }
+      let!(:unexist_day_off_category_id) { @category_vacation.id + @category_illness.id + 999 }
 
       it 'should return 201' do
         params = employee_params.dup
