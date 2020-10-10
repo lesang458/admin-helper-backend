@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       patch 'employees/:id/status', :to => 'employees#update_status'
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
       get 'employees/:id/day-off-requests', to: 'day_off_request#index'
+      put 'day_off_request/:id', to: 'day_off_request#update'
       post 'password/validate_token', to: 'password#validate_token'
       resources :password, only: %i[create]
       patch 'password/reset', to: 'password#update'

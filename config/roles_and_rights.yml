@@ -11,6 +11,7 @@ admin:
   day_off_request:
     - create
     - index
+    - update
   day_off_info:
     - update
     - index
