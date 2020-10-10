@@ -1039,6 +1039,40 @@ paths:
           $ref: '#/components/responses/InvalidParams'
         '400':
           $ref: '#/components/responses/BadRequest'
+  '/day_off_categories/{id}/activate':
+    patch:
+      tags:
+      - Day Off Category
+      summary: Activate
+      parameters:
+      - name: id
+        in: path
+        description: Update status of Day Off Category
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  device_category:
+                    $ref: '#/components/schemas/DayOffCategoryResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams'
+        '400':
+          $ref: '#/components/responses/BadRequest'
 components:
   responses:
     RequestSuccess:
@@ -1497,7 +1531,7 @@ components:
             example: 15
           status:
             type: string
-            example: 'INACTIVE'
+            example: 'active'
     DayOffInfoResponse:
       type: object
       properties:

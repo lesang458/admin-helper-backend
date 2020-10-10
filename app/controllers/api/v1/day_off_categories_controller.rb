@@ -1,5 +1,5 @@
 class Api::V1::DayOffCategoriesController < ApplicationController
-  before_action :find_day_off_category, only: %i[update deactivate]
+  before_action :find_day_off_category, only: %i[update deactivate activate]
   def index
     day_off_categories = DayOffCategory.search(params)
     day_off_categories = @page.to_i <= 0 ? day_off_categories : day_off_categories.page(@page).per(@per_page)
@@ -14,6 +14,12 @@ class Api::V1::DayOffCategoriesController < ApplicationController
   def deactivate
     raise(ExceptionHandler::BadRequest, 'Day off category was deactivated') if @day_off_category.inactive?
     @day_off_category.inactive!
+    render_resource(@day_off_category, :ok, DayOffCategorySerializer)
+  end
+
+  def activate
+    raise(ExceptionHandler::BadRequest, 'Day off category was activated') if @day_off_category.active?
+    @day_off_category.active!
     render_resource(@day_off_category, :ok, DayOffCategorySerializer)
   end
 

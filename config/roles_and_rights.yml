@@ -19,6 +19,7 @@ admin:
     - index
     - update
     - deactivate
+    - activate
     - create
   device_categories:
     - index
