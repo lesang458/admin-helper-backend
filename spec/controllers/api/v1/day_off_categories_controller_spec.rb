@@ -244,7 +244,7 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(DayOffInfo.where(day_off_category_id: day_off_category['id']).count).to eq(2)
     end
 
-    it 'should return 201' do
+    it 'should return 201 and create day off info for 1 user' do
       params = post_params.merge(
         {
           apply_for_all_employees: false
@@ -259,7 +259,7 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(DayOffInfo.where(day_off_category_id: day_off_category['id']).count).to eq(1)
     end
 
-    it 'should return 201' do
+    it 'should return 201 and no day off info created for any user' do
       params = post_params.merge(
         {
           apply_for_all_employees: false,
@@ -275,7 +275,7 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(DayOffInfo.where(day_off_category_id: day_off_category['id']).count).to eq(0)
     end
 
-    it 'should return 201' do
+    it 'should return 201 and no day off info created for any user' do
       params = post_params.dup
       post :create, params: params.except!(:apply_for_all_employees, :employee_ids), as: :json
       day_off_category = JSON.parse(response.body)['day_off_category']
