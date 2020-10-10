@@ -56,6 +56,41 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
     end
   end
 
+  describe 'PATCH# Activate' do
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      patch :activate, params: patch_params_status
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      employee_token = JwtToken.encode({ user_id: @employee.id })
+      headers = { authorization: "Bearer #{employee_token}" }
+      request.headers.merge! headers
+      patch :activate, params: patch_params_status
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404' do
+      patch :activate, params: { id: 'NOT FOUND' }
+      expect(response.status).to eq(404)
+    end
+
+    it 'should return 200' do
+      patch :deactivate, params: patch_params_status
+      patch :activate, params: patch_params_status
+      @category_vacation.reload
+      expect(@category_vacation.status).to eq 'active'
+      expect(response.status).to eq(200)
+    end
+
+    it 'should return 400 if day off category was activated' do
+      patch :activate, params: patch_params_status
+      expect(response.status).to eq(400)
+      expect(JSON.parse(response.body)['message']).to include 'Day off category was activated'
+    end
+  end
+
   describe 'GET# day-off-categories' do
     it 'return status 401 status code with invalid token' do
       request.headers.merge! invalid_headers
