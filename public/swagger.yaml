@@ -1073,6 +1073,44 @@ paths:
           $ref: '#/components/responses/InvalidParams'
         '400':
           $ref: '#/components/responses/BadRequest'
+  '/day_off_request/{id}':
+    put:
+      tags:
+      - Day Off Request
+      summary: Update Day Off Request
+      parameters:
+      - name: id
+        in: path
+        description: Update Day Off Request
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DayOffRequest'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  day_off_request:
+                    $ref: '#/components/schemas/DayOffRequestResponse'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Permission'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/InvalidParams'
 components:
   responses:
     RequestSuccess:
@@ -1511,6 +1549,13 @@ components:
               description:
                 type: string
                 description: "description"
+              total_hours_default:
+                type: integer
+                format: int64
+                example: 1
+              status:
+                type: string
+                example: "active"
     DayOffCategoryResponse:
       type: array
       items:
