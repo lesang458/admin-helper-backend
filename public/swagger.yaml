@@ -968,6 +968,43 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+  '/employees/{id}/password':
+    patch:
+      tags:
+        - Employees
+      summary: Update employee by ID
+      description: Returns a single pet
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePassword'
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  employee:
+                    $ref: '#/components/schemas/Employee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams'
   '/day_off_categories/{id}/deactivate':
     patch:
       tags:
@@ -1698,6 +1735,18 @@ components:
       required:
       - name
       - total_hours_default
+    UpdatePassword:
+      type: object
+      properties:
+        old_password:
+          type: string
+          example: "123456"
+        new_password:
+          type: string
+          example: "123456789"
+      required:
+      - old_password
+      - new_password
   securitySchemes:
     bearerAuth:
       type: http
