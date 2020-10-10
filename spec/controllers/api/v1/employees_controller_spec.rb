@@ -16,6 +16,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
 
     @category_vacation = FactoryBot.create(:day_off_category, :vacation)
     @category_illness = FactoryBot.create(:day_off_category, :illness)
+    @maternity = FactoryBot.create(:day_off_category, :maternity)
     @info_vacation = FactoryBot.create(:day_off_info, :vacation, user_id: @user.id)
     @info_illness = FactoryBot.create(:day_off_info, :illness, user_id: @user.id)
   end
@@ -200,6 +201,44 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(422)
         expect(response.body).to include("Email can't be blank")
       end
+
+      it 'should return 200 with an info of newly created day off category' do
+        params = patch_params.merge(
+          {
+            day_off_infos_attributes:
+          [
+            {
+              day_off_category_id: @category_vacation.id,
+              hours: 222
+            },
+            {
+              day_off_category_id: @category_illness.id,
+              hours: 160
+            },
+            {
+              day_off_category_id: @maternity.id,
+              hours: 140
+            }
+          ]
+          }
+        )
+        patch :update, params: params
+        @user.reload
+        @info_vacation.reload
+        @info_illness.reload
+        @maternity.reload
+        expect(response.status).to eq(200)
+        expect(@user.first_name).to eq('dang')
+        expect(@user.last_name).to eq('hanh')
+        expect(@user.email).to eq('danghanh@mail.com')
+        expect(@user.birthdate.to_s).to eq('1999-02-02')
+        expect(@user.join_date.to_s).to eq('2019-11-23')
+        expect(@user.phone_number).to eq('0123456789')
+        expect(@info_vacation.hours).to eq(222)
+        expect(@info_illness.hours).to eq(160)
+        info_maternity = @user.day_off_infos.find_by day_off_category: @maternity.id
+        expect(info_maternity.hours).to eq(140)
+      end
     end
 
     describe 'POST# create employee' do
@@ -218,12 +257,14 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
           ]
         }
       }
-      let!(:unexist_day_off_category_id) { @category_vacation.id + @category_illness.id }
+      let!(:unexist_day_off_category_id) { @category_vacation.id + @category_illness.id + 999 }
 
       it 'should return 201' do
         params = employee_params.dup
         post :create, params: params
         expect(response.status).to eq(201)
+        user = User.find_by(email: params[:email])
+        expect(user&.check_valid_password(params[:password])).to be true
       end
 
       it 'should return 201 without phone_number' do
@@ -245,6 +286,30 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         request.headers.merge! valid_headers
         post :create, params: employee_params
         expect(response.status).to eq(403)
+      end
+
+      it 'should return 422 with too short password' do
+        params = employee_params.dup
+        params[:password] = '12345'
+        post :create, params: params
+        expect(response.status).to eq(422)
+        expect(response.body).to include('Password is too short')
+      end
+
+      it 'should return 422 with blank password' do
+        params = employee_params.dup
+        params[:password] = ''
+        post :create, params: params
+        expect(response.status).to eq(422)
+        expect(response.body).to include("Password can't be blank")
+      end
+
+      it 'should return 422 with password include space' do
+        params = employee_params.dup
+        params[:password] = '123 456'
+        post :create, params: params
+        expect(response.status).to eq(422)
+        expect(response.body).to include('Password is invalid')
       end
 
       it 'should return 422 with unexist day_off_category_id' do
@@ -539,6 +604,57 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         request.headers.merge! invalid_headers
         get :index
         expect(response.status).to eq(401)
+      end
+    end
+
+    describe 'PATCH# update_password' do
+      let!(:password_params) do
+        {
+          id: @user.id,
+          old_password: '123456',
+          new_password: '123456789'
+        }
+      end
+      it 'return status 401 status code with invalid token' do
+        request.headers.merge! invalid_headers
+        patch :update_password, params: password_params
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 403 with employee' do
+        employee_token = JwtToken.encode({ user_id: @employee.id })
+        headers = { authorization: "Bearer #{employee_token}" }
+        request.headers.merge! headers
+        patch :update_password, params: password_params
+        expect(response.status).to eq(403)
+      end
+
+      it 'should return 422 with blank new_password  qua ngan, chua space' do
+        params = password_params.dup
+        params[:new_password] = ''
+        patch :update_password, params: params
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with too short new_password' do
+        params = password_params.dup
+        params[:new_password] = '12345'
+        patch :update_password, params: params
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 with new_password include space' do
+        params = password_params.dup
+        params[:new_password] = '123 45'
+        patch :update_password, params: params
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 200' do
+        patch :update_password, params: password_params
+        expect(response.status).to eq(200)
+        @user.reload
+        expect(@user&.check_valid_password(password_params[:new_password])).to be true
       end
     end
   end

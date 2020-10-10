@@ -4,8 +4,12 @@ Rails.application.routes.draw do
     namespace :v1 do
       post  'login', to: 'sessions#create'
       post 'google_login', to: 'sessions#google_login'
-      resources :employees, only: %i[index create show update]
-      patch 'employees/:id/status', :to => 'employees#update_status'
+      resources :employees, only: %i[index create show update] do
+        member do
+          patch '/status', to: 'employees#update_status'
+          patch '/password', to: 'employees#update_password'
+        end
+      end
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
       get 'employees/:id/day-off-requests', to: 'day_off_request#index'
       put 'day_off_request/:id', to: 'day_off_request#update'
@@ -16,6 +20,7 @@ Rails.application.routes.draw do
       resources :day_off_categories, only: %i[index update create] do
         member do
           patch '/deactivate', to: 'day_off_categories#deactivate'
+          patch '/activate', to: 'day_off_categories#activate'
         end
       end
       resources :device_categories, except: %i[destroy]

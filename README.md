@@ -24,3 +24,8 @@
 ## Deployment
 ## Example credentials
 - secret_key_base: "my_secret_key"
+
+## Swagger Docs
+- URL: https://admin-helper-backend.herokuapp.com/api_docs
+- Username: admin
+- Password: Novahub@2020
