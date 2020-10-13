@@ -2,7 +2,7 @@ class Api::V1::DayOffCategoriesController < ApplicationController
   before_action :find_day_off_category, only: %i[update deactivate activate]
   def index
     day_off_categories = DayOffCategory.search(params)
-    day_off_categories = @page.to_i <= 0 ? day_off_categories : day_off_categories.page(@page).per(@per_page)
+    day_off_categories = paginate(day_off_categories)
     render_collection(day_off_categories, DayOffCategorySerializer)
   end
 

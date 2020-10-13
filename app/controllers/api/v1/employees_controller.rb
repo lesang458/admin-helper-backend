@@ -4,7 +4,7 @@ class Api::V1::EmployeesController < ApplicationController
   def index
     set_query_sort if params[:sort].present?
     users = User.search(params).order(@query)
-    users = @page.to_i <= 0 ? users : users.page(@page).per(@per_page)
+    users = paginate(users)
     render_collection(users, UserSerializer)
   end
 
