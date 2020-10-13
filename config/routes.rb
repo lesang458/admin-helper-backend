@@ -16,7 +16,11 @@ Rails.application.routes.draw do
       post 'password/validate_token', to: 'password#validate_token'
       resources :password, only: %i[create]
       patch 'password/reset', to: 'password#update'
-      resources :day_off_info, only: %i[update index]
+      resources :day_off_info, only: %i[update index] do
+        member do
+          patch '/deactivate', to: 'day_off_info#deactivate'
+        end
+      end
       resources :day_off_categories, only: %i[index update create] do
         member do
           patch '/deactivate', to: 'day_off_categories#deactivate'
