@@ -15,6 +15,7 @@ class DayOffCategory < ApplicationRecord
   def build_day_off_infos(day_off_infos_params)
     employee_ids = day_off_infos_params[:apply_for_all_employees].present? ? User.all.pluck(:id) : day_off_infos_params[:employee_ids]
     return unless employee_ids.present?
+    employee_ids = employee_ids.select { |employee_id| employee_id.is_a?(Integer) } if employee_ids.present?
     employee_ids.each do |employee_id|
       employee = User.find employee_id
       employee.day_off_infos.create! hours: 0, day_off_category_id: id
