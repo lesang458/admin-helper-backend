@@ -24,6 +24,42 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
     let!(:get_params) { { user_id: @admin.id, day_off_category_id: @category_vacation.id } }
     before(:each) { request.headers.merge! valid_headers }
 
+    describe 'PATCH# Deactive' do
+      let!(:patch_params_status) { { id: @info_vacation.id } }
+      it 'return status 401 status code with invalid token' do
+        request.headers.merge! invalid_headers
+        patch :deactivate, params: patch_params_status
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 403 with employee' do
+        employee_token = JwtToken.encode({ user_id: @employee.id })
+        headers = { authorization: "Bearer #{employee_token}" }
+        request.headers.merge! headers
+        patch :deactivate, params: patch_params_status
+        expect(response.status).to eq(403)
+      end
+
+      it 'should return 404' do
+        patch :deactivate, params: { id: 'NOT FOUND' }
+        expect(response.status).to eq(404)
+      end
+
+      it 'should return 200' do
+        patch :deactivate, params: patch_params_status
+        @info_vacation.reload
+        expect(@info_vacation.status).to eq 'inactive'
+        expect(response.status).to eq(200)
+      end
+
+      it 'should return 400 if day off category was deactivated' do
+        patch :deactivate, params: patch_params_status
+        patch :deactivate, params: patch_params_status
+        expect(response.status).to eq(400)
+        expect(JSON.parse(response.body)['message']).to include 'Day off info was deactivated'
+      end
+    end
+
     describe 'Get Day Off Info' do
       it 'should return 401' do
         request.headers.merge! invalid_headers
