@@ -24,9 +24,12 @@ class Api::V1::DayOffCategoriesController < ApplicationController
   end
 
   def create
-    day_off_category = DayOffCategory.new(day_off_category_params)
-    day_off_category.save!
-    render_resource day_off_category, :created, DayOffCategorySerializer
+    DayOffCategory.transaction do
+      day_off_category = DayOffCategory.new(day_off_category_params)
+      day_off_category.save!
+      day_off_category.build_day_off_infos(day_off_info_options_params) if day_off_info_options_params.present?
+      render_resource day_off_category, :created, DayOffCategorySerializer
+    end
   end
 
   private
@@ -37,5 +40,9 @@ class Api::V1::DayOffCategoriesController < ApplicationController
 
   def day_off_category_params
     params.permit(:name, :total_hours_default, :description)
+  end
+
+  def day_off_info_options_params
+    params.permit(:apply_for_all_employees, employee_ids: [])
   end
 end

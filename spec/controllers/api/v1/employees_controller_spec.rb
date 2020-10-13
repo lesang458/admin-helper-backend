@@ -325,7 +325,7 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         params[:day_off_infos_attributes].first[:hours] = -160
         post :create, params: params
         expect(response.status).to eq(422)
-        expect(response.body).to include('Day off infos hours must be greater than 0')
+        expect(response.body).to include('Day off infos hours must be greater than or equal to 0')
       end
 
       it 'should return 422 with empty email' do
