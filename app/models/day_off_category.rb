@@ -18,7 +18,7 @@ class DayOffCategory < ApplicationRecord
     employee_ids = employee_ids.select { |employee_id| employee_id.is_a?(Integer) }
     employee_ids.each do |employee_id|
       employee = User.find employee_id
-      employee.day_off_infos.create! hours: 0, day_off_category_id: id
+      employee.day_off_infos.create! hours: total_hours_default, day_off_category_id: id
     end
   end
 end
