@@ -16,6 +16,7 @@ admin:
   day_off_info:
     - update
     - index
+    - deactivate
   day_off_categories:
     - index
     - update

@@ -2,11 +2,13 @@ class DayOffInfo < ApplicationRecord
   belongs_to :user
   has_many :day_off_requests
   belongs_to :day_off_category
+  enum status: { active: 'ACTIVE', inactive: 'INACTIVE' }
+  validates :status, presence: true, inclusion: { in: %w[active inactive] }
   validates :hours, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   delegate :email, :first_name, :last_name, to: :user
   delegate :category_name, :description, to: :day_off_category
 
-  def self.id_by_user_and_cateogry(user_id, day_off_category_id)
+  def self.id_by_user_and_category(user_id, day_off_category_id)
     info = find_by('day_off_category_id = ? AND user_id = ?', day_off_category_id, user_id)
     raise(ArgumentError, 'Invalid category or user') unless info
 
