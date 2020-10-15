@@ -7,8 +7,7 @@ class Api::V1::DayOffInfoController < ApplicationController
   end
 
   def update
-    day_off_info = DayOffInfo.find(params[:id])
-    day_off_info.update!(info_params)
+    @day_off_info.update!(info_params)
     render_resource(day_off_info, :ok)
   end
 
