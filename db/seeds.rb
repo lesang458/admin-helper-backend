@@ -106,30 +106,91 @@ phone = DeviceCategory.find_or_create_by name: 'Phone'
 tablet = DeviceCategory.find_or_create_by name: 'Tablet' 
 monitor = DeviceCategory.find_or_create_by name: 'Monitor'
 
-mac_book = Device.find_or_create_by name: 'Mac Book Pro', price: 30_000_000, device_category_id: laptop.id, user_id: nil
-mac_book_history = mac_book.device_histories.find_or_create_by from_date: '2019-02-02', to_date: nil, status: 'IN_INVENTORY', device_id: mac_book.id
+mac_book = Device.create_with(
+  name: "Mac Book Pro",
+  price: 30_000_000,
+  device_category_id: laptop.id,
+  user_id: nil
+).find_or_create_by(name: 'Mac Book Pro')
+mac_book_history = mac_book.device_histories.create_with(
+  from_date: '2019-02-02',
+  to_date: nil,
+  status: 'IN_INVENTORY',
+  device_id: mac_book.id,
+).find_or_create_by(from_date: '2019-02-02', status: 'IN_INVENTORY', device_id: mac_book.id)
 
-iphone = Device.find_or_create_by name: 'Iphone 12 Pro Max', price: 39_990_000, device_category_id: phone.id, user_id: nil
-iphone_history = iphone.device_histories.find_or_create_by from_date: '2019-02-02', to_date: nil, status: 'ASSIGNED', device_id: iphone.id
+iphone = Device.create_with(
+  name: "Iphone 12 Pro Max",
+  price: 39_990_000,
+  device_category_id: phone.id,
+  user_id: nil
+).find_or_create_by(name: 'Iphone 12 Pro Max')
+iphone_history = iphone.device_histories.create_with(
+  from_date: '2019-02-02',
+  to_date: nil,
+  status: 'ASSIGNED',
+  device_id: mac_book.id,
+).find_or_create_by(from_date: '2019-02-02', status: 'ASSIGNED', device_id: iphone.id)
 
-ipad = Device.find_or_create_by name: 'IPad Pro 12.9 inch', price: 27_490_000, device_category_id: tablet.id, user_id: nil
-ipad_history = ipad.device_histories.find_or_create_by from_date: '2019-02-02', to_date: nil, status: 'IN_INVENTORY', device_id: ipad.id
+ipad = Device.create_with(
+  name: "IPad Pro 12.9 inch",
+  price: 27_490_000,
+  device_category_id: tablet.id,
+  user_id: nil
+).find_or_create_by(name: 'IPad Pro 12.9 inch')
+ipad_history = ipad.device_histories.create_with(
+  from_date: '2019-02-02',
+  to_date: nil,
+  status: 'IN_INVENTORY',
+  device_id: ipad.id,
+).find_or_create_by(from_date: '2019-02-02', status: 'ASSIGNED', device_id: ipad.id)
 
-dell_monitor = Device.find_or_create_by name: 'DELL E2019H', price: 2_290_000, device_category_id: monitor.id, user_id: nil
-dell_monitor_history = dell_monitor.device_histories.find_or_create_by from_date: '2019-02-02', to_date: nil, status: 'IN_INVENTORY', device_id: dell_monitor.id
+dell_monitor = Device.create_with(
+  name: "DELL E2019H",
+  price: 2_290_000,
+  device_category_id: monitor.id,
+  user_id: nil
+).find_or_create_by(name: 'DELL E2019H')
+dell_monitor_history = dell_monitor.device_histories.create_with(
+  from_date: '2019-02-02',
+  to_date: nil,
+  status: 'IN_INVENTORY',
+  device_id: ipad.id,
+).find_or_create_by(from_date: '2019-02-02', status: 'IN_INVENTORY', device_id: dell_monitor.id)
 
-DeviceHistory.find_or_create_by from_date: '2019-08-08', to_date: nil, status: 'ASSIGNED', device_id: mac_book.id, user_id: employee.id
+DeviceHistory.create_with(
+  from_date: '2019-08-08',
+  to_date: nil,
+  status: 'ASSIGNED',
+  device_id: mac_book.id,
+  user_id: employee.id
+).find_or_create_by(from_date: '2019-08-08', status: 'ASSIGNED', device_id: mac_book.id)
 mac_book_history.update!(to_date: '2019-08-08')
 mac_book.update!(user_id: employee.id)
 
-DeviceHistory.find_or_create_by from_date: '2019-09-06', status: 'IN_INVENTORY', device_id: iphone.id
+DeviceHistory.create_with(
+  from_date: '2019-09-06',
+  status: 'IN_INVENTORY',
+  device_id: iphone.id
+).find_or_create_by(from_date: '2019-09-06', status: 'IN_INVENTORY', device_id: iphone.id)
 iphone_history.update!(to_date: '2019-09-06')
 iphone.update!(user_id: nil)
 
-DeviceHistory.find_or_create_by from_date: '2019-09-09', to_date: nil, status: 'DISCARDED', device_id: ipad.id
+DeviceHistory.create_with(
+  from_date: '2019-09-09',
+  to_date: nil,
+  status: 'DISCARDED',
+  device_id: ipad.id
+).find_or_create_by(from_date: '2019-09-09', status: 'DISCARDED', device_id: ipad.id)
 ipad_history.update!(to_date: '2019-09-09')
 ipad.update!(user_id: nil)
 
-DeviceHistory.find_or_create_by from_date: '2019-08-08', to_date: nil, status: 'ASSIGNED', device_id: dell_monitor.id, user_id: employee.id
+DeviceHistory.create_with(
+  from_date: '2019-08-08',
+  to_date: nil,
+  status: 'ASSIGNED',
+  device_id: dell_monitor.id,
+  user_id: employee.id
+).find_or_create_by(from_date: '2019-08-08', status: 'ASSIGNED', device_id: dell_monitor.id)
 dell_monitor_history.update!(to_date: '2019-08-08')
 dell_monitor.update!(user_id: employee.id)
