@@ -50,6 +50,13 @@ RSpec.describe DayOffInfo, type: :model do
     expect(illness.name).to eq('ILLNESS')
   end
 
+  describe 'status' do
+    it { should respond_to(:status) }
+    it { should allow_value('ACTIVE').for(:status) }
+    it { should allow_value('INACTIVE').for(:status) }
+    it { should_not allow_value('').for(:status) }
+  end
+
   describe 'hours' do
     it { should respond_to(:hours) }
     it { should allow_value(123).for(:hours) }

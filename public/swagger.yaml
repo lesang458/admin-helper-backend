@@ -1183,6 +1183,38 @@ paths:
             $ref: '#/components/responses/Permission'
           '404':
             $ref: '#/components/responses/NotFound'
+  '/day_off_info/{id}/deactivate':
+    patch:
+      tags:
+      - Day Off Info
+      summary: Deactivate
+      parameters:
+      - name: id
+        in: path
+        description: Update status of Day Off Info
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  day_off_info:
+                    $ref: '#/components/schemas/DayOffInfoResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
 components:
   responses:
     RequestSuccess:
@@ -1738,6 +1770,9 @@ components:
         last_name:
           type: string
           example: "employee"
+        status:
+          type: string
+          example: "inactive"
     UpdateEmployee:
       type: object
       properties:
