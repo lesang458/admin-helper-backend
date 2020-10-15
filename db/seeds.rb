@@ -89,8 +89,8 @@ aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illne
   user = User.create_with(
     email: "user_#{i}@gmail.com",
     password: "123456",
-    first_name: "fake",
-    last_name: "user",
+    first_name: FFaker::Name.first_name,
+    last_name: FFaker::Name.last_name,
     birthdate: "2000-02-02",
     join_date: "2019-02-02",
     status: "ACTIVE",
