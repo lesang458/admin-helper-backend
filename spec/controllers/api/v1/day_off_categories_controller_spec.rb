@@ -256,7 +256,9 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(day_off_category['description']).to eq post_params[:description]
       expect(day_off_category['total_hours_default']).to eq post_params[:total_hours_default]
       expect(response.status).to eq(201)
-      expect(DayOffInfo.where(day_off_category_id: day_off_category['id']).count).to eq(1)
+      day_off_info = DayOffInfo.where(day_off_category_id: day_off_category['id'])
+      expect(day_off_info.count).to eq(1)
+      expect(day_off_info.first.hours).to eq(post_params[:total_hours_default])
     end
 
     it 'should return 201 and no day off info created for any user' do
