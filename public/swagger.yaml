@@ -69,7 +69,7 @@ paths:
                 properties: 
                   data:
                     $ref: '#/components/schemas/DayOffCategoryResponse'
-                  pagination:
+                  meta:
                       $ref: '#/components/schemas/Pagination'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -486,7 +486,7 @@ paths:
                       items:
                         type: object
                         $ref: '#/components/schemas/Employee'
-                    pagination:
+                    meta:
                       $ref: '#/components/schemas/Pagination'
           '401':
             $ref: '#/components/responses/Unauthorized'
@@ -617,7 +617,7 @@ paths:
                       items:
                         type: object
                         $ref: '#/components/schemas/DeviceHistory'
-                    pagination:
+                    meta:
                       $ref: '#/components/schemas/Pagination'
           '401':
             $ref: '#/components/responses/Unauthorized'
@@ -642,7 +642,7 @@ paths:
                     items:
                       type: object
                       $ref: '#/components/schemas/DeviceCategory'
-                  pagination:
+                  meta:
                     $ref: '#/components/schemas/Pagination'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -811,7 +811,7 @@ paths:
                     items:
                       type: object
                       $ref: '#/components/schemas/Device'
-                  pagination:
+                  meta:
                     $ref: '#/components/schemas/Pagination'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -1175,7 +1175,7 @@ paths:
                       items:
                         type: object
                         $ref: '#/components/schemas/DayOffRequest'
-                    pagination:
+                    meta:
                       $ref: '#/components/schemas/Pagination'
           '401':
             $ref: '#/components/responses/Unauthorized'
