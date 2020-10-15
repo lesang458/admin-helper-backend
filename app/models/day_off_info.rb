@@ -4,7 +4,7 @@ class DayOffInfo < ApplicationRecord
   belongs_to :day_off_category
   enum status: { active: 'ACTIVE', inactive: 'INACTIVE' }
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
-  validates :hours, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :hours, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   delegate :email, :first_name, :last_name, to: :user
   delegate :category_name, :description, to: :day_off_category
 

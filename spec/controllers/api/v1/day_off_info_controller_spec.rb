@@ -120,7 +120,7 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
       params[:hours] = -160
       put :update, params: params
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Hours must be greater than 0'
+      expect(message).to include 'Hours must be greater than or equal to 0'
       expect(response.status).to eq(422)
     end
 

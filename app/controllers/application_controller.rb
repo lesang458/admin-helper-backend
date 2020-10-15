@@ -10,4 +10,8 @@ class ApplicationController < ActionController::API
     @per_page = params[:per_page] || 20
     @page = params[:page] || 1
   end
+
+  def paginate(records)
+    @page.to_i <= 0 ? records : records.page(@page).per(@per_page)
+  end
 end

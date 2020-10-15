@@ -2,7 +2,7 @@ class Api::V1::DayOffInfoController < ApplicationController
   before_action :find_day_off_info, only: %i[update deactivate]
   def index
     day_off_infos = DayOffInfo.search(params)
-    day_off_infos = @page.to_i <= 0 ? day_off_infos : day_off_infos.page(@page).per(@per_page)
+    day_off_infos = paginate(day_off_infos)
     render_collection(day_off_infos, DayOffInfoSerializer)
   end
 
