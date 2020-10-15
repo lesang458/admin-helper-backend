@@ -1,7 +1,7 @@
 class Api::V1::DayOffRequestController < ApplicationController
   def index
     day_off_requests = DayOffRequest.search(params)
-    day_off_requests = @page.to_i <= 0 ? day_off_requests : day_off_requests.page(@page).per(@per_page)
+    day_off_requests = paginate(day_off_requests)
     render_collection(day_off_requests, DayOffRequestSerializer)
   end
 
