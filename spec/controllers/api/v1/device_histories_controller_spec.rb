@@ -37,7 +37,7 @@ RSpec.describe Api::V1::DeviceHistoriesController, type: :controller do
     it 'should return 200' do
       get :index, params: request_params
       expect(response.status).to eq(200)
-      json_response = JSON.parse(response.body)['pagination']
+      json_response = JSON.parse(response.body)['meta']
       expect(json_response['current_page']).to eq(1)
       expect(json_response['page_size']).to eq(10)
       expect(json_response['total_pages']).to eq(1)

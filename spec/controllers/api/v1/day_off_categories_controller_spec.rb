@@ -120,7 +120,7 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
 
     it 'should return 200 with status' do
       get :index, params: { status: 'ACTIVE' }
-      json_response = JSON.parse(response.body)['pagination']
+      json_response = JSON.parse(response.body)['meta']
       expect(json_response['current_page']).to eq(1)
       expect(json_response['page_size']).to eq(2)
       expect(json_response['total_pages']).to eq(1)
