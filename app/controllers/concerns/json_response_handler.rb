@@ -10,15 +10,15 @@ module JsonResponseHandler
     render_error message, :bad_request
   end
 
-  def render_collection(list)
+  def render_collection(list, _serializer_class = nil)
     render json: list, root: 'data', meta: pagination_dict(list)
   end
 
-  def render_resource(obj, status_code_symbol)
+  def render_resource(obj, status_code_symbol, _serializer_class = nil)
     render json: obj, status: status_code_symbol
   end
 
-  def render_resources(objs, status_code_symbol)
+  def render_resources(objs, status_code_symbol, _serializer_class = nil)
     render json: objs, status: status_code_symbol
   end
 end
