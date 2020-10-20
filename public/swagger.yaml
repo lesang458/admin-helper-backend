@@ -1799,12 +1799,24 @@ components:
           items:
             type: object
             properties:
-              day_off_category_id: 
+              day_off_category_id:
                 type: integer
                 example: 1
-              hours: 
+              status: 
+                type: string 
+              hours:
                 type: integer
-                example: 200
+                example: 160
+          example:
+            - day_off_category_id: 1
+              hours: 120
+              status: 'active'
+            - day_off_category_id: 2
+              hours: 160
+              status: 'inactive'
+            - day_off_category_id: 3
+              hours: 180
+              status: 'active'
     RequestCreateDayOffCategory:
       type: object
       properties:
