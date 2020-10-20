@@ -7,7 +7,7 @@ class Api::V1::DeviceCategoriesController < ApplicationController
 
   def show
     device_category = DeviceCategory.find(params[:id])
-    render_resource(device_category, :ok)
+    render_resource(device_category)
   end
 
   def create
@@ -18,7 +18,7 @@ class Api::V1::DeviceCategoriesController < ApplicationController
   def update
     category = DeviceCategory.find(params[:id])
     category.update!(category_params)
-    render_resource category, :ok
+    render_resource category
   end
 
   private

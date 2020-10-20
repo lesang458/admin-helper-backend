@@ -8,19 +8,19 @@ class Api::V1::DayOffCategoriesController < ApplicationController
 
   def update
     @day_off_category.update!(day_off_category_params)
-    render_resource(@day_off_category, :ok)
+    render_resource(@day_off_category)
   end
 
   def deactivate
     raise(ExceptionHandler::BadRequest, 'Day off category was deactivated') if @day_off_category.inactive?
     @day_off_category.inactive!
-    render_resource(@day_off_category, :ok)
+    render_resource(@day_off_category)
   end
 
   def activate
     raise(ExceptionHandler::BadRequest, 'Day off category was activated') if @day_off_category.active?
     @day_off_category.active!
-    render_resource(@day_off_category, :ok)
+    render_resource(@day_off_category)
   end
 
   def create

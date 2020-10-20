@@ -7,6 +7,6 @@ class Api::V1::DeviceHistoriesController < ApplicationController
 
   def show
     device_history = DeviceHistory.find(params[:id])
-    render_resource(device_history, :ok)
+    render_resource(device_history)
   end
 end

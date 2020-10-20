@@ -9,7 +9,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def show
-    render_resource @user, :ok
+    render_resource @user
   end
 
   def create
@@ -23,18 +23,18 @@ class Api::V1::EmployeesController < ApplicationController
       infos_params = update_params.delete(:day_off_infos_attributes)
       @user.update!(update_params.except(:day_off_infos_attributes))
       @user.update_infos(infos_params) if infos_params.present?
-      render_resource @user, :ok
+      render_resource @user
     end
   end
 
   def update_status
     @user.update!(user_status_params)
-    render_resource @user, :ok
+    render_resource @user
   end
 
   def update_password
     @user.update_password(update_password_params)
-    render_resource @user, :ok
+    render_resource @user
   end
 
   private

@@ -8,13 +8,13 @@ class Api::V1::DayOffInfoController < ApplicationController
 
   def update
     @day_off_info.update!(info_params)
-    render_resource(@day_off_info, :ok)
+    render_resource(@day_off_info)
   end
 
   def deactivate
     raise(ExceptionHandler::BadRequest, 'Day off info was deactivated') if @day_off_info.inactive?
     @day_off_info.inactive!
-    render_resource(@day_off_info, :ok)
+    render_resource(@day_off_info)
   end
 
   private
