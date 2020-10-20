@@ -30,6 +30,10 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { in: 6..40 }, format: { with: PASSWORD_FORMAT }, on: %i[create account_setup]
   before_create :encrypt_password
 
+  def active_day_off_infos
+    day_off_infos.where status: 'active'
+  end
+
   def update_password(password_params)
     raise(ArgumentError, 'Your password was incorrect.') unless check_valid_password(password_params[:old_password])
     self.password = password_params[:new_password]
@@ -69,7 +73,7 @@ class User < ApplicationRecord
   def update_infos(infos_params)
     infos_params.each do |day_off_info|
       day_off = day_off_infos.find_or_create_by day_off_category_id: day_off_info[:day_off_category_id]
-      day_off.update!(hours: day_off_info[:hours])
+      day_off.update!(hours: day_off_info[:hours], status: day_off_info[:status])
     end
   end
 

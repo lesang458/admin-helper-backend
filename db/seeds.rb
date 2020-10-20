@@ -1,5 +1,6 @@
 day_off_category_vacation = DayOffCategory.find_or_create_by name: 'VACATION', total_hours_default: 120, status: 'ACTIVE'
 day_off_category_illness = DayOffCategory.find_or_create_by name: 'ILLNESS', total_hours_default: 16, status: 'INACTIVE'
+day_off_category_maternity = DayOffCategory.find_or_create_by name: 'MATERNITY', total_hours_default: 160, status: 'ACTIVE'
 
 employee = User.create_with(
   email: "employee@gmail.com",

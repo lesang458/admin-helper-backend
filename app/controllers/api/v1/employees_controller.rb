@@ -50,7 +50,7 @@ class Api::V1::EmployeesController < ApplicationController
 
   def update_params
     params.permit(:email, :first_name, :last_name, :birthdate, :join_date, :phone_number, day_off_infos_attributes:
-      %i[day_off_category_id hours])
+      %i[day_off_category_id status hours])
   end
 
   def user_status_params

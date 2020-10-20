@@ -99,11 +99,13 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
           [
             {
               day_off_category_id: @category_vacation.id,
-              hours: 222
+              hours: 222,
+              status: 'active'
             },
             {
               day_off_category_id: @category_illness.id,
-              hours: 160
+              hours: 160,
+              status: 'active'
             }
           ]
         }
@@ -209,15 +211,18 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
           [
             {
               day_off_category_id: @category_vacation.id,
-              hours: 222
+              hours: 222,
+              status: 'active'
             },
             {
               day_off_category_id: @category_illness.id,
-              hours: 160
+              hours: 160,
+              status: 'inactive'
             },
             {
               day_off_category_id: @maternity.id,
-              hours: 140
+              hours: 140,
+              status: 'active'
             }
           ]
           }
@@ -238,6 +243,11 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(@info_illness.hours).to eq(160)
         info_maternity = @user.day_off_infos.find_by day_off_category: @maternity.id
         expect(info_maternity.hours).to eq(140)
+        infos = JSON.parse(response.body)['user']['day_off_infos']
+        expect(infos.count).to eq(2)
+        expect(@info_illness.status).to eq('inactive')
+        expect(@info_vacation.status).to eq('active')
+        expect(info_maternity.status).to eq('active')
       end
     end
 
