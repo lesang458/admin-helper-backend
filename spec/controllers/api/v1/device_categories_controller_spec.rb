@@ -91,20 +91,20 @@ RSpec.describe Api::V1::DeviceCategoriesController, type: :controller do
       get :index
       expect(response.status).to eq(200)
       json_response = JSON.parse(response.body)
-      expect(json_response['pagination']['current_page']).to eq(1)
-      expect(json_response['pagination']['page_size']).to eq(4)
-      expect(json_response['pagination']['total_pages']).to eq(1)
-      expect(json_response['pagination']['total_count']).to eq(4)
+      expect(json_response['meta']['current_page']).to eq(1)
+      expect(json_response['meta']['page_size']).to eq(4)
+      expect(json_response['meta']['total_pages']).to eq(1)
+      expect(json_response['meta']['total_count']).to eq(4)
     end
 
     it 'should return 200' do
       get :index, params: { page: 1, per_page: 3 }
       expect(response.status).to eq(200)
       json_response = JSON.parse(response.body)
-      expect(json_response['pagination']['current_page']).to eq(1)
-      expect(json_response['pagination']['page_size']).to eq(3)
-      expect(json_response['pagination']['total_pages']).to eq(2)
-      expect(json_response['pagination']['total_count']).to eq(4)
+      expect(json_response['meta']['current_page']).to eq(1)
+      expect(json_response['meta']['page_size']).to eq(3)
+      expect(json_response['meta']['total_pages']).to eq(2)
+      expect(json_response['meta']['total_count']).to eq(4)
     end
   end
 

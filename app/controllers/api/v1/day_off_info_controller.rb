@@ -3,18 +3,18 @@ class Api::V1::DayOffInfoController < ApplicationController
   def index
     day_off_infos = DayOffInfo.search(params)
     day_off_infos = paginate(day_off_infos)
-    render_collection(day_off_infos, DayOffInfoSerializer)
+    render_collection(day_off_infos)
   end
 
   def update
     @day_off_info.update!(info_params)
-    render_resource(@day_off_info, :ok, DayOffInfoSerializer)
+    render_resource(@day_off_info)
   end
 
   def deactivate
     raise(ExceptionHandler::BadRequest, 'Day off info was deactivated') if @day_off_info.inactive?
     @day_off_info.inactive!
-    render_resource(@day_off_info, :ok, DayOffInfoSerializer)
+    render_resource(@day_off_info)
   end
 
   private

@@ -3,24 +3,24 @@ class Api::V1::DayOffCategoriesController < ApplicationController
   def index
     day_off_categories = DayOffCategory.search(params)
     day_off_categories = paginate(day_off_categories)
-    render_collection(day_off_categories, DayOffCategorySerializer)
+    render_collection(day_off_categories)
   end
 
   def update
     @day_off_category.update!(day_off_category_params)
-    render_resource(@day_off_category, :ok, DayOffCategorySerializer)
+    render_resource(@day_off_category)
   end
 
   def deactivate
     raise(ExceptionHandler::BadRequest, 'Day off category was deactivated') if @day_off_category.inactive?
     @day_off_category.inactive!
-    render_resource(@day_off_category, :ok, DayOffCategorySerializer)
+    render_resource(@day_off_category)
   end
 
   def activate
     raise(ExceptionHandler::BadRequest, 'Day off category was activated') if @day_off_category.active?
     @day_off_category.active!
-    render_resource(@day_off_category, :ok, DayOffCategorySerializer)
+    render_resource(@day_off_category)
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::DayOffCategoriesController < ApplicationController
       day_off_category = DayOffCategory.new(day_off_category_params)
       day_off_category.save!
       day_off_category.build_day_off_infos(day_off_info_options_params) if day_off_info_options_params.present?
-      render_resource day_off_category, :created, DayOffCategorySerializer
+      render_resource day_off_category, :created
     end
   end
 
