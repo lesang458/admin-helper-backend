@@ -1,4 +1,6 @@
 class Api::V1::DayOffRequestController < ApplicationController
+  before_action :find_day_off_request, only: %i[update destroy]
+
   def index
     day_off_requests = DayOffRequest.search(params)
     day_off_requests = paginate(day_off_requests)
@@ -18,7 +20,16 @@ class Api::V1::DayOffRequestController < ApplicationController
     render_resource(day_off_request)
   end
 
+  def destroy
+    @day_off_request.destroy
+    head 204
+  end
+
   private
+
+  def find_day_off_request
+    @day_off_request = DayOffRequest.find(params[:id])
+  end
 
   def day_off_request_params
     params.permit(:from_date, :to_date, :hours_per_day, :notes)
