@@ -29,7 +29,7 @@ class User < ApplicationRecord
 
   validates :password, presence: true, length: { in: 6..40 }, format: { with: PASSWORD_FORMAT }, on: %i[create account_setup]
   before_create :encrypt_password
-
+  scope :employee_name_like, ->(employee_name) { where('first_name ILIKE ? OR last_name ILIKE ?', "%#{employee_name}%", "%#{employee_name}%") if employee_name }
   def active_day_off_infos
     day_off_infos.where status: 'active'
   end

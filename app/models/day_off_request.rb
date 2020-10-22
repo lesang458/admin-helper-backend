@@ -13,7 +13,7 @@ class DayOffRequest < ApplicationRecord
 
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
-
+  scope :requests_by_employee_name, ->(employee_name) { where user_id: User.employee_name_like(employee_name).pluck(:id) }
   def total_hours_off
     (to_date.to_date - from_date.to_date + 1).to_i * hours_per_day
   end
@@ -26,11 +26,6 @@ class DayOffRequest < ApplicationRecord
     day_off_requests.to_date(params[:to_date]).from_date(params[:from_date])
   end
   # rubocop:enable Metrics/AbcSize
-
-  def self.requests_by_employee_name(employee_name)
-    user_ids = User.where('first_name ILIKE :name OR last_name ILIKE :name', name: "%#{employee_name}%").pluck(:id)
-    DayOffRequest.where(user_id: user_ids) if user_ids
-  end
 
   def self.create_requests(params, user_id)
     employee = User.find(user_id)
