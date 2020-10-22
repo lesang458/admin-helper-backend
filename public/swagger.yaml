@@ -1122,7 +1122,7 @@ paths:
         parameters:
           - name: employee_name
             in: query
-            description: Search by name employee
+            description: Search by employee name
             required: false
             schema:
               type: string
