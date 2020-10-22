@@ -11,13 +11,11 @@ module JsonResponseHandler
   end
 
   def render_collection(list, serializer_class = nil)
-    if serializer_class.nil?
-      render json: list, root: 'data', meta: list.respond_to?(:current_page) ? pagination_dict(list) : nil
+    meta = list.respond_to?(:current_page) ? pagination_dict(list) : nil
+    if serializer_class.present?
+      render json: list, root: 'data', meta: meta, each_serializer: serializer_class
     else
-      render json: {
-        data: list.map { |item| serializer_class.new(item) },
-        meta: list.respond_to?(:current_page) ? pagination_dict(list) : nil
-      }
+      render json: list, root: 'data', meta: meta
     end
   end
 
