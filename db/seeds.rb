@@ -13,7 +13,7 @@ employee = User.create_with(
   phone_number: "0935270046",
   roles: %w[EMPLOYEE]
 ).find_or_create_by(email: 'employee@gmail.com')
-employee.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
+info_vacation =  employee.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 employee.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
 admin = User.create_with(
@@ -28,7 +28,7 @@ admin = User.create_with(
   roles: %w[EMPLOYEE ADMIN]
 ).find_or_create_by(email: 'admin@gmail.com')
 admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
-admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
+info_illness = admin.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
 
 super_admin = User.create_with(
   email: "super_admin@gmail.com",
@@ -195,3 +195,19 @@ DeviceHistory.create_with(
 ).find_or_create_by(from_date: '2019-08-08', status: 'ASSIGNED', device_id: dell_monitor.id)
 dell_monitor_history.update!(to_date: '2019-08-08')
 dell_monitor.update!(user_id: employee.id)
+
+employee.day_off_requests.create_with(
+  from_date: '2020-02-02',
+  to_date: '2020-02-10',
+  hours_per_day: 4,
+  notes: 'travel with family',
+  day_off_info_id: info_vacation.id
+).find_or_create_by(day_off_info_id: info_vacation.id, notes: 'travel with family')
+
+admin.day_off_requests.create_with(
+  from_date: '2020-02-02',
+  to_date: '2020-02-04',
+  hours_per_day: 4,
+  notes: 'go to hospital',
+  day_off_info_id: info_illness.id
+).find_or_create_by(day_off_info_id: info_illness.id, notes: 'go to hospital')
