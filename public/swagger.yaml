@@ -1120,7 +1120,7 @@ paths:
         summary: Get list Day Off Request
         description: Returns list Day Off Request
         parameters:
-          - name: name_employee
+          - name: employee_name
             in: query
             description: Search by name employee
             required: false

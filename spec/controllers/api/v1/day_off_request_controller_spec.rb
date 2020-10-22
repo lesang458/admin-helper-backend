@@ -57,7 +57,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     end
 
     it 'should return 200 with search by name employee' do
-      get :index, params: { name_employee: 'dang' }
+      get :index, params: { employee_name: 'dang' }
       expect(response.status).to eq(200)
       json_response = JSON.parse(response.body)['meta']
       expect(json_response['current_page']).to eq(1)
