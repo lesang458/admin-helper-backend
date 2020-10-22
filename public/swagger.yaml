@@ -165,7 +165,7 @@ paths:
               schema:
                 type: object
                 properties: 
-                  employee:
+                  user:
                     $ref: '#/components/schemas/Employee'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -997,7 +997,7 @@ paths:
               schema:
                 type: object
                 properties: 
-                  employee:
+                  user:
                     $ref: '#/components/schemas/Employee'
         '401':
           $ref: '#/components/responses/Unauthorized'
