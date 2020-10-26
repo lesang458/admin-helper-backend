@@ -1221,6 +1221,35 @@ paths:
           $ref: '#/components/responses/NotFound'
         '400':
           $ref: '#/components/responses/BadRequest'
+  /day_off_info:
+    post:
+      tags:
+      - Day Off Info
+      summary: Create Day Off Info
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestDayOffInfo'
+      responses:
+        '201':
+          description: created day off info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  day_off_info:
+                    $ref: '#/components/schemas/DayOffInfoResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidParams' 
 components:
   responses:
     RequestSuccess:
@@ -1522,6 +1551,25 @@ components:
       required:
       - name
       - total_hours_default
+    RequestDayOffInfo:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int64
+          example: 1
+        hours:
+          type: integer
+          format: int64
+          example: 160
+        day_off_category_id:
+          type: integer
+          format: int64
+          example: 1
+      required:
+        - hours
+        - day_off_category_id
+        - user_id
     DayOffInfo:
       type: object
       properties:

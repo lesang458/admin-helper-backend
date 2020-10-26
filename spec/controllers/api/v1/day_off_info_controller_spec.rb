@@ -24,6 +24,42 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
     let!(:get_params) { { user_id: @admin.id, day_off_category_id: @category_vacation.id } }
     before(:each) { request.headers.merge! valid_headers }
 
+    describe 'POST# day-off-info' do
+      let!(:post_params) { { user_id: @admin.id, hours: 160, day_off_category_id: @category_illness.id } }
+      it 'return status 401 status code with invalid token' do
+        request.headers.merge! invalid_headers
+        post :create, params: post_params
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 403 with employee' do
+        employee_token = JwtToken.encode({ user_id: @employee.id })
+        headers = { authorization: "Bearer #{employee_token}" }
+        request.headers.merge! headers
+        post :create, params: post_params
+        expect(response.status).to eq(403)
+      end
+
+      it 'should return 201' do
+        post :create, params: post_params
+        expect(response.status).to eq(201)
+        day_off_info = JSON.parse(response.body)['day_off_info']
+        expect(day_off_info['user_id']).to eq @admin.id
+        expect(day_off_info['hours']).to eq post_params[:hours]
+        expect(day_off_info['day_off_category_id']).to eq post_params[:day_off_category_id]
+      end
+
+      it 'should return 422 non params user id' do
+        post :create, params: post_params.except(:user_id)
+        expect(response.status).to eq(422)
+      end
+
+      it 'should return 422 non params day off category' do
+        post :create, params: post_params.except(:day_off_category_id)
+        expect(response.status).to eq(422)
+      end
+    end
+
     describe 'PATCH# Deactive' do
       let!(:patch_params_status) { { id: @info_vacation.id } }
       it 'return status 401 status code with invalid token' do

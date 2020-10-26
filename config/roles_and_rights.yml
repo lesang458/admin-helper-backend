@@ -14,6 +14,7 @@ admin:
     - index
     - update
   day_off_info:
+    - create
     - update
     - index
     - deactivate
