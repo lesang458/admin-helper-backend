@@ -1,5 +1,5 @@
 class Api::V1::DayOffRequestController < ApplicationController
-  before_action :find_day_off_request, only: %i[update destroy]
+  before_action :set_day_off_request, only: %i[update destroy]
 
   def index
     day_off_requests = DayOffRequest.search(params)
@@ -27,7 +27,7 @@ class Api::V1::DayOffRequestController < ApplicationController
 
   private
 
-  def find_day_off_request
+  def set_day_off_request
     @day_off_request = DayOffRequest.find(params[:id])
   end
 
