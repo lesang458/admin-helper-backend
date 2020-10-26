@@ -165,7 +165,7 @@ paths:
               schema:
                 type: object
                 properties: 
-                  employee:
+                  user:
                     $ref: '#/components/schemas/Employee'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -997,7 +997,7 @@ paths:
               schema:
                 type: object
                 properties: 
-                  employee:
+                  user:
                     $ref: '#/components/schemas/Employee'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -1133,6 +1133,12 @@ paths:
         summary: Get list Day Off Request
         description: Returns list Day Off Request
         parameters:
+          - name: employee_name
+            in: query
+            description: Search by employee name
+            required: false
+            schema:
+              type: string
           - name: day_off_category_id
             in: query
             description: Search with day off category id

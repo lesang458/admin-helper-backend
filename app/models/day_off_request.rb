@@ -13,16 +13,19 @@ class DayOffRequest < ApplicationRecord
 
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
-
+  scope :requests_by_employee_name, ->(employee_name) { where user_id: User.employee_name_like(employee_name).pluck(:id) }
   def total_hours_off
     (to_date.to_date - from_date.to_date + 1).to_i * hours_per_day
   end
 
+  # rubocop:disable Metrics/AbcSize
   def self.search(params)
     day_off_requests = DayOffCategory.find(params[:day_off_category_id]).day_off_requests if params[:day_off_category_id]
     day_off_requests = (day_off_requests || DayOffRequest.all).where({ user_id: params[:user_id].presence }.compact)
+    day_off_requests = day_off_requests.requests_by_employee_name(params[:employee_name]) if params[:employee_name]
     day_off_requests.to_date(params[:to_date]).from_date(params[:from_date])
   end
+  # rubocop:enable Metrics/AbcSize
 
   def self.create_requests(params, user_id)
     employee = User.find(user_id)
