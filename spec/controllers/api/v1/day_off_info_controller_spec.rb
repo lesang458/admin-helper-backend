@@ -54,8 +54,9 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
         expect(response.status).to eq(422)
       end
 
-      it 'should return 422 non params day off category' do
-        post :create, params: post_params.except(:day_off_category_id)
+      it 'should return 422 with day off category deactivated' do
+        @category_illness.inactive!
+        post :create, params: post_params
         expect(response.status).to eq(422)
       end
     end
