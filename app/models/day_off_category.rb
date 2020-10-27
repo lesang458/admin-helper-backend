@@ -5,7 +5,7 @@ class DayOffCategory < ApplicationRecord
   enum status: { active: 'ACTIVE', inactive: 'INACTIVE' }
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
   validates :name, presence: true, length: { in: 2..40 }
-  validates :description, allow_nil: true, length: { minimum: 3 }
+  validates :description, allow_nil: true, length: { maximum: 225 }
   validates :total_hours_default, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   def self.search(params)
