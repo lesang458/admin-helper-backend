@@ -154,13 +154,12 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(message).to include 'Name has already been taken'
     end
 
-    it 'should return 422 with too short description' do
+    it 'should return 200 with short description' do
       params = patch_params.dup
       params[:description] = 'ok'
+      params.delete(:name)
       patch :update, params: params
-      expect(response.status).to eq(422)
-      message = JSON.parse(response.body)['message']
-      expect(message).to include 'Description is too short'
+      expect(response.status).to eq(200)
     end
 
     it 'should return 422 with negative total_hours_default' do
@@ -216,13 +215,11 @@ RSpec.describe Api::V1::DayOffCategoriesController, type: :controller do
       expect(message).to include 'Name has already been taken'
     end
 
-    it 'should return 422 with too short description' do
+    it 'should return 201 with short description' do
       params = post_params.dup
       params[:description] = 'hi'
       post :create, params: params
-      expect(response.status).to eq(422)
-      message = JSON.parse(response.body)['message']
-      expect(message).to include 'Description is too short'
+      expect(response.status).to eq(201)
     end
 
     it 'should return 422 with negative total_hours_default' do

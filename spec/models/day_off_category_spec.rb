@@ -17,9 +17,9 @@ RSpec.describe DayOffCategory, type: :model do
   describe 'description' do
     it { should respond_to(:description) }
     it { should allow_value('description').for(:description) }
-    it { should_not allow_value('hi').for(:description) }
-    it 'should have length greater than or equal to 3' do
-      should validate_length_of(:description).is_at_least(3)
+    it { should allow_value('hi').for(:description) }
+    it 'should have length shorter than or equal to 225' do
+      should validate_length_of(:description).is_at_most(225)
     end
   end
 
