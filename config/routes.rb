@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       end
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
       get 'employees/:id/day-off-requests', to: 'day_off_request#index'
-      resources :day_off_request, only: %i[index update]
+      resources :day_off_request, only: %i[index update destroy]
       post 'password/validate_token', to: 'password#validate_token'
       resources :password, only: %i[create]
       patch 'password/reset', to: 'password#update'

@@ -1076,11 +1076,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
   '/day_off_request/{id}':
-    put:
-      tags:
-      - Day Off Request
-      summary: Update Day Off Request
-      parameters:
+    parameters:
       - name: id
         in: path
         description: Update Day Off Request
@@ -1089,6 +1085,23 @@ paths:
           type: integer
           format: int64
           example: 1
+    delete:
+      tags:
+      - Day Off Request
+      summary: Update Day Off Request
+      responses:
+        204:
+          description: Day Off Request was deleted successfully
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Permission'
+        404:
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+      - Day Off Request
+      summary: Update Day Off Request
       requestBody:
         required: true
         content:

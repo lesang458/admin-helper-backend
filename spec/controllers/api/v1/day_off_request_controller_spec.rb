@@ -23,6 +23,34 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
   let!(:invalid_headers) { { authorization: "Bearer #{invalid_token}" } }
   before(:each) { request.headers.merge! valid_headers }
 
+  describe 'Destroy Day Off Request' do
+    let!(:delete_params) { { id: DayOffRequest.first.id } }
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      delete :destroy, params: delete_params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403' do
+      employee_token = JwtToken.encode({ user_id: @employee.id })
+      headers = { authorization: "Bearer #{employee_token}" }
+      request.headers.merge! headers
+      delete :destroy, params: delete_params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404' do
+      delete :destroy, params: { id: 'not_found' }
+      expect(response.status).to eq(404)
+    end
+
+    it 'should return 204' do
+      delete :destroy, params: delete_params
+      expect(response.status).to eq(204)
+      expect(DayOffRequest.first.id).not_to eq delete_params[:id]
+    end
+  end
+
   describe 'GET# Day Off Request' do
     let!(:get_params) {
       {
