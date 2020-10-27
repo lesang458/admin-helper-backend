@@ -6,6 +6,11 @@ class Api::V1::DayOffInfoController < ApplicationController
     render_collection(day_off_infos)
   end
 
+  def create
+    day_off_info = DayOffInfo.create!(create_params)
+    render_resource day_off_info, :created
+  end
+
   def update
     @day_off_info.update!(info_params)
     render_resource(@day_off_info)
@@ -18,6 +23,10 @@ class Api::V1::DayOffInfoController < ApplicationController
   end
 
   private
+
+  def create_params
+    params.permit(:user_id, :hours, :day_off_category_id)
+  end
 
   def find_day_off_info
     @day_off_info = DayOffInfo.find params[:id]
