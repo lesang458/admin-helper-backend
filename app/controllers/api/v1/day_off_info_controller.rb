@@ -1,8 +1,7 @@
 class Api::V1::DayOffInfoController < ApplicationController
   before_action :find_day_off_info, only: %i[update deactivate]
   def index
-    employee = User.find(params[:id]) if params[:id]
-    day_off_infos = employee.day_off_infos if employee
+    day_off_infos = DayOffInfo.search(params)
     day_off_infos = paginate(day_off_infos)
     render_collection(day_off_infos)
   end

@@ -8,7 +8,7 @@ Rails.application.routes.draw do
         member do
           patch '/status', to: 'employees#update_status'
           patch '/password', to: 'employees#update_password'
-          get 'day_off_infos', to: 'day_off_info#index'
+          get 'day_off_infos', to: 'employees/day_off_info#index'
         end
       end
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
       post 'password/validate_token', to: 'password#validate_token'
       resources :password, only: %i[create]
       patch 'password/reset', to: 'password#update'
-      resources :day_off_info, only: %i[update create] do
+      resources :day_off_info, only: %i[update index create] do
         member do
           patch '/deactivate', to: 'day_off_info#deactivate'
         end

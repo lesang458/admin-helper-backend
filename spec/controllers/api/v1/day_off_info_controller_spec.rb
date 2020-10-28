@@ -142,8 +142,8 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
     end
   end
 
-  describe 'GET# Day Off Info' do
-    let!(:get_params) { { id: @admin.id } }
+  describe 'GET# day-off-info' do
+    let!(:get_params) { { user_id: @admin.id, day_off_category_id: @category_vacation.id } }
     it 'should return 401' do
       request.headers.merge! invalid_headers
       get :index, params: get_params
@@ -158,16 +158,6 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
       expect(response.status).to eq(403)
     end
 
-    it 'should return 404 with unexist employee id' do
-      get :index, params: { id: 999 }
-      expect(response.status).to eq(404)
-    end
-
-    it 'should return 404 with invalid employee id' do
-      get :index, params: { id: -999 }
-      expect(response.status).to eq(404)
-    end
-
     it 'should return 200' do
       get :index, params: get_params
       expect(response.status).to eq(200)
@@ -176,6 +166,45 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
       expect(json_response['page_size']).to eq(1)
       expect(json_response['total_pages']).to eq(1)
       expect(json_response['total_count']).to eq(1)
+    end
+  end
+
+  describe Api::V1::Employees::DayOffInfoController, type: :controller do
+    describe 'GET# Day Off Info' do
+      let!(:get_params) { { id: @admin.id } }
+      it 'should return 401' do
+        request.headers.merge! invalid_headers
+        get :index, params: get_params
+        expect(response.status).to eq(401)
+      end
+
+      it 'should return 403 with employee' do
+        valid_token = JwtToken.encode({ user_id: @employee.id })
+        valid_headers = { authorization: "Bearer #{valid_token}" }
+        request.headers.merge! valid_headers
+        get :index, params: get_params
+        expect(response.status).to eq(403)
+      end
+
+      it 'should return 404 with unexist employee id' do
+        get :index, params: { id: 999 }
+        expect(response.status).to eq(404)
+      end
+
+      it 'should return 404 with invalid employee id' do
+        get :index, params: { id: -999 }
+        expect(response.status).to eq(404)
+      end
+
+      it 'should return 200' do
+        get :index, params: get_params
+        expect(response.status).to eq(200)
+        json_response = JSON.parse(response.body)['meta']
+        expect(json_response['current_page']).to eq(1)
+        expect(json_response['page_size']).to eq(1)
+        expect(json_response['total_pages']).to eq(1)
+        expect(json_response['total_count']).to eq(1)
+      end
     end
   end
 end
