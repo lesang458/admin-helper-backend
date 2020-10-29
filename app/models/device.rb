@@ -27,9 +27,11 @@ class Device < ApplicationRecord
     Device.transaction do
       User.find(user_id) if user_id.present?
       update! user_id: user_id
-      now = Time.zone.now
-      device_histories.create! from_date: now, status: new_status, user_id: user_id
-      device_histories.second_to_last.update!(to_date: now)
+      old_time = Time.zone.now
+      old_history = device_histories.find_by to_date: nil
+      raise(ExceptionHandler::BadRequest, 'Something went wrong when trying to update status device') unless old_history
+      device_histories.create! from_date: Time.zone.now, status: new_status, user_id: user_id
+      old_history.update!(to_date: old_time)
     end
   end
 
