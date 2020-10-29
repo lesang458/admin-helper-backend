@@ -2,33 +2,42 @@ require 'rails_helper'
 RSpec.describe Api::V1::SessionsController do
   describe 'Success Sessions' do
     before(:each) do
-      @user = FactoryBot.create(:user)
+      @admin = FactoryBot.create(:user, :admin, first_name: 'danghanh')
     end
 
     it 'should response 200 ' do
-      post :create, params: { email: @user.email, password: '123456' }
+      post :create, params: { email: @admin.email, password: '123456' }
       expect(response).to have_http_status(200)
     end
   end
 
   describe 'Failed Sessions' do
     before(:each) do
+      @admin = FactoryBot.create(:user, :admin, first_name: 'danghanh')
       @user = FactoryBot.create :user
     end
 
+    it 'should response 403 ' do
+      post :create, params: { email: @user.email, password: '123456' }
+      expect(response).to have_http_status(403)
+    end
+
     it 'should response 400' do
+      @user.email = 'fake@email.com'
+      allow(GoogleApis::IdTokens).to receive(:get_user_info).and_return(@user)
       post :create, params: { email: 'unexist@gmail.com', password: '123456' }
       expect(response).to have_http_status(400)
     end
 
     it 'should response 400' do
-      post :create, params: { email: @user.email, password: 'wrong password' }
+      post :create, params: { email: @admin.email, password: 'wrong password' }
       expect(response).to have_http_status(400)
     end
   end
 
   describe 'login via google email' do
     before(:each) do
+      @admin = FactoryBot.create(:user, :admin, first_name: 'danghanh')
       @user = FactoryBot.create :user
     end
 
@@ -46,9 +55,15 @@ RSpec.describe Api::V1::SessionsController do
     }
 
     it 'should response 200 with valid email' do
-      allow(GoogleApis::IdTokens).to receive(:get_user_info).and_return(@user)
+      allow(GoogleApis::IdTokens).to receive(:get_user_info).and_return(@admin)
       post :google_login, params: { id_token: 'id token' }
       expect(response).to have_http_status(200)
+    end
+
+    it 'should response 200 with valid email' do
+      allow(GoogleApis::IdTokens).to receive(:get_user_info).and_return(@user)
+      post :google_login, params: { id_token: 'id token' }
+      expect(response).to have_http_status(403)
     end
 
     it 'should response 400 invalid email' do
