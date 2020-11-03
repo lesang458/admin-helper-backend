@@ -23,15 +23,15 @@ class Device < ApplicationRecord
     update_status(nil, 'discarded')
   end
 
-  def update_status(user_id, new_status)
+  def update_status(new_user_id, new_status)
     Device.transaction do
-      User.find(user_id) if user_id.present?
-      update! user_id: user_id
-      old_time = Time.zone.now
+      User.find(new_user_id) if new_user_id.present?
+      update! user_id: new_user_id
+      now = Time.zone.now
       old_history = device_histories.find_by to_date: nil
       raise(ExceptionHandler::BadRequest, 'Something went wrong when trying to update status device') unless old_history
-      device_histories.create! from_date: Time.zone.now, status: new_status, user_id: user_id
-      old_history.update!(to_date: old_time)
+      device_histories.create! from_date: now, status: new_status, user_id: new_user_id
+      old_history.update!(to_date: now)
     end
   end
 
@@ -44,10 +44,9 @@ class Device < ApplicationRecord
     end
   end
 
-  def assign(user_id)
-    old_history = device_histories.find_by to_date: nil
-    raise(ExceptionHandler::BadRequest, 'refuse action, device has been assigned for you') if old_history.user_id == user_id
-    update_status(user_id, 'assigned')
+  def assign(new_user_id)
+    raise(ExceptionHandler::BadRequest, 'Device has been assigned to the user') if user_id == new_user_id
+    update_status(new_user_id, 'assigned')
   end
 
   def self.search(params)
