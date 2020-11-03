@@ -38,6 +38,6 @@ class DayOffInfo < ApplicationRecord
   private
 
   def valid_day_off_category
-    errors[:base] << 'Day off category was deactivated' if DayOffCategory.find(self.day_off_category_id).inactive?
+    errors.add(:day_off_category, 'was deactivated') if DayOffCategory.find(self.day_off_category_id).inactive?
   end
 end
