@@ -45,6 +45,8 @@ class Device < ApplicationRecord
   end
 
   def assign(user_id)
+    old_history = device_histories.find_by to_date: nil
+    raise(ExceptionHandler::BadRequest, 'refuse action, device has been assigned for you') if old_history.user_id == user_id
     update_status(user_id, 'assigned')
   end
 
