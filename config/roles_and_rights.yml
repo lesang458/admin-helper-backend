@@ -13,6 +13,7 @@ admin:
     - create
     - index
     - update
+    - destroy
   day_off_info:
     - create
     - update
