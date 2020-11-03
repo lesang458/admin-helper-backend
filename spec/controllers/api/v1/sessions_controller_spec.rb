@@ -60,7 +60,7 @@ RSpec.describe Api::V1::SessionsController do
       expect(response).to have_http_status(200)
     end
 
-    it 'should response 200 with valid email' do
+    it 'should response 403 with valid email' do
       allow(GoogleApis::IdTokens).to receive(:get_user_info).and_return(@user)
       post :google_login, params: { id_token: 'id token' }
       expect(response).to have_http_status(403)
