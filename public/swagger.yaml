@@ -391,6 +391,13 @@ paths:
         summary: Get list employee
         description: Returns list employee
         parameters:
+          - name: full_info
+            in: query
+            description: Return full info
+            required: true
+            schema:
+              type: boolean
+            example: true
           - name: search
             in: query
             description: Search with first name or last name
