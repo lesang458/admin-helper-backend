@@ -7,7 +7,6 @@ class Api::V1::DayOffInfoController < ApplicationController
   end
 
   def create
-    raise(ArgumentError, 'Day off category was deactivated') if DayOffCategory.find(params[:day_off_category_id]).inactive?
     day_off_info = DayOffInfo.create!(create_params)
     render_resource day_off_info, :created
   end

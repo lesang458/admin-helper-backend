@@ -322,12 +322,12 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.body).to include('Password is invalid')
       end
 
-      it 'should return 422 with unexist day_off_category_id' do
+      it 'should return 404 with unexist day_off_category_id' do
         params = employee_params.dup
         params[:day_off_infos_attributes].first[:day_off_category_id] = unexist_day_off_category_id
         post :create, params: params
-        expect(response.status).to eq(422)
-        expect(response.body).to include('Day off infos day off category must exist')
+        expect(response.status).to eq(404)
+        expect(JSON.parse(response.body)['message']).to include("Couldn't find DayOffCategory with 'id'=#{unexist_day_off_category_id}")
       end
 
       it 'should return 422 with invalid hours' do
