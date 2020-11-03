@@ -499,6 +499,36 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
       expect(@iphone.status).to eq('ASSIGNED')
       expect(history.user_id).to eq(@employee.id)
     end
+
+    it 'should return 200 by assign 2 times' do
+      @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
+      put :assign, params: put_params
+      put :assign, params: { id: @iphone.id, user_id: @admin.id }
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(@employee.id)
+      history = DeviceHistory.find_by to_date: nil, device_id: @iphone.id
+      expect(@iphone.status).to eq('ASSIGNED')
+      expect(history.user_id).to eq(@admin.id)
+    end
+
+    it 'should return 200 by assign 2 times and move in inventory' do
+      @iphone_history.update(status: 'ASSIGNED', user_id: @employee.id)
+      put :assign, params: put_params
+      put :assign, params: { id: @iphone.id, user_id: @admin.id }
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(@employee.id)
+      history = DeviceHistory.find_by to_date: nil, device_id: @iphone.id
+      expect(@iphone.status).to eq('ASSIGNED')
+      expect(history.user_id).to eq(@admin.id)
+
+      put :move_to_inventory, params: { id: @iphone.id }
+      @iphone.reload
+      expect(response.status).to eq(200)
+      expect(@iphone.user_id).to eq(nil)
+      history = @iphone.device_histories.last
+      expect(@iphone.status).to eq('IN_INVENTORY')
+      expect(history.user_id).to eq(nil)
+    end
   end
 
   describe 'PUT#move device to inventory' do
