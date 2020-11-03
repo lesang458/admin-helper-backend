@@ -51,7 +51,7 @@ RSpec.describe DayOffInfo, type: :model do
   end
 
   describe 'status' do
-    skip "is skipped" do
+    skip 'is skipped' do
       it { should respond_to(:status) }
       it { should allow_value('ACTIVE').for(:status) }
       it { should allow_value('INACTIVE').for(:status) }
@@ -60,7 +60,7 @@ RSpec.describe DayOffInfo, type: :model do
   end
 
   describe 'hours' do
-    skip "is skipped" do
+    skip 'is skipped' do
       it { should respond_to(:hours) }
       it { should allow_value(123).for(:hours) }
       it { should_not allow_value(-123).for(:hours) }
