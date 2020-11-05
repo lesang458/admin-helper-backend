@@ -5,7 +5,7 @@ class Api::V1::EmployeesController < ApplicationController
     set_query_sort if params[:sort].present?
     users = User.search(params).order(@query)
     users = paginate(users)
-    string_to_boolean(params[:full_info]) ? render_collection(users, FullUserSerializer) : render_collection(users)
+    params[:full_info] == 'true' ? render_collection(users, FullUserSerializer) : render_collection(users)
   end
 
   def show
@@ -63,14 +63,5 @@ class Api::V1::EmployeesController < ApplicationController
 
   def update_password_params
     params.permit(:old_password, :new_password)
-  end
-
-  def string_to_boolean(string)
-    case string
-    when 'true'
-      true
-    when false
-      false
-    end
   end
 end
