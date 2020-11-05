@@ -394,7 +394,6 @@ paths:
           - name: full_info
             in: query
             description: Return full info
-            required: true
             schema:
               type: boolean
             example: true
