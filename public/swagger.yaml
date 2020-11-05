@@ -1300,6 +1300,37 @@ paths:
           $ref: '#/components/responses/Permission'
         '404':
           $ref: '#/components/responses/NotFound'
+  '/employees/{id}/device_histories':
+    get:
+      tags:
+        - Employees
+      summary: Get DeviceHistories by employee ID
+      description: Get DeviceHistories by employee ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of employee
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  data:
+                    $ref: '#/components/schemas/DeviceHistory'
+                  meta:
+                      $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
 components:
   responses:
     RequestSuccess:
