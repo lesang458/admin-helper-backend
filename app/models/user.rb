@@ -111,7 +111,7 @@ class User < ApplicationRecord
       users = User.joins(:day_off_requests).day_off_request_to(params[:day_off_to_date]).day_off_request_from(params[:day_off_from_date]).group('id')
     end
     users = users.where('first_name ILIKE :search OR last_name ILIKE :search OR phone_number ILIKE :search', search: "%#{params[:search]}%") if params[:search].present?
-    users = users.where('status = :search', search: params[:status]) if params[:status]
+    users = users.where('users.status = :search', search: params[:status]) if params[:status]
     users = users.birthday_to(params[:birthday_to])
     users = users.birthday_from(params[:birthday_from])
     users = users.join_date_to(params[:joined_company_date_to])
