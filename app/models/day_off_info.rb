@@ -8,6 +8,7 @@ class DayOffInfo < ApplicationRecord
   delegate :email, :first_name, :last_name, to: :user
   delegate :category_name, :description, to: :day_off_category
   validate :valid_day_off_category, on: %i[create]
+  default_scope { where(status: 'active') }
 
   def self.id_by_user_and_category(user_id, day_off_category_id)
     info = find_by('day_off_category_id = ? AND user_id = ?', day_off_category_id, user_id)
