@@ -135,11 +135,11 @@ RSpec.describe Api::V1::DayOffInfoController, type: :controller do
       expect(response.status).to eq(200)
     end
 
-    it 'should return 400 if day off category was deactivated' do
+    it 'should return 404 if day off category was deactivated' do
       patch :deactivate, params: patch_params_status
       patch :deactivate, params: patch_params_status
-      expect(response.status).to eq(400)
-      expect(JSON.parse(response.body)['message']).to include 'Day off info was deactivated'
+      expect(response.status).to eq(404)
+      expect(JSON.parse(response.body)['message']).to include "Couldn't find DayOffInfo with 'id'=#{@info_vacation.id}"
     end
   end
 

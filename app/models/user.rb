@@ -30,9 +30,6 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { in: 6..40 }, format: { with: PASSWORD_FORMAT }, on: %i[create account_setup]
   before_create :encrypt_password
   scope :employee_name_like, ->(employee_name) { where('first_name ILIKE ? OR last_name ILIKE ?', "%#{employee_name}%", "%#{employee_name}%") if employee_name }
-  def active_day_off_infos
-    day_off_infos.where status: 'active'
-  end
 
   def update_password(password_params)
     raise(ArgumentError, 'Your password was incorrect.') unless check_valid_password(password_params[:old_password])
@@ -109,12 +106,12 @@ class User < ApplicationRecord
 
   # rubocop:disable Metrics/AbcSize
   def self.search(params)
-    users = User.all
+    users = User.eager_load(day_off_infos: %I[day_off_category day_off_requests])
     if params[:day_off_to_date] || params[:day_off_from_date]
       users = User.joins(:day_off_requests).day_off_request_to(params[:day_off_to_date]).day_off_request_from(params[:day_off_from_date]).group('id')
     end
     users = users.where('first_name ILIKE :search OR last_name ILIKE :search OR phone_number ILIKE :search', search: "%#{params[:search]}%") if params[:search].present?
-    users = users.where('status = :search', search: params[:status]) if params[:status]
+    users = users.where('users.status = :search', search: params[:status]) if params[:status]
     users = users.birthday_to(params[:birthday_to])
     users = users.birthday_from(params[:birthday_from])
     users = users.join_date_to(params[:joined_company_date_to])
