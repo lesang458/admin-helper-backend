@@ -312,7 +312,7 @@ paths:
   /employees/{id}/day-off-requests/:
     post:
       tags:
-      - Day Off Request
+      - Employees
       parameters:
         - name: id
           in: path
@@ -1272,7 +1272,7 @@ paths:
   '/employees/{id}/day_off_infos':
     get:
       tags:
-        - Day Off Info
+        - Employees
       summary: Get DayOffInfos by employee ID
       description: Get DayOffInfos by employee ID
       parameters:
@@ -1361,7 +1361,7 @@ paths:
                       type: object
                       $ref: '#/components/schemas/Device'
                   meta:
-                      $ref: '#/components/schemas/Pagination'
+                    $ref: '#/components/schemas/Pagination'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
