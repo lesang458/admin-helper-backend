@@ -8,7 +8,8 @@ Rails.application.routes.draw do
         member do
           patch '/status', to: 'employees#update_status'
           patch '/password', to: 'employees#update_password'
-          get 'day_off_infos', to: 'employees/day_off_info#index'
+          get 'day_off_infos', to: 'employees/day_off_info#index' 
+          get 'device_histories', to: 'employees/device_histories#index'
           get 'devices', to: 'employees/devices#index'
           get 'day_off_requests', to: 'employees/day_off_request#index'
         end
