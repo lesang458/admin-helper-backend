@@ -1,5 +1,4 @@
 class Api::V1::DevicesController < ApplicationController
-  before_action :set_current_user
   before_action :set_device, only: %i[assign discard destroy update show]
   def update
     @device.update!(device_params)

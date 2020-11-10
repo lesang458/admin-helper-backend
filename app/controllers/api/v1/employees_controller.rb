@@ -1,5 +1,4 @@
 class Api::V1::EmployeesController < ApplicationController
-  before_action :set_current_user
   before_action :find_user, only: %i[update update_status show update_password]
   def index
     set_query_sort if params[:sort].present?
