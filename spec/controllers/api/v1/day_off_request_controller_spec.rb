@@ -209,6 +209,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(request.count).to eq(1)
       expect(request.first['from_date'].to_date.to_s).to eq('2020-02-02')
       expect(request.first['to_date'].to_date.to_s).to eq('2020-07-07')
+      expect(request.first['status'].to_s).to eq('pending')
     end
 
     it 'should return 201 with request in 2 years' do
@@ -220,8 +221,10 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(requests.count).to eq(2)
       expect(requests.first['from_date'].to_date.to_s).to eq('2020-02-02')
       expect(requests.first['to_date'].to_date.to_s).to eq('2020-12-31')
+      expect(requests.first['status'].to_s).to eq('pending')
       expect(requests.second['from_date'].to_date.to_s).to eq('2021-01-01')
       expect(requests.second['to_date'].to_date.to_s).to eq('2021-07-07')
+      expect(requests.second['status'].to_s).to eq('pending')
     end
 
     it 'should return 422 with request in 3 years' do

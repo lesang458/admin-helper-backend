@@ -4,6 +4,7 @@ FactoryBot.define do
     hours_per_day { 8 }
     from_date { '2020-07-08' }
     to_date { '2020-07-30' }
+    status { 'pending' }
     user
   end
 end
