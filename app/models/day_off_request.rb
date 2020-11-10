@@ -10,7 +10,7 @@ class DayOffRequest < ApplicationRecord
   delegate :day_off_category, to: :day_off_info
   validate :request_too_long
   validate :check_category_status, on: :create
-  enum status: { pending: 'pending', approved: 'approved', denied: 'denied', cancelled: 'cancelled'  }
+  enum status: { pending: 'pending', approved: 'approved', denied: 'denied', cancelled: 'cancelled' }
   validates :status, presence: true, inclusion: { in: %w[pending approved denied cancelled] }
 
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
