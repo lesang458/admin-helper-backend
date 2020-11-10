@@ -4,7 +4,7 @@ class Api::V1::EmployeesController < ApplicationController
     set_query_sort if params[:sort].present?
     users = User.search(params).order(@query)
     users = paginate(users)
-    render_collection(users)
+    params[:full_info] == 'true' ? render_collection(users, FullUserSerializer) : render_collection(users)
   end
 
   def show
