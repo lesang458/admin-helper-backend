@@ -5,6 +5,7 @@ class ApplicationController < ActionController::API
   include Authenticatable
   before_action :authorize_request
   before_action :set_paginate, only: %i[index]
+  serialization_scope :view_context
 
   def pagination_dict(collection)
     {
