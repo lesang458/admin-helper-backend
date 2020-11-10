@@ -10,6 +10,7 @@ Rails.application.routes.draw do
           patch '/password', to: 'employees#update_password'
           get 'day_off_infos', to: 'employees/day_off_info#index'
           get 'devices', to: 'employees/devices#index'
+          get 'day_off_requests', to: 'employees/day_off_request#index'
         end
       end
       post 'employees/:id/day-off-requests', to: 'day_off_request#create'

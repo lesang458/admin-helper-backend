@@ -9,6 +9,7 @@ admin:
     - update_password
   sessions:
     - create
+    - google_login
   day_off_request:
     - create
     - index
