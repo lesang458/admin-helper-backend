@@ -8,6 +8,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     @day_off_category = FactoryBot.create(:day_off_category, :vacation)
     @category_illness = FactoryBot.create(:day_off_category, :illness)
     @employee = FactoryBot.create(:user, :employee)
+    @other_employee = FactoryBot.create(:user, :employee)
     @admin = FactoryBot.create(:user, :admin, first_name: 'danghanh')
     @day_off_info = FactoryBot.create(:day_off_info, :vacation, user: @employee)
     @illness_info = FactoryBot.create(:day_off_info, :illness, user: @admin)
@@ -183,6 +184,14 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       request.headers.merge! headers
       post :create, params: post_params
       expect(response.status).to eq(201)
+    end
+
+    it 'should return 401 when logged in employee is not requested employee' do
+      employee_token = JwtToken.encode({ user_id: @other_employee.id })
+      headers = { authorization: "Bearer #{employee_token}" }
+      request.headers.merge! headers
+      post :create, params: post_params
+      expect(response.status).to eq(401)
     end
 
     it 'should return 422 with unexist id' do
