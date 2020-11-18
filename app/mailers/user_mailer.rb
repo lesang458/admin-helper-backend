@@ -4,8 +4,8 @@ class UserMailer < ApplicationMailer
     mail to: user.email, subject: 'Password reset'
   end
 
-  def cancel_request(request_id)
-    @day_off_request = DayOffRequest.find request_id
+  def cancel_request(request)
+    @day_off_request = request
     send_mail_to_admin
   end
 

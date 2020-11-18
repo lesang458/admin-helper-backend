@@ -313,7 +313,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       put :cancel, params: put_params
       expect(response.status).to eq(400)
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Something went wrong when trying to update status day_off_request'
+      expect(message).to include 'Something went wrong when trying to cancel day_off_request'
     end
 
     it 'should return 400 with approved request' do
@@ -321,7 +321,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       put :cancel, params: put_params
       expect(response.status).to eq(400)
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Something went wrong when trying to update status day_off_request'
+      expect(message).to include 'Something went wrong when trying to cancel day_off_request'
     end
 
     it 'should return 400 with denied request' do
@@ -329,7 +329,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       put :cancel, params: put_params
       expect(response.status).to eq(400)
       message = JSON.parse(response.body)['message']
-      expect(message).to include 'Something went wrong when trying to update status day_off_request'
+      expect(message).to include 'Something went wrong when trying to cancel day_off_request'
     end
   end
 end
