@@ -1,6 +1,5 @@
 class Api::V1::DayOffRequestController < ApplicationController
-  before_action :set_day_off_request, only: %i[update destroy]
-
+  before_action :set_day_off_request, only: %i[update destroy cancel]
   def index
     day_off_requests = DayOffRequest.search(params)
     day_off_requests = paginate(day_off_requests)
@@ -22,6 +21,15 @@ class Api::V1::DayOffRequestController < ApplicationController
   def destroy
     @day_off_request.destroy
     head 204
+  end
+
+  def cancel
+    DayOffRequest.transaction do
+      raise(ExceptionHandler::BadRequest, 'Something went wrong when trying to update status day_off_request') unless @day_off_request.pending?
+      @day_off_request.cancelled!
+      UserMailer.cancel_request(@day_off_request.id).deliver_now # if @day_off_request.cancelled?
+      render_resource(@day_off_request)
+    end
   end
 
   private

@@ -5,7 +5,6 @@ module Authenticatable
 
   def logged_in_user
     return User.find_by(email: params[:email]) || User.find_by(email: GoogleApis::IdTokens.get_user_info(params[:id_token])['email']) if controller_name.eql? 'sessions'
-
     current_user
   end
 

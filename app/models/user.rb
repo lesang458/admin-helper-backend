@@ -49,6 +49,10 @@ class User < ApplicationRecord
     save!
   end
 
+  def send_mail_notification_canncel
+    UserMailer.password_reset(self).deliver_now
+  end
+
   def send_password_reset_email
     UserMailer.password_reset(self).deliver_now
   end

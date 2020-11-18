@@ -81,7 +81,7 @@ aulu = User.create_with(
   join_date: "2019-11-25",
   status: "ACTIVE",
   phone_number: "0935270046",
-  roles: %w[EMPLOYEE ADMIN SUPER_ADMIN]
+  roles: %w[EMPLOYEE]
 ).find_or_create_by(email: 'aulu@novahub.vn')
 aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_vacation.id, hours: day_off_category_vacation.total_hours_default
 aulu.day_off_infos.find_or_create_by day_off_category_id: day_off_category_illness.id, hours: day_off_category_illness.total_hours_default
