@@ -302,4 +302,61 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(JSON.parse(response.body)['message']).to include 'Invalid category or user'
     end
   end
+
+  describe 'PUT# Cancel Day Off Request' do
+    let!(:put_params) {
+      {
+        id: DayOffRequest.first.id
+      }
+    }
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      put :cancel, params: put_params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 200 with employee' do
+      employee_token = JwtToken.encode({ user_id: @employee.id })
+      headers = { authorization: "Bearer #{employee_token}" }
+      request.headers.merge! headers
+      put :cancel, params: put_params
+      expect(response.status).to eq(200)
+    end
+
+    it 'should return 200' do
+      put :cancel, params: put_params
+      day_off_request = DayOffRequest.first.reload
+      expect(response.status).to eq(200)
+      expect(day_off_request.status).to eq('cancelled')
+    end
+
+    it 'should return 404' do
+      put :cancel, params: { id: 'not_found' }
+      expect(response.status).to eq(404)
+    end
+
+    it 'should return 400 with cancelled request' do
+      DayOffRequest.first.cancelled!
+      put :cancel, params: put_params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Something went wrong when trying to cancel day_off_request'
+    end
+
+    it 'should return 400 with approved request' do
+      DayOffRequest.first.approved!
+      put :cancel, params: put_params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Something went wrong when trying to cancel day_off_request'
+    end
+
+    it 'should return 400 with denied request' do
+      DayOffRequest.first.denied!
+      put :cancel, params: put_params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Something went wrong when trying to cancel day_off_request'
+    end
+  end
 end

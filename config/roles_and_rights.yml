@@ -3,6 +3,7 @@ employee:
     - create
   day_off_request:
     - create
+    - cancel
 admin:
   employees:
     - index
