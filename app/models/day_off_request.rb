@@ -29,14 +29,6 @@ class DayOffRequest < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize
 
-  def self.create_requests(params, user_id)
-    employee = User.find(user_id)
-    day_off_request = employee.day_off_requests.new(params)
-    day_off_request.status = 'pending'
-    day_off_request.save!
-    day_off_request.different_year_request? ? [day_off_request, day_off_request.next_year_request] : [day_off_request]
-  end
-
   def different_year_request?
     different_year = to_date.to_datetime.year - from_date.to_datetime.year if from_date.present? && to_date.present?
     different_year.positive?
