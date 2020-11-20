@@ -1,4 +1,8 @@
 employee:
+  sessions:
+    - create
+  day_off_request:
+    - create
 admin:
   employees:
     - index
