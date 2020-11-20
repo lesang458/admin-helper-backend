@@ -36,7 +36,7 @@ Rails.application.configure do
     :authentication => :plain,
     :user_name      => Rails.application.credentials.SENDGRID_USERNAME,
     :password       => Rails.application.credentials.SENDGRID_PASSWORD,
-    domain: "example.com",
+    :domain => "example.com",
     :enable_starttls_auto => true
   }
 
