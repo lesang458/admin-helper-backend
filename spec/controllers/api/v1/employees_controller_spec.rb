@@ -492,6 +492,20 @@ RSpec.describe Api::V1::EmployeesController, type: :controller do
         expect(response.status).to eq(200)
       end
 
+      it 'should return 200 with full info' do
+        get :index, params: { full_info: 'true' }
+        expect(response.status).to eq(200)
+        json_response = JSON.parse(response.body)['data'].select { |item| item['id'] == @user.id }
+        expect(JSON.parse(response.body)['data'].first['day_off_infos']).to eq []
+        expect(json_response.first['day_off_infos'].first['day_off_category_id']).to eq @info_vacation.day_off_category_id
+      end
+
+      it 'should return 200 with non full info' do
+        get :index, params: { full_info: 'false' }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)['data'].first['day_off_infos']).to eq nil
+      end
+
       it 'should return 200 with day off from date' do
         params = request_params.dup
         params.delete(:day_off_to_date)

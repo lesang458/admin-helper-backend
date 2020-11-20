@@ -31,6 +31,19 @@ class User < ApplicationRecord
   before_create :encrypt_password
   scope :employee_name_like, ->(employee_name) { where('first_name ILIKE ? OR last_name ILIKE ?', "%#{employee_name}%", "%#{employee_name}%") if employee_name }
 
+  def admin?
+    roles.include?('ADMIN')
+  end
+
+  def request_day_off(params, user_id)
+    raise(ExceptionHandler::Forbidden, 'You do not have permission') if !admin? && id != user_id.to_i
+    employee = User.find(user_id)
+    day_off_request = employee.day_off_requests.new(params)
+    day_off_request.status = admin? ? 'approved' : 'pending'
+    day_off_request.save!
+    day_off_request.different_year_request? ? [day_off_request, day_off_request.next_year_request] : [day_off_request]
+  end
+
   def update_password(password_params)
     raise(ArgumentError, 'Your password was incorrect.') unless check_valid_password(password_params[:old_password])
     self.password = password_params[:new_password]

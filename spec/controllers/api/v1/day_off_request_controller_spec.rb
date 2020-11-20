@@ -8,6 +8,7 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
     @day_off_category = FactoryBot.create(:day_off_category, :vacation)
     @category_illness = FactoryBot.create(:day_off_category, :illness)
     @employee = FactoryBot.create(:user, :employee)
+    @other_employee = FactoryBot.create(:user, :employee)
     @admin = FactoryBot.create(:user, :admin, first_name: 'danghanh')
     @day_off_info = FactoryBot.create(:day_off_info, :vacation, user: @employee)
     @illness_info = FactoryBot.create(:day_off_info, :illness, user: @admin)
@@ -185,6 +186,14 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(response.status).to eq(201)
     end
 
+    it 'should return 403 when logged in employee is not requested employee' do
+      employee_token = JwtToken.encode({ user_id: @other_employee.id })
+      headers = { authorization: "Bearer #{employee_token}" }
+      request.headers.merge! headers
+      post :create, params: post_params
+      expect(response.status).to eq(403)
+    end
+
     it 'should return 422 with unexist id' do
       params = post_params.dup
       params[:id] = unexist_id
@@ -202,17 +211,20 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(message).to include 'Day off category inactivated'
     end
 
-    it 'should return 201' do
+    it 'should return 201 with admin' do
       post :create, params: post_params
       request = JSON.parse(response.body)['day_off_requests']
       expect(response.status).to eq(201)
       expect(request.count).to eq(1)
       expect(request.first['from_date'].to_date.to_s).to eq('2020-02-02')
       expect(request.first['to_date'].to_date.to_s).to eq('2020-07-07')
-      expect(request.first['status'].to_s).to eq('pending')
+      expect(request.first['status'].to_s).to eq('approved')
     end
 
-    it 'should return 201 with request in 2 years' do
+    it 'should return 201 with request in 2 years with employee' do
+      employee_token = JwtToken.encode({ user_id: @employee.id })
+      headers = { authorization: "Bearer #{employee_token}" }
+      request.headers.merge! headers
       params = post_params.dup
       params[:to_date] = '2021-07-07'
       post :create, params: params
@@ -225,6 +237,21 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(requests.second['from_date'].to_date.to_s).to eq('2021-01-01')
       expect(requests.second['to_date'].to_date.to_s).to eq('2021-07-07')
       expect(requests.second['status'].to_s).to eq('pending')
+    end
+
+    it 'should return 201 with request in 2 years with admin' do
+      params = post_params.dup
+      params[:to_date] = '2021-07-07'
+      post :create, params: params
+      requests = JSON.parse(response.body)['day_off_requests']
+      expect(response.status).to eq(201)
+      expect(requests.count).to eq(2)
+      expect(requests.first['from_date'].to_date.to_s).to eq('2020-02-02')
+      expect(requests.first['to_date'].to_date.to_s).to eq('2020-12-31')
+      expect(requests.first['status'].to_s).to eq('approved')
+      expect(requests.second['from_date'].to_date.to_s).to eq('2021-01-01')
+      expect(requests.second['to_date'].to_date.to_s).to eq('2021-07-07')
+      expect(requests.second['status'].to_s).to eq('approved')
     end
 
     it 'should return 422 with request in 3 years' do
