@@ -416,4 +416,61 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(day_off_request.status).to eq('approved')
     end
   end
+
+  describe 'PUT# Deny Day Off Request' do
+    let!(:put_params) {
+      {
+        id: DayOffRequest.first.id
+      }
+    }
+    it 'return status 401 status code with invalid token' do
+      request.headers.merge! invalid_headers
+      put :deny, params: put_params
+      expect(response.status).to eq(401)
+    end
+
+    it 'should return 403 with employee' do
+      employee_token = JwtToken.encode({ user_id: @employee.id })
+      headers = { authorization: "Bearer #{employee_token}" }
+      request.headers.merge! headers
+      put :deny, params: put_params
+      expect(response.status).to eq(403)
+    end
+
+    it 'should return 404' do
+      put :deny, params: { id: 'not_found' }
+      expect(response.status).to eq(404)
+    end
+
+    it 'should return 400 with cancelled request' do
+      DayOffRequest.first.cancelled!
+      put :deny, params: put_params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Something went wrong when trying to deny day_off_request'
+    end
+
+    it 'should return 400 with denied request' do
+      DayOffRequest.first.denied!
+      put :deny, params: put_params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Something went wrong when trying to deny day_off_request'
+    end
+
+    it 'should return 400 with denied request' do
+      DayOffRequest.first.denied!
+      put :deny, params: put_params
+      expect(response.status).to eq(400)
+      message = JSON.parse(response.body)['message']
+      expect(message).to include 'Something went wrong when trying to deny day_off_request'
+    end
+
+    it 'should return 200' do
+      put :deny, params: put_params
+      day_off_request = DayOffRequest.first.reload
+      expect(response.status).to eq(200)
+      expect(day_off_request.status).to eq('denied')
+    end
+  end
 end

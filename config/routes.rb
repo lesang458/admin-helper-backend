@@ -20,6 +20,7 @@ Rails.application.routes.draw do
         member do
           put '/cancel', to: 'day_off_request#cancel'
           put '/approve', to: 'day_off_request#approve'
+          put '/deny', to: 'day_off_request#deny'
         end
       end
       post 'password/validate_token', to: 'password#validate_token'

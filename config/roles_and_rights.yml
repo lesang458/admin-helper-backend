@@ -21,6 +21,7 @@ admin:
     - update
     - destroy
     - approve
+    - deny
   day_off_info:
     - create
     - update
