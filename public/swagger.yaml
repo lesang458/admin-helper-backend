@@ -391,6 +391,12 @@ paths:
         summary: Get list employee
         description: Returns list employee
         parameters:
+          - name: full_info
+            in: query
+            description: Return full info
+            schema:
+              type: boolean
+            example: true
           - name: search
             in: query
             description: Search with first name or last name
@@ -1294,6 +1300,35 @@ paths:
                     $ref: '#/components/schemas/DayOffInfoResponse'
                   meta:
                       $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Permission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  '/employees/{id}/device_histories':
+    get:
+      tags:
+        - Employees
+      summary: Get DeviceHistories by employee ID
+      description: Get DeviceHistories by employee ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of employee
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  data:
+                    $ref: '#/components/schemas/DeviceHistory'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
