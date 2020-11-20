@@ -20,6 +20,7 @@ admin:
     - index
     - update
     - destroy
+    - approve
   day_off_info:
     - create
     - update

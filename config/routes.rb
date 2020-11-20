@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       resources :day_off_request, only: %i[index update destroy] do
         member do
           put '/cancel', to: 'day_off_request#cancel'
+          put '/approve', to: 'day_off_request#approve'
         end
       end
       post 'password/validate_token', to: 'password#validate_token'

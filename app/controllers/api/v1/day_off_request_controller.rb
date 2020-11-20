@@ -1,5 +1,5 @@
 class Api::V1::DayOffRequestController < ApplicationController
-  before_action :set_day_off_request, only: %i[update destroy cancel]
+  before_action :set_day_off_request, only: %i[update destroy cancel approve]
   def index
     day_off_requests = DayOffRequest.search(params)
     day_off_requests = paginate(day_off_requests)
@@ -28,6 +28,15 @@ class Api::V1::DayOffRequestController < ApplicationController
       raise(ExceptionHandler::BadRequest, 'Something went wrong when trying to cancel day_off_request') unless @day_off_request.pending?
       @day_off_request.cancelled!
       UserMailer.cancel_request(@day_off_request).deliver_now
+      render_resource(@day_off_request)
+    end
+  end
+
+  def approve
+    DayOffRequest.transaction do
+      raise(ExceptionHandler::BadRequest, 'Something went wrong when trying to approve day_off_request') unless @day_off_request.pending?
+      @day_off_request.approved!
+      UserMailer.admin_request(@day_off_request, 'Approved Request').deliver_now
       render_resource(@day_off_request)
     end
   end
