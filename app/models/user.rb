@@ -36,7 +36,7 @@ class User < ApplicationRecord
   end
 
   def request_day_off(params, user_id)
-    raise(ExceptionHandler::Unauthorized, 'User authentication failed') if admin? == false && id != user_id.to_i
+    raise(ExceptionHandler::Forbidden, 'You do not have permission') if !admin? && id != user_id.to_i
     employee = User.find(user_id)
     day_off_request = employee.day_off_requests.new(params)
     day_off_request.status = admin? ? 'approved' : 'pending'

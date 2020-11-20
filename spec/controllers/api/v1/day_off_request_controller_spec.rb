@@ -186,12 +186,12 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(response.status).to eq(201)
     end
 
-    it 'should return 401 when logged in employee is not requested employee' do
+    it 'should return 403 when logged in employee is not requested employee' do
       employee_token = JwtToken.encode({ user_id: @other_employee.id })
       headers = { authorization: "Bearer #{employee_token}" }
       request.headers.merge! headers
       post :create, params: post_params
-      expect(response.status).to eq(401)
+      expect(response.status).to eq(403)
     end
 
     it 'should return 422 with unexist id' do
