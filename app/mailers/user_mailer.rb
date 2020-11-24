@@ -16,10 +16,10 @@ class UserMailer < ApplicationMailer
 
   def admin_request(request, subject)
     @day_off_request = request
-    send_mail_to_employee(@day_off_request.user.email, subject)
+    send_mail_to_user(@day_off_request.user.email, subject)
   end
 
-  def send_mail_to_employee(email, subject)
+  def send_mail_to_user(email, subject)
     mail to: email, subject: subject
   end
 end
