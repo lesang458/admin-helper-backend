@@ -6,20 +6,16 @@ class UserMailer < ApplicationMailer
 
   def employee_request(request, subject)
     @day_off_request = request
-    send_mail_to_admin(subject)
-  end
-
-  def send_mail_to_admin(subject)
     emails = User.where('roles @> ?', '{ADMIN}').map(&:email)
-    mail to: emails, subject: subject
+    send_mail(emails, subject)
   end
 
   def admin_request(request, subject)
     @day_off_request = request
-    send_mail_to_user(@day_off_request.user.email, subject)
+    send_mail(@day_off_request.user.email, subject)
   end
 
-  def send_mail_to_user(email, subject)
-    mail to: email, subject: subject
+  def send_mail(emails, subject)
+    mail to: emails, subject: subject
   end
 end

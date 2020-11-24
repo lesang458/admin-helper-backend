@@ -24,8 +24,13 @@ class Api::V1::DayOffRequestController < ApplicationController
   end
 
   def cancel
-    @day_off_request.send_request('cancel')
-    render_resource(@day_off_request)
+    raise(ExceptionHandler::Forbidden, 'You do not have permission') if !current_user.admin? && current_user.id != @day_off_request.user_id
+    raise(ExceptionHandler::BadRequest, 'Something went wrong when trying to cancel day_off_request') unless @day_off_request.pending?
+    DayOffRequest.transaction do
+      @day_off_request.cancelled!
+      UserMailer.employee_request(@day_off_request, 'Cancelled Request').deliver_now
+      render_resource(@day_off_request)
+    end
   end
 
   def approve
