@@ -4,14 +4,14 @@ class UserMailer < ApplicationMailer
     mail to: user.email, subject: 'Password reset'
   end
 
-  def cancel_request(request)
+  def employee_request(request, subject)
     @day_off_request = request
-    send_mail_to_admin
+    send_mail_to_admin(subject)
   end
 
-  def send_mail_to_admin
+  def send_mail_to_admin(subject)
     emails = User.where('roles @> ?', '{ADMIN}').map(&:email)
-    mail to: emails, subject: 'User cancelled request'
+    mail to: emails, subject: subject
   end
 
   def admin_request(request, subject)

@@ -42,6 +42,10 @@ class DayOffRequest < ApplicationRecord
     next_year_request
   end
 
+  def separate_request
+    self.different_year_request? ? [self, self.next_year_request] : [self]
+  end
+
   private
 
   def check_category_status
