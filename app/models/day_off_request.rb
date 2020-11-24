@@ -53,7 +53,7 @@ class DayOffRequest < ApplicationRecord
     DayOffRequest.transaction do
       self.status = ACTION_TO_STATUS[action]
       self.save!
-      UserMailer.admin_request(self, "#{action} request").deliver_now
+      UserMailer.notify_requested_employee(self, "#{self.status.capitalize} request").deliver_now
     end
   end
 

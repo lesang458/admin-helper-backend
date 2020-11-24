@@ -46,7 +46,7 @@ class User < ApplicationRecord
   end
 
   def send_mail(day_off_request)
-    admin? ? UserMailer.admin_request(day_off_request, 'Approved Request').deliver_now : UserMailer.employee_request(day_off_request, 'Created Request').deliver_now
+    admin? ? UserMailer.notify_requested_employee(day_off_request, 'Approved Request').deliver_now : UserMailer.notify_admins(day_off_request, 'Created Request').deliver_now
   end
 
   def update_password(password_params)

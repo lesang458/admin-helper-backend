@@ -28,7 +28,7 @@ class Api::V1::DayOffRequestController < ApplicationController
     raise(ExceptionHandler::BadRequest, 'Something went wrong when trying to cancel day_off_request') unless @day_off_request.pending?
     DayOffRequest.transaction do
       @day_off_request.cancelled!
-      UserMailer.employee_request(@day_off_request, 'Cancelled Request').deliver_now
+      UserMailer.notify_admins(@day_off_request, 'Cancelled Request').deliver_now
       render_resource(@day_off_request)
     end
   end
