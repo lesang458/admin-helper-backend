@@ -16,6 +16,8 @@ class DayOffRequest < ApplicationRecord
   scope :to_date, ->(to) { where('from_date <= ? OR to_date <= ?', to, to) if to }
   scope :from_date, ->(from) { where('from_date >= ? OR to_date >= ?', from, from) if from }
   scope :requests_by_employee_name, ->(employee_name) { where user_id: User.employee_name_like(employee_name).pluck(:id) }
+
+  ACTION_TO_STATUS = { 'deny' => 'denied', 'approve' => 'approved' }.freeze
   def total_hours_off
     (to_date.to_date - from_date.to_date + 1).to_i * hours_per_day
   end
@@ -40,6 +42,19 @@ class DayOffRequest < ApplicationRecord
     next_year_request.from_date = from_date.to_datetime.end_of_year + 1
     next_year_request.save!
     next_year_request
+  end
+
+  def separate_request
+    self.different_year_request? ? [self, self.next_year_request] : [self]
+  end
+
+  def send_request(action)
+    raise(ExceptionHandler::BadRequest, "Something went wrong when trying to #{action} day_off_request") unless pending?
+    DayOffRequest.transaction do
+      self.status = ACTION_TO_STATUS[action]
+      self.save!
+      UserMailer.notify_requested_employee(self, "#{self.status.capitalize} request").deliver_now
+    end
   end
 
   private

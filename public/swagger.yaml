@@ -1433,6 +1433,66 @@ paths:
           $ref: '#/components/responses/Permission'
         404:
           $ref: '#/components/responses/NotFound'
+  '/day_off_request/{id}/approve':
+    parameters:
+      - name: id
+        in: path
+        description: Approve Day Off Request
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+    put:
+      tags:
+      - Day Off Request
+      summary: Approve Day Off Request
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  day_off_request:
+                    $ref: '#/components/schemas/DayOffRequestResponse'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Permission'
+        404:
+          $ref: '#/components/responses/NotFound'
+  '/day_off_request/{id}/deny':
+    parameters:
+      - name: id
+        in: path
+        description: Deny Day Off Request
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 1
+    put:
+      tags:
+      - Day Off Request
+      summary: Deny Day Off Request
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  day_off_request:
+                    $ref: '#/components/schemas/DayOffRequestResponse'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Permission'
+        404:
+          $ref: '#/components/responses/NotFound'
 components:
   responses:
     RequestSuccess:

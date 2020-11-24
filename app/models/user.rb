@@ -41,7 +41,12 @@ class User < ApplicationRecord
     day_off_request = employee.day_off_requests.new(params)
     day_off_request.status = admin? ? 'approved' : 'pending'
     day_off_request.save!
-    day_off_request.different_year_request? ? [day_off_request, day_off_request.next_year_request] : [day_off_request]
+    send_mail(day_off_request)
+    day_off_request.separate_request
+  end
+
+  def send_mail(day_off_request)
+    admin? ? UserMailer.notify_requested_employee(day_off_request, 'Approved Request').deliver_now : UserMailer.notify_admins(day_off_request, 'Created Request').deliver_now
   end
 
   def update_password(password_params)

@@ -1,5 +1,5 @@
 class Api::V1::DayOffRequestController < ApplicationController
-  before_action :set_day_off_request, only: %i[update destroy cancel]
+  before_action :set_day_off_request, only: %i[update destroy cancel approve deny]
   def index
     day_off_requests = DayOffRequest.search(params)
     day_off_requests = paginate(day_off_requests)
@@ -24,12 +24,23 @@ class Api::V1::DayOffRequestController < ApplicationController
   end
 
   def cancel
+    raise(ExceptionHandler::Forbidden, 'You do not have permission') if !current_user.admin? && current_user.id != @day_off_request.user_id
+    raise(ExceptionHandler::BadRequest, 'Something went wrong when trying to cancel day_off_request') unless @day_off_request.pending?
     DayOffRequest.transaction do
-      raise(ExceptionHandler::BadRequest, 'Something went wrong when trying to cancel day_off_request') unless @day_off_request.pending?
       @day_off_request.cancelled!
-      UserMailer.cancel_request(@day_off_request).deliver_now
+      UserMailer.notify_admins(@day_off_request, 'Cancelled Request').deliver_now
       render_resource(@day_off_request)
     end
+  end
+
+  def approve
+    @day_off_request.send_request('approve')
+    render_resource(@day_off_request)
+  end
+
+  def deny
+    @day_off_request.send_request('deny')
+    render_resource(@day_off_request)
   end
 
   private
