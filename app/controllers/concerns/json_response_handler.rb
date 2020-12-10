@@ -10,12 +10,12 @@ module JsonResponseHandler
     render_error message, :bad_request
   end
 
-  def render_collection(list, serializer_class = nil)
+  def render_collection(list, serializer_class = nil, serializer_params = {})
     meta = list.respond_to?(:current_page) ? pagination_dict(list) : nil
     if serializer_class.present?
-      render json: list, root: 'data', meta: meta, each_serializer: serializer_class
+      render json: list, root: 'data', meta: meta, each_serializer: serializer_class, serializer_params: serializer_params
     else
-      render json: list, root: 'data', meta: meta
+      render json: list, root: 'data', meta: meta, hello: 2, serializer_params: serializer_params
     end
   end
 

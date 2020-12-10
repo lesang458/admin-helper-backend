@@ -4,7 +4,8 @@ class Api::V1::EmployeesController < ApplicationController
     set_query_sort if params[:sort].present?
     users = User.search(params).order(@query)
     users = paginate(users)
-    params[:full_info] == 'true' ? render_collection(users, FullUserSerializer) : render_collection(users)
+    month_params = { month: params[:month].to_datetime }.compact
+    params[:full_info] == 'true' ? render_collection(users, FullUserSerializer, month_params) : render_collection(users, nil, month_params)
   end
 
   def show

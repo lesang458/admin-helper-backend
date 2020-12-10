@@ -89,6 +89,31 @@ class User < ApplicationRecord
     user
   end
 
+  def approved_requests_in_month(month)
+    beginning_of_month = month.beginning_of_month
+    end_of_month = month.end_of_month
+    query = "status = 'approved' and ((from_date <= ? and to_date >= ?) or (from_date >= ? and to_date <= ?) or (from_date <= ? and to_date >= ?))"
+    day_off_requests.where(query, beginning_of_month, beginning_of_month, beginning_of_month, end_of_month, end_of_month, end_of_month)
+  end
+
+  def total_days_off(month, has_salary)
+    beginning_of_month = month.beginning_of_month
+    end_of_month = month.end_of_month
+    approved_requests_in_month(month).select { |it| it.day_off_category.present? == has_salary }.sum do |it|
+      first = it.from_date > beginning_of_month ? it.from_date : beginning_of_month
+      last = it.to_date < end_of_month ? it.to_date : end_of_month
+      (last.to_date - first.to_date).to_i * it.hours_per_day / 8
+    end
+  end
+
+  def total_paid_days_off(month)
+    total_days_off(month, true)
+  end
+
+  def total_non_paid_days_off(month)
+    total_days_off(month, false)
+  end
+
   def update_infos(infos_params)
     infos_params.each do |day_off_info|
       day_off = day_off_infos.find_or_create_by day_off_category_id: day_off_info[:day_off_category_id]
