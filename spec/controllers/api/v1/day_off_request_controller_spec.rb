@@ -288,12 +288,6 @@ RSpec.describe Api::V1::DayOffRequestController, type: :controller do
       expect(JSON.parse(response.body)['message']).to include 'Hours per day must be greater than 0'
     end
 
-    it 'should return 422 without day_off_category_id' do
-      post :create, params: post_params.except(:day_off_category_id)
-      expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)['message']).to include 'Invalid category or user'
-    end
-
     it 'should return 422 with validate info' do
       params = post_params.dup
       params[:id] = @admin.id

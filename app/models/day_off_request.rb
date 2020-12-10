@@ -1,5 +1,5 @@
 class DayOffRequest < ApplicationRecord
-  belongs_to :day_off_info
+  belongs_to :day_off_info, optional: true
   belongs_to :user
   validates :from_date, presence: true
   validates :to_date, presence: true
@@ -7,7 +7,7 @@ class DayOffRequest < ApplicationRecord
   validate :validate_date_range
   validate :validate_info_user
   delegate :email, :first_name, :last_name, to: :user
-  delegate :day_off_category, to: :day_off_info
+  delegate :day_off_category, to: :day_off_info, allow_nil: true
   validate :request_too_long
   validate :check_category_status, on: :create
   enum status: { pending: 'pending', approved: 'approved', denied: 'denied', cancelled: 'cancelled' }
