@@ -50,7 +50,7 @@ class Device < ApplicationRecord
   end
 
   def self.search(params)
-    devices = Device.all
+    devices = Device.order(id: :asc)
     devices = devices.with_status(params[:status]) if params[:status].present?
     devices = devices.where('devices.user_id = ?', params[:user_id]) if params[:user_id].present?
     devices = devices.where('device_category_id = ?', params[:device_category_id]) if params[:device_category_id].present?

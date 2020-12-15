@@ -15,7 +15,7 @@ class DeviceHistory < ApplicationRecord
   validate :allow_action?, on: :create
   # rubocop:disable Metrics/AbcSize
   def self.search(params)
-    device_histories = DeviceHistory.all
+    device_histories = DeviceHistory.order(id: :desc)
     device_histories = DeviceHistory.joins(:device).where('device_category_id = ?', params[:device_category_id]) if params[:device_category_id].present?
     device_histories = device_histories.where('status = ?', params[:status]) if params[:status].present?
     device_histories = device_histories.to_date(params[:history_to]) if params[:history_to].present?

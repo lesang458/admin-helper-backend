@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(version: 2020_12_10_032208) do
     t.string "roles", default: [], array: true
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.float "salary_per_month", default: 0.0
+    t.float "salary_per_month", default: 10000000.0
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

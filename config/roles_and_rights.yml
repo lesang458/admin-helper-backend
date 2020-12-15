@@ -1,9 +1,18 @@
 employee:
   sessions:
     - create
+    - google_login
+  employees:
+    - show
+    - update_password
   day_off_request:
+    - index
     - create
     - cancel
+  device_histories:
+    - index
+  devices:
+    - index
 admin:
   employees:
     - index

@@ -4,7 +4,7 @@ class Api::V1::EmployeesController < ApplicationController
     set_query_sort if params[:sort].present?
     users = User.search(params).order(@query)
     users = paginate(users)
-    month_params = { month: params[:month].to_datetime }.compact
+    month_params = { month: params[:month] ? params[:month].to_datetime : Date.today }.compact
     params[:full_info] == 'true' ? render_collection(users, FullUserSerializer, month_params) : render_collection(users, nil, month_params)
   end
 
@@ -44,7 +44,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def create_params
-    params.permit(:email, :password, :first_name, :last_name, :birthdate, :join_date, :phone_number, day_off_infos_attributes:
+    params.permit(:email, :password, :first_name, :last_name, :birthdate, :join_date, :phone_number, :salary_per_month, day_off_infos_attributes:
     %i[day_off_category_id hours])
   end
 

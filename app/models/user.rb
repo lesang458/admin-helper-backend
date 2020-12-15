@@ -92,7 +92,7 @@ class User < ApplicationRecord
   def approved_requests_in_month(month)
     beginning_of_month = month.beginning_of_month
     end_of_month = month.end_of_month
-    query = "status = 'approved' and ((from_date <= ? and to_date >= ?) or (from_date >= ? and to_date <= ?) or (from_date <= ? and to_date >= ?))"
+    query = "(status = 'approved' or status = 'pending') and ((from_date <= ? and to_date >= ?) or (from_date >= ? and to_date <= ?) or (from_date <= ? and to_date >= ?))"
     day_off_requests.where(query, beginning_of_month, beginning_of_month, beginning_of_month, end_of_month, end_of_month, end_of_month)
   end
 
@@ -102,7 +102,7 @@ class User < ApplicationRecord
     approved_requests_in_month(month).select { |it| it.day_off_category.present? == has_salary }.sum do |it|
       first = it.from_date > beginning_of_month ? it.from_date : beginning_of_month
       last = it.to_date < end_of_month ? it.to_date : end_of_month
-      (last.to_date - first.to_date).to_i * it.hours_per_day / 8
+      ((last.to_date - first.to_date).to_i + 1) * it.hours_per_day / 8
     end
   end
 

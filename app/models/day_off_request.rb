@@ -24,8 +24,8 @@ class DayOffRequest < ApplicationRecord
 
   # rubocop:disable Metrics/AbcSize
   def self.search(params)
-    day_off_requests = DayOffCategory.find(params[:day_off_category_id]).day_off_requests if params[:day_off_category_id]
-    day_off_requests = (day_off_requests || DayOffRequest.all).where({ user_id: params[:user_id].presence }.compact)
+    day_off_requests = DayOffCategory.find(params[:day_off_category_id]).reorder(id: :desc).day_off_requests if params[:day_off_category_id]
+    day_off_requests = (day_off_requests || DayOffRequest.order(id: :desc)).where({ user_id: params[:user_id].presence }.compact)
     day_off_requests = day_off_requests.requests_by_employee_name(params[:employee_name]) if params[:employee_name]
     day_off_requests.to_date(params[:to_date]).from_date(params[:from_date])
   end

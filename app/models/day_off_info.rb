@@ -22,7 +22,7 @@ class DayOffInfo < ApplicationRecord
   end
 
   def total_hours_of_request
-    day_off_requests.sum(&:total_hours_off)
+    day_off_requests.select{|request| ['pending', 'approved'].include? request.status}.sum(&:total_hours_off)
   end
 
   def category_name
