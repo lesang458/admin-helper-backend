@@ -19,7 +19,17 @@ class DayOffRequest < ApplicationRecord
 
   ACTION_TO_STATUS = { 'deny' => 'denied', 'approve' => 'approved' }.freeze
   def total_hours_off
-    (to_date.to_date - from_date.to_date + 1).to_i * hours_per_day
+    business_days_between(from_date.to_date, to_date.to_date) * hours_per_day
+  end
+
+  def business_days_between(date1, date2)
+    business_days = 0
+    date = date2
+    while date >= date1
+     business_days = business_days + 1 unless date.saturday? or date.sunday?
+     date = date - 1.day
+    end
+    business_days
   end
 
   # rubocop:disable Metrics/AbcSize

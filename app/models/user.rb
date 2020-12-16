@@ -102,9 +102,20 @@ class User < ApplicationRecord
     approved_requests_in_month(month).select { |it| it.day_off_category.present? == has_salary }.sum do |it|
       first = it.from_date > beginning_of_month ? it.from_date : beginning_of_month
       last = it.to_date < end_of_month ? it.to_date : end_of_month
-      ((last.to_date - first.to_date).to_i + 1) * it.hours_per_day / 8
+      business_days_between(first.to_date, last.to_date) * it.hours_per_day / 8
     end
   end
+
+  def business_days_between(date1, date2)
+    business_days = 0
+    date = date2
+    while date >= date1
+     business_days = business_days + 1 unless date.saturday? or date.sunday?
+     date = date - 1.day
+    end
+    business_days
+  end
+
 
   def total_paid_days_off(month)
     total_days_off(month, true)

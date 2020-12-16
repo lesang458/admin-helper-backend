@@ -13,7 +13,7 @@ class Api::V1::DayOffRequestController < ApplicationController
   end
 
   def update
-    info_id = DayOffInfo.id_by_user_and_category(@day_off_request.user_id, params[:day_off_category_id])
+    info_id = params[:day_off_category_id].nil? ? nil : DayOffInfo.id_by_user_and_category(params[:id], params[:day_off_category_id])
     @day_off_request.update!(day_off_request_params.merge({ day_off_info_id: info_id }))
     render_resource(@day_off_request)
   end
