@@ -17,6 +17,8 @@ class User < ApplicationRecord
   validates :status, presence: true, inclusion: { in: %w[ACTIVE FORMER] }
   enum certificate: { UNIVERSITY: "UNIVERSITY", COLLEGE: "COLLEGE", INTERMEDIATE: "INTERMEDIATE", MASTER: "MASTER" }
   validates :certificate, presence: true, inclusion: { in: %w[UNIVERSITY COLLEGE INTERMEDIATE MASTER] }
+  enum position: { INTERN: "INTERN", FRESHER: "FRESHER", JUNIOR_DEV: "JUNIOR_DEV", SENIOR_DEV: "SENIOR_DEV", JUNIOR_BA: "JUNIOR_BA", SENIOR_BA: "SENIOR_BA", JUNIOR_QA: "JUNIOR_QA", SENIOR_QA: "SENIOR_QA", HR: "HR", PM: "PM" }
+  validates :position, presence: true, inclusion: { in: %w[INTERN FRESHER JUNIOR_DEV SENIOR_DEV JUNIOR_BA SENIOR_BA JUNIOR_QA SENIOR_QA HR PM]}
   VALID_PHONE_NUMBER_REGEX = /\d[0-9]\)*\z/.freeze
   validates :phone_number, presence: true, allow_nil: true, length: { maximum: 25 },
                            format: { with: VALID_PHONE_NUMBER_REGEX }
