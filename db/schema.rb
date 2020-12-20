@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_10_032208) do
+ActiveRecord::Schema.define(version: 2020_12_20_023037) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(version: 2020_12_10_032208) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.float "salary_per_month", default: 10000000.0
+    t.string "certificate", default: "UNIVERSITY"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

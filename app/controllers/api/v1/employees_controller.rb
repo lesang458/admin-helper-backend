@@ -2,7 +2,7 @@ class Api::V1::EmployeesController < ApplicationController
   before_action :find_user, only: %i[update update_status show update_password]
   def index
     set_query_sort if params[:sort].present?
-    users = User.search(params).order(@query)
+    users = User.search(params).order(@query).reorder(id: :asc)
     users = paginate(users)
     month_params = { month: params[:month] ? params[:month].to_datetime : Date.today }.compact
     params[:full_info] == 'true' ? render_collection(users, FullUserSerializer, month_params) : render_collection(users, nil, month_params)
@@ -44,12 +44,12 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def create_params
-    params.permit(:email, :password, :first_name, :last_name, :birthdate, :join_date, :phone_number, :salary_per_month, day_off_infos_attributes:
+    params.permit(:email, :password, :first_name, :last_name, :birthdate, :join_date, :phone_number, :salary_per_month, :certificate, day_off_infos_attributes:
     %i[day_off_category_id hours])
   end
 
   def update_params
-    params.permit(:email, :first_name, :last_name, :birthdate, :join_date, :phone_number, :salary_per_month, day_off_infos_attributes:
+    params.permit(:email, :first_name, :last_name, :birthdate, :join_date, :phone_number, :salary_per_month, :certificate, day_off_infos_attributes:
       %i[day_off_category_id status hours])
   end
 
